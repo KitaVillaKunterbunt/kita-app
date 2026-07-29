@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dienstplan — Kita Villa Kunterbunt</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #1A56DB; --blue-light: #EBF0FF;
+    --purple: #7C3AED; --purple-light: #EDE9FE;
+    --teal: #0D9488; --teal-light: #CCFBF1;
+    --green: #059669; --green-light: #D1FAE5;
+    --red: #DC2626; --red-light: #FEE2E2;
+    --gray: #6B7280; --gray-light: #F3F4F6;
+    --orange: #D97706; --orange-light: #FEF3C7;
+    --border: #E5E7EB; --bg: #F9FAFB; --surface: #fff;
+    --text: #111827; --text-muted: #6B7280;
+    --r: 8px; --shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* === HEADER === */
+  header { background: var(--blue); color: #fff; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  header h1 { font-size: 16px; font-weight: 700; }
+  header .header-right { display: flex; align-items: center; gap: 12px; }
+  .plan-source { font-size: 12px; opacity: 0.8; background: rgba(255,255,255,.15); padding: 3px 8px; border-radius: 99px; }
+
+  /* === TOOLBAR === */
+  .toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .toolbar select, .toolbar input[type=text] { border: 1px solid var(--border); border-radius: var(--r); padding: 6px 10px; font-size: 14px; background: var(--surface); color: var(--text); }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--r); font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: opacity .15s; white-space: nowrap; }
+  .btn:active { opacity: .8; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-outline { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-success { background: var(--green); color: #fff; }
+  .btn-danger  { background: var(--red); color: #fff; font-size: 12px; padding: 4px 10px; }
+  .month-nav { display: flex; align-items: center; gap: 8px; }
+  .month-nav button { background: none; border: 1px solid var(--border); border-radius: 6px; width: 30px; height: 30px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .month-nav button:hover { background: var(--blue-light); }
+  #month-label { font-weight: 700; font-size: 15px; min-width: 130px; text-align: center; }
+  .tab-bar { display: flex; gap: 4px; }
+  .tab { padding: 6px 14px; border-radius: 6px; border: none; background: none; font-size: 14px; cursor: pointer; color: var(--text-muted); font-weight: 500; }
+  .tab.active { background: var(--blue-light); color: var(--blue); font-weight: 700; }
+
+  /* === DIENSTPLAN-TABELLE === */
+  #tab-plan { overflow: hidden; }
+  .table-wrap { overflow-x: auto; padding: 16px 24px; }
+  table { border-collapse: collapse; min-width: 100%; font-size: 13px; }
+  th { background: var(--bg); border: 1px solid var(--border); padding: 6px 4px; text-align: center; font-weight: 600; position: sticky; top: 0; z-index: 2; white-space: nowrap; min-width: 52px; }
+  th.day-header { min-width: 52px; font-size: 12px; }
+  th.day-header .dow { display: block; font-size: 11px; color: var(--text-muted); }
+  th.day-header .day-num { font-size: 14px; }
+  th.day-header.today-col { background: var(--blue-light); color: var(--blue); }
+  th.day-header.weekend { color: var(--text-muted); }
+  th.name-col { text-align: left; padding-left: 10px; min-width: 140px; position: sticky; left: 0; z-index: 3; background: var(--bg); border-right: 2px solid var(--border); }
+  td { border: 1px solid var(--border); padding: 3px; text-align: center; vertical-align: middle; }
+  td.name-cell { text-align: left; padding: 6px 10px; font-weight: 600; white-space: nowrap; position: sticky; left: 0; background: var(--surface); border-right: 2px solid var(--border); }
+  td.name-cell small { display: block; font-weight: 400; color: var(--text-muted); font-size: 11px; }
+  tr:hover td { background: rgba(26,86,219,.03); }
+  tr:hover td.name-cell { background: var(--surface); }
+
+  /* === SCHICHTEN-CHIPS === */
+  .shift-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 34px; border-radius: 6px; font-size: 11px; font-weight: 700;
+    cursor: pointer; border: none; transition: transform .1s; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .shift-chip:active { transform: scale(.9); }
+  .chip-leer    { background: var(--gray-light); color: var(--text-muted); }
+  .chip-frueh   { background: var(--blue-light); color: var(--blue); }
+  .chip-spaet   { background: var(--purple-light); color: var(--purple); }
+  .chip-teil    { background: var(--teal-light); color: var(--teal); }
+  .chip-urlaub  { background: var(--green-light); color: var(--green); }
+  .chip-krank   { background: var(--red-light); color: var(--red); }
+  .chip-frei    { background: var(--gray-light); color: var(--gray); }
+  .chip-weekend { background: transparent; color: var(--border); border: 1px dashed var(--border); cursor: default; }
+
+  /* === LEGENDE === */
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 24px; background: var(--surface); border-top: 1px solid var(--border); font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* === INFOS-TAB === */
+  #tab-infos { padding: 16px 24px; display: none; }
+  #tab-infos.active { display: block; }
+  .info-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 16px; }
+  .info-form h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .form-group input, .form-group textarea, .form-group select { border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); resize: vertical; }
+  .form-group textarea { min-height: 80px; }
+  .info-list { display: flex; flex-direction: column; gap: 8px; }
+  .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; display: flex; gap: 12px; align-items: flex-start; }
+  .info-card.sehrwichtig { border-left: 4px solid var(--red); }
+  .info-card.wichtig     { border-left: 4px solid var(--orange); }
+  .info-card.normal      { border-left: 4px solid var(--gray-light); }
+  .info-card-body { flex: 1; }
+  .info-card-body strong { font-size: 14px; display: block; margin-bottom: 2px; }
+  .info-card-body p { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; line-height: 1.5; }
+  .info-card-meta { font-size: 11px; color: var(--text-muted); }
+  .priority-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: .05em; }
+  .priority-badge.normal      { background: var(--gray-light); color: var(--gray); }
+  .priority-badge.wichtig     { background: var(--orange-light); color: var(--orange); }
+  .priority-badge.sehrwichtig { background: var(--red-light); color: var(--red); }
+
+  /* === EXPORT-BEREICH === */
+  .export-bar { position: sticky; bottom: 0; background: var(--surface); border-top: 2px solid var(--blue); padding: 12px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; z-index: 10; }
+  .export-bar .export-info { flex: 1; font-size: 13px; color: var(--text-muted); }
+  .export-bar .export-info strong { color: var(--text); display: block; }
+  .export-hint { background: var(--blue-light); border: 1px solid rgba(26,86,219,.2); border-radius: var(--r); padding: 8px 12px; font-size: 12px; color: var(--blue); margin: 0 24px 12px; display: none; }
+  .export-hint.show { display: block; }
+  .export-hint code { background: rgba(26,86,219,.1); padding: 1px 5px; border-radius: 4px; font-family: monospace; }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    header { padding: 0 12px; }
+    .toolbar { padding: 10px 12px; }
+    .table-wrap { padding: 8px 0; }
+    .export-bar { padding: 10px 12px; }
+    #tab-infos { padding: 12px; }
+    .export-hint { margin: 0 12px 10px; }
+  }
+
+  /* === TOAST === */
+  #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #1f2937; color: #fff; padding: 10px 20px; border-radius: 99px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 100; white-space: nowrap; }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📋 Dienstplan — Kita Villa Kunterbunt</h1>
+  <div class="header-right">
+    <span class="plan-source" id="plan-status">Entwurf</span>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="tab-bar">
+    <button class="tab active" data-tab="plan">Dienstplan</button>
+    <button class="tab" data-tab="infos">Mitteilungen</button>
+  </div>
+
+  <div class="month-nav">
+    <button id="prev-month" aria-label="Vorheriger Monat">&#8249;</button>
+    <span id="month-label">August 2026</span>
+    <button id="next-month" aria-label="Nächster Monat">&#8250;</button>
+  </div>
+
+  <button class="btn btn-outline" id="btn-add-employee">+ Mitarbeiterin</button>
+</div>
+
+<div id="tab-plan">
+  <div class="table-wrap">
+    <table id="plan-table"></table>
+  </div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#BFDBFE"></span> Frühdienst 07–14</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#DDD6FE"></span> Spätdienst 12–19</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#99F6E4"></span> Teildienst 09–15</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#A7F3D0"></span> Urlaub</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#FECACA"></span> Krank</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#F3F4F6"></span> Frei / kein Dienst</span>
+  </div>
+</div>
+
+<div id="tab-infos">
+  <div class="info-form">
+    <h3>Neue Mitteilung</h3>
+    <div class="form-row">
+      <div class="form-group" style="flex:2; min-width:250px">
+        <label for="info-title">Titel</label>
+        <input type="text" id="info-title" placeholder="z. B. Teammeeting am 10. August">
+      </div>
+      <div class="form-group">
+        <label for="info-priority">Priorität</label>
+        <select id="info-priority">
+          <option value="normal">Normal</option>
+          <option value="wichtig">Wichtig</option>
+          <option value="sehrwichtig">Sehr wichtig (Bestätigung Pflicht)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:1; min-width:200px">
+        <label for="info-groups">Zielgruppen (Komma-getrennt oder "alle")</label>
+        <input type="text" id="info-groups" value="alle" placeholder="alle, Bären, Mäuse, Dinos">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label for="info-body">Text</label>
+      <textarea id="info-body" placeholder="Mitteilungstext …"></textarea>
+    </div>
+    <button class="btn btn-primary" id="btn-add-info">Mitteilung hinzufügen</button>
+  </div>
+
+  <div class="info-list" id="info-list"></div>
+</div>
+
+<div class="export-hint" id="export-hint">
+  ✓ <strong>Exportiert!</strong> Datei <code>plan-export.json</code> speichern unter:
+  <code>kita-app/public/plan-export.json</code> — danach App neu laden.
+</div>
+
+<div class="export-bar">
+  <div class="export-info">
+    <strong id="export-summary">0 Mitarbeiterinnen · 0 Schichten · 0 Mitteilungen</strong>
+    Plan als JSON exportieren → in <code>public/</code> legen → App neu laden
+  </div>
+  <button class="btn btn-success" id="btn-export">
+    ⬇ Plan veröffentlichen
+  </button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+
+const SHIFTS_ORDER = ["", "frueh", "spaet", "teil", "urlaub", "krank", "frei"];
+const SHIFT_LABEL  = { "": "–", frueh: "Frü", spaet: "Spä", teil: "Tei", urlaub: "Url", krank: "Kra", frei: "Frei" };
+const SHIFT_TIMES  = {
+  frueh:  { von: "07:00", bis: "14:00" },
+  spaet:  { von: "12:00", bis: "19:00" },
+  teil:   { von: "09:00", bis: "15:00" },
+  urlaub: { von: null,    bis: null    },
+  krank:  { von: null,    bis: null    },
+  frei:   { von: null,    bis: null    },
+  "":     { von: null,    bis: null    },
+};
+const CHIP_CLASS = { "": "chip-leer", frueh: "chip-frueh", spaet: "chip-spaet", teil: "chip-teil", urlaub: "chip-urlaub", krank: "chip-krank", frei: "chip-frei" };
+
+let currentYear  = 2026;
+let currentMonth = 8; // 1-based
+
+// Mitarbeiterinnen
+let mitarbeiter = [
+  { id: "user-001", name: "Vanessa Müller", gruppe: "Bären", rolle: "Erzieherin" },
+  { id: "user-002", name: "Lisa Bauer",     gruppe: "Mäuse", rolle: "Erzieherin" },
+  { id: "user-003", name: "Sarah Klein",    gruppe: "Dinos",  rolle: "Erzieherin" },
+  { id: "user-004", name: "Mia Wagner",     gruppe: "Bären",  rolle: "Erzieherin" },
+];
+
+// Schichten: "userId-YYYY-MM-DD" → Typ
+const shiftsMap = {};
+
+// Infos
+let infos = [];
+
+// ============================================================
+// VORAUSGEFÜLLTE DATEN — August 2026
+// ============================================================
+(function prefill() {
+  // Vanessa Müller
+  const v = "user-001";
+  [["03","frueh"],["04","spaet"],["05","frueh"],["06","frei"],["07","spaet"],
+   ["10","spaet"],["11","frueh"],["12","frueh"],["13","frei"],["14","spaet"],
+   ["17","frueh"],["18","spaet"],["19","frei"],["20","frueh"],["21","teil"],
+   ["24","frueh"],["25","urlaub"],["26","spaet"],["27","frueh"],["28","spaet"]
+  ].forEach(([d,t]) => shiftsMap[`${v}-2026-08-${d}`] = t);
+
+  // Lisa Bauer
+  const l = "user-002";
+  [["03","spaet"],["04","frueh"],["05","spaet"],["07","frueh"],
+   ["10","frueh"],["11","spaet"],["12","spaet"],["14","frueh"],
+   ["17","spaet"],["18","frueh"],["20","spaet"],["21","frueh"],
+   ["24","spaet"],["26","frueh"],["27","spaet"],["28","frueh"]
+  ].forEach(([d,t]) => shiftsMap[`${l}-2026-08-${d}`] = t);
+
+  // Sarah Klein
+  const s = "user-003";
+  [["03","frueh"],["04","spaet"],["06","frueh"],["07","spaet"],
+   ["10","spaet"],["11","frueh"],["13","spaet"],["14","frueh"],
+   ["17","frueh"],["19","spaet"],["20","frueh"],["21","spaet"],
+   ["25","frueh"],["26","spaet"],["28","frueh"]
+  ].forEach(([d,t]) => shiftsMap[`${s}-2026-08-${d}`] = t);
+
+  // Mia Wagner
+  const m = "user-004";
+  [["03","spaet"],["05","frueh"],["06","spaet"],["07","frueh"],
+   ["11","spaet"],["12","frueh"],["13","frueh"],["14","spaet"],
+   ["17","spaet"],["18","frueh"],["19","frueh"],["21","spaet"],
+   ["24","frueh"],["25","spaet"],["27","frueh"],["28","spaet"]
+  ].forEach(([d,t]) => shiftsMap[`${m}-2026-08-${d}`] = t);
+
+  // Vorausgefüllte Infos
+  infos = [
+    { id: "info-001", datum: "2026-07-28T08:00:00+02:00", titel: "Evakuierungsübung am 05.08. um 10:00 Uhr", text: "Am Mittwoch, 05. August um 10:00 Uhr findet eine Pflicht-Evakuierungsübung statt. Alle Mitarbeitenden müssen anwesend sein.", zielgruppen: ["alle"], prioritaet: "sehrwichtig" },
+    { id: "info-002", datum: "2026-07-27T10:30:00+02:00", titel: "Notfallkontakte bis 31.07. aktualisieren", text: "Bitte gebt bis Ende Juli eure aktuellen Notfallkontakte bei der Leitung ab.", zielgruppen: ["alle"], prioritaet: "wichtig" },
+    { id: "info-003", datum: "2026-07-26T14:00:00+02:00", titel: "04.08. Hausmeister kommt um 15:00 Uhr", text: "Der Hausmeister kommt am Dienstag, 04. August um 15:00 Uhr in die Gruppe Bären, um die defekte Heizung zu reparieren. Bitte räumt den Bereich vor der Heizkörpernische frei.", zielgruppen: ["Bären"], prioritaet: "normal" },
+    { id: "info-004", datum: "2026-07-25T09:00:00+02:00", titel: "Sommerferienplan: Betriebsferien 17.–21.08.", text: "Die Kita bleibt vom 17. bis 21. August für Betriebsferien geschlossen.", zielgruppen: ["alle"], prioritaet: "normal" },
+  ];
+})();
+
+// ============================================================
+// KALENDER-HILFSFUNKTIONEN
+// ============================================================
+const DOW_SHORT = ["So","Mo","Di","Mi","Do","Fr","Sa"];
+const MONTH_NAMES = ["","Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+
+function daysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+function todayISO() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function isWeekend(year, month, day) {
+  const dow = new Date(year, month-1, day).getDay();
+  return dow === 0 || dow === 6;
+}
+
+// ============================================================
+// TABELLE RENDERN
+// ============================================================
+function renderTable() {
+  const table  = document.getElementById("plan-table");
+  const today  = todayISO();
+  const days   = daysInMonth(currentYear, currentMonth);
+  const prefix = `${currentYear}-${String(currentMonth).padStart(2,"0")}`;
+
+  let head = '<thead><tr><th class="name-col">Mitarbeiterin</th>';
+  for (let d = 1; d <= days; d++) {
+    const dateISO = `${prefix}-${String(d).padStart(2,"0")}`;
+    const dow = DOW_SHORT[new Date(currentYear, currentMonth-1, d).getDay()];
+    const isWE = isWeekend(currentYear, currentMonth, d);
+    const isTod = dateISO === today;
+    head += `<th class="day-header${isTod ? " today-col" : ""}${isWE ? " weekend" : ""}">
+      <span class="dow">${dow}</span>
+      <span class="day-num">${d}</span>
+    </th>`;
+  }
+  head += "</tr></thead>";
+
+  let body = "<tbody>";
+  mitarbeiter.forEach((ma) => {
+    body += `<tr>
+      <td class="name-cell">${esc(ma.name)}<small>${esc(ma.gruppe)}</small></td>`;
+    for (let d = 1; d <= days; d++) {
+      const dateISO = `${prefix}-${String(d).padStart(2,"0")}`;
+      const key     = `${ma.id}-${dateISO}`;
+      const typ     = shiftsMap[key] ?? "";
+      const isWE    = isWeekend(currentYear, currentMonth, d);
+      if (isWE && !typ) {
+        body += `<td><span class="shift-chip chip-weekend">–</span></td>`;
+      } else {
+        body += `<td><button class="shift-chip ${CHIP_CLASS[typ] ?? "chip-leer"}"
+          data-key="${key}" title="${dateISO}">
+          ${SHIFT_LABEL[typ] ?? "–"}
+        </button></td>`;
+      }
+    }
+    body += "</tr>";
+  });
+  body += "</tbody>";
+
+  table.innerHTML = head + body;
+
+  // Click-Handler: Schicht durchschalten
+  table.querySelectorAll("[data-key]").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const key  = chip.dataset.key;
+      const cur  = shiftsMap[key] ?? "";
+      const idx  = SHIFTS_ORDER.indexOf(cur);
+      const next = SHIFTS_ORDER[(idx + 1) % SHIFTS_ORDER.length];
+      if (next === "") { delete shiftsMap[key]; } else { shiftsMap[key] = next; }
+      chip.className = `shift-chip ${CHIP_CLASS[next] ?? "chip-leer"}`;
+      chip.textContent = SHIFT_LABEL[next] ?? "–";
+      updateSummary();
+    });
+  });
+
+  updateSummary();
+  document.getElementById("month-label").textContent = `${MONTH_NAMES[currentMonth]} ${currentYear}`;
+}
+
+// ============================================================
+// INFOS RENDERN
+// ============================================================
+function renderInfos() {
+  const list = document.getElementById("info-list");
+  if (infos.length === 0) {
+    list.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:12px 0">Noch keine Mitteilungen. Füge oben eine hinzu.</p>';
+    return;
+  }
+  list.innerHTML = infos.map((info, i) => `
+    <div class="info-card ${info.prioritaet}">
+      <div class="info-card-body">
+        <strong>${esc(info.titel)}</strong>
+        <p>${esc(info.text)}</p>
+        <div class="info-card-meta">
+          <span class="priority-badge ${info.prioritaet}">${PRIORITY_LABEL[info.prioritaet] ?? info.prioritaet}</span>
+          · ${info.zielgruppen.join(", ")}
+          · ${new Date(info.datum).toLocaleDateString("de-DE",{day:"numeric",month:"short"})}
+        </div>
+      </div>
+      <button class="btn btn-danger" data-remove="${i}">✕</button>
+    </div>`).join("");
+
+  list.querySelectorAll("[data-remove]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      infos.splice(Number(btn.dataset.remove), 1);
+      renderInfos();
+      updateSummary();
+    });
+  });
+}
+
+const PRIORITY_LABEL = { normal: "Normal", wichtig: "Wichtig", sehrwichtig: "Sehr wichtig" };
+
+// ============================================================
+// SUMMARY
+// ============================================================
+function updateSummary() {
+  const shiftCount = Object.values(shiftsMap).filter((t) => t && t !== "frei").length;
+  document.getElementById("export-summary").textContent =
+    `${mitarbeiter.length} Mitarbeiterinnen · ${shiftCount} Schichten · ${infos.length} Mitteilungen`;
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+function buildExport() {
+  const now     = new Date().toISOString();
+  const prefix  = `${currentYear}-${String(currentMonth).padStart(2,"0")}`;
+  const days    = daysInMonth(currentYear, currentMonth);
+
+  const wochen = [];
+  mitarbeiter.forEach((ma) => {
+    for (let d = 1; d <= days; d++) {
+      const dateISO = `${prefix}-${String(d).padStart(2,"0")}`;
+      const key     = `${ma.id}-${dateISO}`;
+      const typ     = shiftsMap[key] ?? "";
+      if (!typ || typ === "") continue; // Leere Tage nicht exportieren
+      const times = SHIFT_TIMES[typ];
+      wochen.push({
+        datum:         dateISO,
+        mitarbeiterId: ma.id,
+        typ,
+        vonUhr:  times.von,
+        bisUhr:  times.bis,
+        gruppe:  ma.gruppe,
+        raum:    null,
+        notiz:   null,
+      });
+    }
+  });
+
+  return {
+    exportiert: now,
+    monat:      currentMonth,
+    jahr:       currentYear,
+    mitarbeiter: mitarbeiter.map((m) => ({ ...m })),
+    wochen,
+    infos: infos.map((n) => ({ ...n })),
+  };
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// HILFSFUNKTIONEN
+// ============================================================
+function esc(str) {
+  return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), duration);
+}
+
+// ============================================================
+// EVENT-LISTENER
+// ============================================================
+document.getElementById("prev-month").addEventListener("click", () => {
+  currentMonth--;
+  if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+  renderTable();
+});
+
+document.getElementById("next-month").addEventListener("click", () => {
+  currentMonth++;
+  if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+  renderTable();
+});
+
+// Tabs wechseln
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("tab-plan").style.display  = tab.dataset.tab === "plan"  ? "" : "none";
+    document.getElementById("tab-infos").style.display = tab.dataset.tab === "infos" ? "block" : "none";
+  });
+});
+
+// Mitarbeiterin hinzufügen
+document.getElementById("btn-add-employee").addEventListener("click", () => {
+  const name   = prompt("Name der Mitarbeiterin:");
+  if (!name?.trim()) return;
+  const gruppe = prompt("Gruppe (z. B. Bären, Mäuse, Dinos):") ?? "Alle";
+  const id     = "user-" + Date.now();
+  mitarbeiter.push({ id, name: name.trim(), gruppe: gruppe.trim(), rolle: "Erzieherin" });
+  renderTable();
+  showToast(`${name.trim()} hinzugefügt.`);
+});
+
+// Mitteilung hinzufügen
+document.getElementById("btn-add-info").addEventListener("click", () => {
+  const titel     = document.getElementById("info-title").value.trim();
+  const text      = document.getElementById("info-body").value.trim();
+  const prioritaet = document.getElementById("info-priority").value;
+  const groupsRaw = document.getElementById("info-groups").value;
+  const zielgruppen = groupsRaw.split(",").map((g) => g.trim()).filter(Boolean);
+
+  if (!titel || !text) { alert("Bitte Titel und Text ausfüllen."); return; }
+
+  infos.push({
+    id:   "info-" + Date.now(),
+    datum: new Date().toISOString(),
+    titel, text,
+    zielgruppen: zielgruppen.length ? zielgruppen : ["alle"],
+    prioritaet,
+  });
+
+  document.getElementById("info-title").value = "";
+  document.getElementById("info-body").value  = "";
+  renderInfos();
+  updateSummary();
+  showToast("Mitteilung hinzugefügt.");
+});
+
+// Plan veröffentlichen
+document.getElementById("btn-export").addEventListener("click", () => {
+  const data = buildExport();
+  downloadJSON(data, "plan-export.json");
+  document.getElementById("export-hint").classList.add("show");
+  document.getElementById("plan-status").textContent = `Exportiert ${new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}`;
+  showToast("⬇ plan-export.json heruntergeladen!", 3500);
+});
+
+// ============================================================
+// INIT
+// ============================================================
+renderTable();
+renderInfos();
+updateSummary();
+</script>
+</body>
+</html>
