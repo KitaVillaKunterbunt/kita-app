@@ -110,12 +110,9 @@ const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
  * @returns {string}
  */
 function shiftBadgeHTML(shift) {
-  if (!shift || shift.type === "frei") return "";
-  if (shift.type === "urlaub") return `<span class="shift-badge shift-badge--urlaub">Urlaub</span>`;
-  if (shift.type === "krank")  return `<span class="shift-badge shift-badge--krank">Krank</span>`;
-  if (shift.type === "teil")   return `<span class="shift-badge shift-badge--teil">Teil</span>`;
-  if (shift.startTime && shift.startTime < "08:00") return `<span class="shift-badge shift-badge--frueh">Früh</span>`;
-  if (shift.endTime   && shift.endTime   > "16:00") return `<span class="shift-badge shift-badge--spaet">Spät</span>`;
+  if (!shift) return "";
+  if (shift.startTime && shift.startTime < "07:30") return `<span class="shift-badge shift-badge--frueh">Früh</span>`;
+  if (shift.endTime   && shift.endTime   > "16:30") return `<span class="shift-badge shift-badge--spaet">Spät</span>`;
   return "";
 }
 

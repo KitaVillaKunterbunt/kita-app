@@ -1,7 +1,7 @@
 // src/screens/meine-antraege.js
 // Screen 4: Meine Anträge — alle Typen, Statusfilter, Zurückziehen
 
-import { escapeHTML } from "../utils.js";
+import { escapeHTML, showConfirm } from "../utils.js";
 
 const TYPE_LABEL = {
   urlaub:        "Urlaub",
@@ -192,13 +192,11 @@ export function renderMeineAntraege(container, requests, onWithdraw) {
              <line x1="3" y1="18" x2="3.01" y2="18"/>
            </svg>
            <p>${activeFilter === "alle" ? "Noch keine Anträge gestellt." : `Keine ${FILTER_LABELS[activeFilter]}-Anträge vorhanden.`}</p>
-           ${activeFilter === "alle"
-             ? `<button class="btn btn--primary btn--sm mt-md" data-nav="antrag">Neuen Antrag stellen</button>`
-             : ""}
          </div>`;
 
     container.innerHTML = `
       <h1 class="screen-title">Meine Anträge</h1>
+      <button class="btn btn--primary btn--full mb-md" data-nav="antrag">Neuen Antrag stellen</button>
       <div class="filter-tabs" role="tablist" aria-label="Statusfilter">
         ${filterTabsHTML}
       </div>
@@ -215,15 +213,18 @@ export function renderMeineAntraege(container, requests, onWithdraw) {
       });
     });
 
+    container.querySelector("[data-nav='antrag']")?.addEventListener("click", () => {
+      window.location.hash = "antrag";
+    });
+
     container.querySelector("#requests-list").addEventListener("click", async (e) => {
-      // Navigationsbutton im Empty-State
       const navBtn = e.target.closest("[data-nav]");
       if (navBtn) { window.location.hash = navBtn.dataset.nav; return; }
 
       const btn = e.target.closest("[data-action='withdraw']");
       if (!btn) return;
 
-      const confirmed = window.confirm("Antrag wirklich zurückziehen?");
+      const confirmed = await showConfirm("Antrag wirklich zurückziehen?", "Zurückziehen");
       if (!confirmed) return;
 
       btn.disabled = true;
