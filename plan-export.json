@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-07-29T02:45:34.071Z",
+  "exportiert": "2026-07-29T20:28:57.004Z",
   "monat": 9,
   "jahr": 2026,
   "mitarbeiter": [
@@ -8,140 +8,140 @@
       "name": "Vanessa",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "214747"
+      "pin": "815730"
     },
     {
       "id": "user-2",
       "name": "Rieke",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "369930"
+      "pin": "978085"
     },
     {
       "id": "user-3",
       "name": "Vera",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "399595"
+      "pin": "273987"
     },
     {
       "id": "user-4",
       "name": "Doreen",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "278826"
+      "pin": "825695"
     },
     {
       "id": "user-5",
       "name": "Biance",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "pin": "592342"
+      "pin": "323739"
     },
     {
       "id": "user-6",
       "name": "Julia",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "pin": "924786"
+      "pin": "766485"
     },
     {
       "id": "user-7",
       "name": "Sabine",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "pin": "520375"
+      "pin": "810711"
     },
     {
       "id": "user-8",
       "name": "Emilia",
       "gruppe": "Mäuse (U3)",
       "rolle": "Praktikantin",
-      "pin": "287913"
+      "pin": "768154"
     },
     {
       "id": "user-9",
       "name": "Larissa",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "835767"
+      "pin": "418709"
     },
     {
       "id": "user-10",
       "name": "Celina",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "655959"
+      "pin": "546636"
     },
     {
       "id": "user-11",
       "name": "Hedwig",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "159606"
+      "pin": "645116"
     },
     {
       "id": "user-12",
       "name": "Simge",
       "gruppe": "Bären (Ü3)",
       "rolle": "Praktikantin",
-      "pin": "504368"
+      "pin": "508713"
     },
     {
       "id": "user-13",
       "name": "Gabi",
       "gruppe": "Dino (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "850240"
+      "pin": "451129"
     },
     {
       "id": "user-14",
       "name": "Andju",
       "gruppe": "Dino (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "693316"
+      "pin": "540588"
     },
     {
       "id": "user-15",
       "name": "Andreea",
       "gruppe": "Dino (Ü3)",
       "rolle": "Praktikantin",
-      "pin": "743815"
+      "pin": "910496"
     },
     {
       "id": "user-16",
       "name": "Laura",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "409775"
+      "pin": "926608"
     },
     {
       "id": "user-17",
       "name": "Anke",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "969583"
+      "pin": "774180"
     },
     {
       "id": "user-18",
       "name": "Janina",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "696416"
+      "pin": "905780"
     },
     {
       "id": "user-19",
       "name": "Svenja",
       "gruppe": "Springer",
       "rolle": "Springerin",
-      "pin": "499100"
+      "pin": "489277"
     },
     {
       "id": "user-20",
       "name": "Pierre",
       "gruppe": "Leitung",
       "rolle": "Leitung",
-      "pin": "738559"
+      "pin": "371051"
     }
   ],
   "wochen": [
@@ -4546,5 +4546,16 @@
       "notiz": null
     }
   ],
-  "infos": []
+  "infos": [
+    {
+      "id": "info-1785356923419-pa20",
+      "datum": "2026-07-29T20:28:43.419Z",
+      "titel": "Test",
+      "text": "Test",
+      "prioritaet": "normal",
+      "zielgruppen": [
+        "Bären"
+      ]
+    }
+  ]
 }
