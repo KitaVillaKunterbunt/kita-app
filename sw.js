@@ -1,7 +1,7 @@
 // Service Worker — Kita-App
 // Strategie: Cache First für App-Shell
 
-const CACHE_NAME = 'kita-app-v6';
+const CACHE_NAME = 'kita-app-v7';
 
 // Relative Pfade (aufgelöst gegenüber der Service-Worker-URL selbst) statt absoluter
 // Pfade ab der Domain-Wurzel, damit die App auch in einem Unterordner funktioniert
