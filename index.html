@@ -29,7 +29,7 @@
       <p>Wird geladen…</p>
     </div>
 
-    <!-- Haupt-Inhalt: 5 Screens -->
+    <!-- Haupt-Inhalt: 6 Screens -->
     <main id="main-content" aria-label="Hauptinhalt">
 
       <!-- Screen 1: Home -->
@@ -47,9 +47,12 @@
       <!-- Screen 5: Infos / Mitteilungen -->
       <section id="screen-infos" class="screen" hidden aria-label="Mitteilungen"></section>
 
+      <!-- Screen 6: Leitung-Dashboard (nur für Leitung + Stellvertreterin) -->
+      <section id="screen-dashboard" class="screen" hidden aria-label="Dashboard"></section>
+
     </main>
 
-    <!-- Bottom Navigation — 4 Items -->
+    <!-- Bottom Navigation — 4 Items (+ Dashboard für Leitung) -->
     <nav id="bottom-nav" class="bottom-nav" aria-label="Hauptnavigation">
 
       <button class="nav-item" data-screen="home" aria-label="Home">
@@ -91,6 +94,17 @@
           <span class="badge" id="notif-badge" hidden>0</span>
         </span>
         <span class="nav-label">Infos</span>
+      </button>
+
+      <!-- Dashboard-Tab (nur für Leitung — standardmäßig versteckt) -->
+      <button class="nav-item" id="nav-dashboard" data-screen="dashboard" aria-label="Dashboard" hidden>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span class="nav-label">Dashboard</span>
       </button>
 
     </nav>

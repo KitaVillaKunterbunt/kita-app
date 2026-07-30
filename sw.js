@@ -1,7 +1,7 @@
 // Service Worker — Kita-App
 // Strategie: Cache First für App-Shell
 
-const CACHE_NAME = 'kita-app-v8';
+const CACHE_NAME = 'kita-app-v10';
 
 // Relative Pfade (aufgelöst gegenüber der Service-Worker-URL selbst) statt absoluter
 // Pfade ab der Domain-Wurzel, damit die App auch in einem Unterordner funktioniert
@@ -22,6 +22,8 @@ const APP_SHELL = [
   './src/screens/antrag.js',
   './src/screens/meine-antraege.js',
   './src/screens/infos.js',
+  './src/screens/dashboard.js',
+  './src/notifications.js',
 ];
 
 // Install: App-Shell in Cache legen
@@ -53,6 +55,23 @@ self.addEventListener('activate', (event) => {
     })
   );
   self.clients.claim();
+});
+
+// Benachrichtigungs-Klick: richtigen Screen öffnen
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const hash = event.notification.data?.hash ?? 'home';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if ('focus' in client) {
+          client.postMessage({ type: 'NAVIGATE', hash });
+          return client.focus();
+        }
+      }
+      return clients.openWindow?.('./#' + hash);
+    })
+  );
 });
 
 // Fetch: Cache First für App-Shell
