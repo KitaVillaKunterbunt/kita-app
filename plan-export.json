@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-07-29T20:28:57.004Z",
+  "exportiert": "2026-07-29T02:45:34.071Z",
   "monat": 9,
   "jahr": 2026,
   "mitarbeiter": [
@@ -8,140 +8,140 @@
       "name": "Vanessa",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "815730"
+      "pin": "214747"
     },
     {
       "id": "user-2",
       "name": "Rieke",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "978085"
+      "pin": "369930"
     },
     {
       "id": "user-3",
       "name": "Vera",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "273987"
+      "pin": "399595"
     },
     {
       "id": "user-4",
       "name": "Doreen",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "pin": "825695"
+      "pin": "278826"
     },
     {
       "id": "user-5",
       "name": "Biance",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "pin": "323739"
+      "pin": "592342"
     },
     {
       "id": "user-6",
       "name": "Julia",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "pin": "766485"
+      "pin": "924786"
     },
     {
       "id": "user-7",
       "name": "Sabine",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "pin": "810711"
+      "pin": "520375"
     },
     {
       "id": "user-8",
       "name": "Emilia",
       "gruppe": "Mäuse (U3)",
       "rolle": "Praktikantin",
-      "pin": "768154"
+      "pin": "287913"
     },
     {
       "id": "user-9",
       "name": "Larissa",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "418709"
+      "pin": "835767"
     },
     {
       "id": "user-10",
       "name": "Celina",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "546636"
+      "pin": "655959"
     },
     {
       "id": "user-11",
       "name": "Hedwig",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "645116"
+      "pin": "159606"
     },
     {
       "id": "user-12",
       "name": "Simge",
       "gruppe": "Bären (Ü3)",
       "rolle": "Praktikantin",
-      "pin": "508713"
+      "pin": "504368"
     },
     {
       "id": "user-13",
       "name": "Gabi",
       "gruppe": "Dino (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "451129"
+      "pin": "850240"
     },
     {
       "id": "user-14",
       "name": "Andju",
       "gruppe": "Dino (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "540588"
+      "pin": "693316"
     },
     {
       "id": "user-15",
       "name": "Andreea",
       "gruppe": "Dino (Ü3)",
       "rolle": "Praktikantin",
-      "pin": "910496"
+      "pin": "743815"
     },
     {
       "id": "user-16",
       "name": "Laura",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "926608"
+      "pin": "409775"
     },
     {
       "id": "user-17",
       "name": "Anke",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "774180"
+      "pin": "969583"
     },
     {
       "id": "user-18",
       "name": "Janina",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "pin": "905780"
+      "pin": "696416"
     },
     {
       "id": "user-19",
       "name": "Svenja",
       "gruppe": "Springer",
-      "rolle": "Springerin",
-      "pin": "489277"
+      "rolle": "Stellvertreterin",
+      "pin": "499100"
     },
     {
       "id": "user-20",
       "name": "Pierre",
       "gruppe": "Leitung",
       "rolle": "Leitung",
-      "pin": "371051"
+      "pin": "738559"
     }
   ],
   "wochen": [
@@ -253,7 +253,8 @@
       "bisUhr": "15:30",
       "gruppe": "Käfer (U3)",
       "raum": null,
-      "notiz": null
+      "notiz": "Impfunterlagen für Timo mitbringen",
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
     },
     {
       "datum": "2026-09-16",
@@ -473,7 +474,8 @@
       "bisUhr": "16:30",
       "gruppe": "Käfer (U3)",
       "raum": null,
-      "notiz": null
+      "notiz": null,
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
     },
     {
       "datum": "2026-09-16",
@@ -693,7 +695,8 @@
       "bisUhr": "13:00",
       "gruppe": "Käfer (U3)",
       "raum": null,
-      "notiz": null
+      "notiz": null,
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
     },
     {
       "datum": "2026-09-16",
@@ -913,7 +916,8 @@
       "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
-      "notiz": null
+      "notiz": null,
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
     },
     {
       "datum": "2026-09-16",
@@ -4343,7 +4347,7 @@
       "bisUhr": "16:00",
       "gruppe": "Leitung",
       "raum": null,
-      "notiz": null
+      "notiz": "Elterngespräch um 14:00 vorbereiten"
     },
     {
       "datum": "2026-09-03",
@@ -4393,7 +4397,8 @@
       "bisUhr": "16:00",
       "gruppe": "Leitung",
       "raum": null,
-      "notiz": null
+      "notiz": null,
+      "gruppenNotiz": "Personalkonferenz 15:00 Uhr"
     },
     {
       "datum": "2026-09-10",
@@ -4546,16 +4551,47 @@
       "notiz": null
     }
   ],
-  "infos": [
+  "infos": [],
+  "pendingAntraege": [
     {
-      "id": "info-1785356923419-pa20",
-      "datum": "2026-07-29T20:28:43.419Z",
-      "titel": "Test",
-      "text": "Test",
-      "prioritaet": "normal",
-      "zielgruppen": [
-        "Bären"
-      ]
+      "id": "pa-001",
+      "mitarbeiterId": "user-9",
+      "type": "urlaub",
+      "dateFrom": "2026-09-21",
+      "dateTo": "2026-09-25",
+      "note": "Familienurlaub — bitte genehmigen",
+      "status": "ausstehend",
+      "createdAt": "2026-07-28T08:00:00Z"
+    },
+    {
+      "id": "pa-002",
+      "mitarbeiterId": "user-5",
+      "type": "dienstwunsch",
+      "dateFrom": "2026-09-03",
+      "dateTo": "2026-09-03",
+      "note": "Möchte gerne Frühdienst statt Spätdienst",
+      "status": "ausstehend",
+      "createdAt": "2026-07-29T09:15:00Z"
+    },
+    {
+      "id": "pa-003",
+      "mitarbeiterId": "user-10",
+      "type": "urlaub",
+      "dateFrom": "2026-09-07",
+      "dateTo": "2026-09-08",
+      "note": null,
+      "status": "ausstehend",
+      "createdAt": "2026-07-30T07:30:00Z"
+    },
+    {
+      "id": "pa-004",
+      "mitarbeiterId": "user-6",
+      "type": "krankmeldung",
+      "dateFrom": "2026-07-30",
+      "dateTo": "2026-07-31",
+      "note": "Fieber",
+      "status": "ausstehend-leitung",
+      "createdAt": "2026-07-30T06:45:00Z"
     }
   ]
 }
