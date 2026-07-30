@@ -1,6 +1,8 @@
 // src/screens/plan.js
 // Screen 2: Mein Plan — Monatskalender mit Schichten farblich markiert
 
+import { escapeHTML } from "../utils.js";
+
 // Modul-Zustand für Monatsnavigation
 let _month = 8;   // August (1-basiert)
 let _year  = 2026;
@@ -49,8 +51,69 @@ function daysInMonth(year, month) {
   return new Date(year, month, 0).getDate();
 }
 
+const PRIO_ORDER = { sehrwichtig: 3, wichtig: 2, normal: 1 };
+const PRIO_LABEL = { sehrwichtig: "Sehr wichtig", wichtig: "Wichtig", normal: "Information" };
+
+/** Baut Map von Datum → { birthdays: string[], anniversaries: { name, years }[] } */
+function buildEventsMap(mitarbeiter, year, month) {
+  const mm = String(month).padStart(2, "0");
+  const map = {};
+  (mitarbeiter ?? []).forEach((m) => {
+    if (m.geburtstag) {
+      const [gbMm, gbDd] = m.geburtstag.split("-");
+      if (gbMm === mm) {
+        const key = `${year}-${mm}-${gbDd}`;
+        if (!map[key]) map[key] = { birthdays: [], anniversaries: [] };
+        map[key].birthdays.push(m.name);
+      }
+    }
+    if (m.eintrittsdatum) {
+      const [entY, entMm, entDd] = m.eintrittsdatum.split("-");
+      if (entMm === mm) {
+        const years = year - parseInt(entY, 10);
+        if (years > 0 && years % 5 === 0) {
+          const key = `${year}-${mm}-${entDd}`;
+          if (!map[key]) map[key] = { birthdays: [], anniversaries: [] };
+          map[key].anniversaries.push({ name: m.name, years });
+        }
+      }
+    }
+  });
+  return map;
+}
+
+/**
+ * Baut Map von Datum → [name1, name2, …] für Kolleginnen im Urlaub.
+ * Kein Gruppen-Filter — alle sehen wer Urlaub hat.
+ * @param {Array<{userId:string, date:string}>} vacations
+ * @param {Array<{id:string, name:string}>} mitarbeiter
+ */
+function buildVacationMap(vacations, mitarbeiter) {
+  const nameById = {};
+  (mitarbeiter ?? []).forEach((m) => { nameById[m.id] = m.name ?? m.id; });
+
+  const map = {};
+  (vacations ?? []).forEach(({ userId, date }) => {
+    const name = nameById[userId] ?? userId;
+    if (!map[date]) map[date] = [];
+    if (!map[date].includes(name)) map[date].push(name);
+  });
+  return map;
+}
+
+/** Baut Map von Datum → Notifications-Array (nur mit datum-Feld) */
+function buildNotifMap(notifications) {
+  const map = {};
+  (notifications ?? []).forEach((n) => {
+    if (!n.datum) return;
+    if (!map[n.datum]) map[n.datum] = [];
+    map[n.datum].push(n);
+  });
+  return map;
+}
+
 /** Baut die Kalender-Zellen auf */
-function buildCalendarCells(year, month, shifts) {
+function buildCalendarCells(year, month, shifts, notifMap, eventsMap, vacationMap) {
   const shiftMap = {};
   shifts.forEach((s) => { shiftMap[s.date] = s; });
 
@@ -72,9 +135,26 @@ function buildCalendarCells(year, month, shifts) {
     const dow = new Date(year, month - 1, day).getDay(); // 0=So, 6=Sa
     const isWeekend = dow === 0 || dow === 6;
 
-    const dotHTML = (shift && shift.type !== "frei")
+    const shiftDot = (shift && shift.type !== "frei")
       ? `<span class="day-dot day-dot--${shift.type}"></span>`
       : "";
+
+    const notifsForDay = (notifMap ?? {})[dateStr] ?? [];
+    const topNotif = notifsForDay.reduce(
+      (top, n) => (!top || (PRIO_ORDER[n.priority] ?? 1) > (PRIO_ORDER[top.priority] ?? 1)) ? n : top,
+      null
+    );
+    const notifDot = topNotif
+      ? `<span class="day-dot day-dot--notif-${topNotif.priority}"></span>`
+      : "";
+
+    const events = (eventsMap ?? {})[dateStr] ?? { birthdays: [], anniversaries: [] };
+    const hasColleagueVacation = ((vacationMap ?? {})[dateStr] ?? []).length > 0;
+    const birthdayEmoji = (events.birthdays.length && events.anniversaries.length) ? "🎂🏆"
+      : events.birthdays.length ? "🎂"
+      : events.anniversaries.length ? "🏆"
+      : "";
+    const eventEmoji = [birthdayEmoji, hasColleagueVacation ? "🌴" : ""].filter(Boolean).join("");
 
     const classes = [
       "calendar-day",
@@ -86,7 +166,8 @@ function buildCalendarCells(year, month, shifts) {
       <div class="${classes}"
            data-date="${dateStr}" ${shift ? `data-shift-id="${shift.id}"` : ""}>
         <span class="day-num">${day}</span>
-        ${dotHTML}
+        ${(shiftDot || notifDot) ? `<div class="day-dots">${shiftDot}${notifDot}</div>` : ""}
+        ${eventEmoji ? `<span class="day-event" aria-hidden="true">${eventEmoji}</span>` : ""}
       </div>`);
   }
 
@@ -94,7 +175,7 @@ function buildCalendarCells(year, month, shifts) {
 }
 
 /** Rendert das Detail-Panel für einen ausgewählten Tag */
-function renderDayDetail(container, date, shift) {
+function renderDayDetail(container, date, shift, notifsForDate, eventsForDate, vacationNamesForDate) {
   let existing = container.querySelector(".day-detail");
   if (existing) existing.remove();
 
@@ -119,6 +200,34 @@ function renderDayDetail(container, date, shift) {
     detailContent = `<p class="day-detail__empty">Kein Dienst eingetragen.</p>`;
   }
 
+  const ev = eventsForDate ?? { birthdays: [], anniversaries: [] };
+  const eventHTML = [
+    ...ev.birthdays.map((name) => `
+      <div class="day-detail__event">
+        🎂 Heute hat <strong>${escapeHTML(name)}</strong> Geburtstag!
+      </div>`),
+    ...ev.anniversaries.map(({ name, years }) => `
+      <div class="day-detail__event day-detail__event--anniversary">
+        🏆 ${years} Jahre bei uns — <strong>${escapeHTML(name)}</strong>
+      </div>`),
+  ].join("");
+
+  const notifHTML = (notifsForDate ?? [])
+    .sort((a, b) => (PRIO_ORDER[b.priority] ?? 1) - (PRIO_ORDER[a.priority] ?? 1))
+    .map((n) => `
+      <div class="day-detail__notif day-detail__notif--${n.priority}">
+        <span class="day-detail__notif-badge">${escapeHTML(PRIO_LABEL[n.priority] ?? "Mitteilung")}</span>
+        <p class="day-detail__notif-title">${escapeHTML(n.title)}</p>
+        <p class="day-detail__notif-body">${escapeHTML(n.body)}</p>
+      </div>`).join("");
+
+  const vacationNames = vacationNamesForDate ?? [];
+  const vacationHTML = vacationNames.length > 0
+    ? `<div class="day-detail__vacation">
+         🌴 Im Urlaub: ${vacationNames.map((n) => escapeHTML(n)).join(", ")}
+       </div>`
+    : "";
+
   const div = document.createElement("div");
   div.className = `day-detail ${typeClass}`;
   div.innerHTML = `
@@ -126,7 +235,10 @@ function renderDayDetail(container, date, shift) {
       <span class="day-detail__date">${dateFormatted}</span>
       <button class="day-detail-close" aria-label="Schließen">✕</button>
     </div>
-    ${detailContent}`;
+    ${detailContent}
+    ${vacationHTML}
+    ${eventHTML}
+    ${notifHTML}`;
 
   container.querySelector(".plan-calendar").appendChild(div);
 
@@ -141,9 +253,12 @@ function renderDayDetail(container, date, shift) {
  * @param {number} month
  * @param {number} year
  */
-export function renderPlan(container, user, shifts, month, year) {
+export function renderPlan(container, user, shifts, notifications, mitarbeiter, month, year, vacations) {
   _month = month;
   _year  = year;
+  const notifMap    = buildNotifMap(notifications);
+  const eventsMap   = buildEventsMap(mitarbeiter, year, month);
+  const vacationMap = buildVacationMap(vacations, mitarbeiter);
 
   const prevMonth = month === 1 ? 12 : month - 1;
   const prevYear  = month === 1 ? year - 1 : year;
@@ -176,7 +291,7 @@ export function renderPlan(container, user, shifts, month, year) {
 
       <!-- Kalender-Zellen -->
       <div class="calendar-grid" id="calendar-cells">
-        ${buildCalendarCells(year, month, shifts)}
+        ${buildCalendarCells(year, month, shifts, notifMap, eventsMap, vacationMap)}
       </div>
 
       <!-- Legende -->
@@ -191,6 +306,10 @@ export function renderPlan(container, user, shifts, month, year) {
             <span class="day-dot day-dot--${type}" style="width:10px;height:10px;flex-shrink:0"></span>
             <span style="font-size:var(--text-xs);color:var(--c-text-secondary)">${label}</span>
           </div>`).join("")}
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:11px;line-height:1">🌴</span>
+          <span style="font-size:var(--text-xs);color:var(--c-text-secondary)">Kollegin im Urlaub</span>
+        </div>
       </div>
     </div>`;
 
@@ -219,6 +338,9 @@ export function renderPlan(container, user, shifts, month, year) {
 
     const date = cell.dataset.date;
     const shift = shifts.find((s) => s.date === date) ?? null;
-    renderDayDetail(container, date, shift);
+    const notifsForDate   = notifMap[date] ?? [];
+    const eventsForDate   = eventsMap[date] ?? { birthdays: [], anniversaries: [] };
+    const vacationNames   = vacationMap[date] ?? [];
+    renderDayDetail(container, date, shift, notifsForDate, eventsForDate, vacationNames);
   });
 }

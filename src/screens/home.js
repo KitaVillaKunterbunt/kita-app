@@ -141,19 +141,32 @@ function _renderWeekView() {
         month: "short",
       }); // z.B. "1. Sep"
 
+      // Notizen ermitteln
+      const hasNote      = !!(shift?.note);
+      const hasGroupNote = !!(shift?.groupNote);
+      const hasAnyNote   = hasNote || hasGroupNote;
+      const noteIcon     = hasAnyNote
+        ? `<span class="week-row__note-icon" aria-label="Notiz vorhanden">📝</span>`
+        : "";
+
       // Uhrzeit-Spalte
       let timeHTML;
       if (!shift || shift.type === "frei" || !shift.startTime) {
-        timeHTML = `<span class="week-row__time week-row__time--empty">—</span>`;
+        timeHTML = `<span class="week-row__time week-row__time--empty">—${noteIcon}</span>`;
       } else {
-        timeHTML = `<span class="week-row__time">${escapeHTML(shift.startTime)} – ${escapeHTML(shift.endTime)}</span>`;
+        timeHTML = `<span class="week-row__time">${escapeHTML(shift.startTime)} – ${escapeHTML(shift.endTime)}${noteIcon}</span>`;
       }
 
       // Badge-Spalte (zeit-basiert)
       const badge = shiftBadgeHTML(shift);
 
+      // Notiz-Daten als Attribute (für Click-Handler)
+      const noteAttr      = hasNote      ? ` data-note="${escapeHTML(shift.note)}"` : "";
+      const groupNoteAttr = hasGroupNote ? ` data-group-note="${escapeHTML(shift.groupNote)}"` : "";
+      const hasNoteClass  = hasAnyNote   ? " week-row--has-note" : "";
+
       return `
-        <div class="week-row${isToday ? " week-row--today" : ""}" role="listitem">
+        <div class="week-row${isToday ? " week-row--today" : ""}${hasNoteClass}" data-date="${dateISO}"${noteAttr}${groupNoteAttr} role="listitem">
           <span class="week-row__day">${weekdayLabel}</span>
           <span class="week-row__date">${escapeHTML(dayLabel)}</span>
           ${timeHTML}
@@ -263,6 +276,31 @@ function _renderWeekView() {
   _container.querySelectorAll("[data-nav]").forEach((btn) => {
     btn.addEventListener("click", () => {
       window.location.hash = btn.dataset.nav;
+    });
+  });
+
+  // Event-Handler: Notiz-Detail ein-/ausklappen
+  _container.querySelectorAll(".week-row--has-note").forEach((row) => {
+    row.addEventListener("click", () => {
+      const next    = row.nextElementSibling;
+      const isOpen  = next?.classList.contains("week-row-detail");
+
+      // Alle offenen Details schließen
+      _container.querySelectorAll(".week-row-detail").forEach((d) => d.remove());
+      _container.querySelectorAll(".week-row--open").forEach((r) => r.classList.remove("week-row--open"));
+
+      if (!isOpen) {
+        const note      = row.dataset.note      ?? "";
+        const groupNote = row.dataset.groupNote ?? "";
+        const detail    = document.createElement("div");
+        detail.className = "week-row-detail";
+        detail.innerHTML = [
+          note      ? `<p class="week-row-detail__item"><span class="week-row-detail__icon">📝</span><span>${escapeHTML(note)}</span></p>` : "",
+          groupNote ? `<p class="week-row-detail__item week-row-detail__item--group"><span class="week-row-detail__icon">👥</span><span>${escapeHTML(groupNote)}</span></p>` : "",
+        ].join("");
+        row.after(detail);
+        row.classList.add("week-row--open");
+      }
     });
   });
 }
