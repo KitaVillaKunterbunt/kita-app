@@ -32,35 +32,35 @@ export const MOCK_COLLEAGUES = [
 // Sa/So werden NICHT eingetragen — Kita hat keinen Wochenenddienst.
 // ============================================================
 
-/** @type {Array<{id:string, userId:string, date:string, type:string, startTime:string|null, endTime:string|null, group:string, room:string|null, note:string|null}>} */
+/** @type {Array<{id:string, userId:string, date:string, type:string, startTime:string|null, endTime:string|null, group:string, room:string|null, note:string|null, groupNote:string|null}>} */
 export const MOCK_SHIFTS = [
   // ----- Woche 1: 3.–7. August -----
-  { id: "s01", userId: "user-001", date: "2026-08-03", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s02", userId: "user-001", date: "2026-08-04", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s03", userId: "user-001", date: "2026-08-05", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: "Elterngespräch 13:00" },
-  { id: "s04", userId: "user-001", date: "2026-08-06", type: "frei",  startTime: null,    endTime: null,    group: "Bären", room: null,     note: null },
-  { id: "s05", userId: "user-001", date: "2026-08-07", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
+  { id: "s01", userId: "user-001", date: "2026-08-03", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s02", userId: "user-001", date: "2026-08-04", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s03", userId: "user-001", date: "2026-08-05", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: "Elterngespräch 13:00",   groupNote: "Praktikantin Jana dabei" },
+  { id: "s04", userId: "user-001", date: "2026-08-06", type: "frei",  startTime: null,    endTime: null,    group: "Bären", room: null,     note: null,                      groupNote: null },
+  { id: "s05", userId: "user-001", date: "2026-08-07", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
 
   // ----- Woche 2: 10.–14. August -----
-  { id: "s06", userId: "user-001", date: "2026-08-10", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s07", userId: "user-001", date: "2026-08-11", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s08", userId: "user-001", date: "2026-08-12", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: null },
-  { id: "s09", userId: "user-001", date: "2026-08-13", type: "frei",  startTime: null,    endTime: null,    group: "Bären", room: null,     note: null },
-  { id: "s10", userId: "user-001", date: "2026-08-14", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
+  { id: "s06", userId: "user-001", date: "2026-08-10", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s07", userId: "user-001", date: "2026-08-11", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s08", userId: "user-001", date: "2026-08-12", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: null,                      groupNote: null },
+  { id: "s09", userId: "user-001", date: "2026-08-13", type: "frei",  startTime: null,    endTime: null,    group: "Bären", room: null,     note: null,                      groupNote: null },
+  { id: "s10", userId: "user-001", date: "2026-08-14", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
 
   // ----- Woche 3: 17.–21. August -----
-  { id: "s11", userId: "user-001", date: "2026-08-17", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s12", userId: "user-001", date: "2026-08-18", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s13", userId: "user-001", date: "2026-08-19", type: "frei",  startTime: null,    endTime: null,    group: "Bären", room: null,     note: null },
-  { id: "s14", userId: "user-001", date: "2026-08-20", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: null },
-  { id: "s15", userId: "user-001", date: "2026-08-21", type: "teil",  startTime: "09:00", endTime: "15:00", group: "Bären", room: "Raum 2", note: "Teildienst — Vertretung" },
+  { id: "s11", userId: "user-001", date: "2026-08-17", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s12", userId: "user-001", date: "2026-08-18", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s13", userId: "user-001", date: "2026-08-19", type: "frei",  startTime: null,    endTime: null,    group: "Bären", room: null,     note: null,                      groupNote: null },
+  { id: "s14", userId: "user-001", date: "2026-08-20", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: null,                      groupNote: null },
+  { id: "s15", userId: "user-001", date: "2026-08-21", type: "teil",  startTime: "09:00", endTime: "15:00", group: "Bären", room: "Raum 2", note: "Teildienst — Vertretung", groupNote: null },
 
   // ----- Woche 4: 24.–28. August -----
-  { id: "s16", userId: "user-001", date: "2026-08-24", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s17", userId: "user-001", date: "2026-08-25", type: "urlaub", startTime: null,   endTime: null,    group: "Bären", room: null,     note: "Genehmigter Urlaub" },
-  { id: "s18", userId: "user-001", date: "2026-08-26", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
-  { id: "s19", userId: "user-001", date: "2026-08-27", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: null },
-  { id: "s20", userId: "user-001", date: "2026-08-28", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null },
+  { id: "s16", userId: "user-001", date: "2026-08-24", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s17", userId: "user-001", date: "2026-08-25", type: "urlaub", startTime: null,   endTime: null,    group: "Bären", room: null,     note: "Genehmigter Urlaub",       groupNote: null },
+  { id: "s18", userId: "user-001", date: "2026-08-26", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
+  { id: "s19", userId: "user-001", date: "2026-08-27", type: "frueh", startTime: "07:00", endTime: "14:00", group: "Bären", room: "Raum 1", note: null,                      groupNote: null },
+  { id: "s20", userId: "user-001", date: "2026-08-28", type: "spaet", startTime: "12:00", endTime: "19:00", group: "Bären", room: "Raum 2", note: null,                      groupNote: null },
 ];
 
 // ============================================================
@@ -213,6 +213,7 @@ export const MOCK_NOTIFICATIONS = [
     targetGroups: ["alle"],
     priority: "sehrwichtig",
     type: "sehrwichtig",
+    datum: "2026-08-05",
     confirmedBy: [],
   },
   // --- WICHTIG: Notfallkontakte (kein Bestätigen nötig, aber hervorgehoben) ---
@@ -237,6 +238,7 @@ export const MOCK_NOTIFICATIONS = [
     targetGroups: ["Bären"],
     priority: "normal",
     type: "info",
+    datum: "2026-08-04",
     confirmedBy: [],
   },
   // --- NORMAL: Sommerferienplan ---
@@ -261,6 +263,7 @@ export const MOCK_NOTIFICATIONS = [
     targetGroups: ["Bären"],
     priority: "normal",
     type: "info",
+    datum: "2026-08-03",
     confirmedBy: [],
   },
   // --- TAUSCHANFRAGE: Lisa Bauer fragt Vanessa (spezielle Notification) ---
@@ -306,4 +309,14 @@ export const MOCK_NOTIFICATIONS = [
     type: "wichtig",
     confirmedBy: ["user-001"],
   },
+];
+
+// ============================================================
+// Mitarbeiter-Events (Geburtstage + Jubiläen) — für Demo/Mock-Modus
+// geburtstag: "MM-DD" | eintrittsdatum: "YYYY-MM-DD"
+// ============================================================
+export const MOCK_MITARBEITER = [
+  { id: "user-001", name: "Vanessa Müller",  geburtstag: "08-12", eintrittsdatum: "2021-08-01" },
+  { id: "user-002", name: "Lisa Bauer",       geburtstag: "08-20", eintrittsdatum: "2011-08-20" },
+  { id: "user-003", name: "Sandra Hoffmann",  geburtstag: "09-05", eintrittsdatum: "2006-08-05" },
 ];

@@ -43,6 +43,22 @@ export function hasPlanData() {
   return _planData !== null;
 }
 
+const LS_DECISIONS_KEY = "kita-decisions";
+
+function _lsGetDecisions() {
+  if (typeof localStorage === "undefined") return {};
+  try { return JSON.parse(localStorage.getItem(LS_DECISIONS_KEY) ?? "{}"); }
+  catch { return {}; }
+}
+
+function _lsSaveDecision(requestId, status, reviewNote) {
+  const d = _lsGetDecisions();
+  d[requestId] = { status, reviewNote, reviewedAt: new Date().toISOString() };
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(LS_DECISIONS_KEY, JSON.stringify(d));
+  }
+}
+
 // In-Memory-Bestätigungen für plan-export-Notifications (Fallback bis SharePoint)
 const _confirmedBy = {};
 
@@ -65,18 +81,19 @@ function adaptShifts(wochen) {
     userId:    w.mitarbeiterId,
     date:      w.datum,
     type:      w.typ,
-    startTime: w.vonUhr  ?? null,
-    endTime:   w.bisUhr  ?? null,
-    group:     w.gruppe  ?? "",
-    room:      w.raum    ?? null,
-    note:      w.notiz   ?? null,
+    startTime: w.vonUhr      ?? null,
+    endTime:   w.bisUhr      ?? null,
+    group:     w.gruppe      ?? "",
+    room:      w.raum        ?? null,
+    note:      w.notiz       ?? null,
+    groupNote: w.gruppenNotiz ?? null,
   }));
 }
 
 function adaptNotifications(infos) {
   return (infos ?? []).map((n) => ({
     id:           n.id,
-    createdAt:    n.datum,
+    createdAt:    n.erstelltAm ?? n.datum,
     authorId:     "user-leitung-001",
     title:        n.titel,
     body:         n.text,
@@ -85,6 +102,7 @@ function adaptNotifications(infos) {
     type:         n.prioritaet === "sehrwichtig" ? "sehrwichtig"
                 : n.prioritaet === "wichtig"     ? "wichtig"
                 : "info",
+    datum:        (n.datum && n.datum.length === 10) ? n.datum : null,
     confirmedBy:  _planConfirmedBy(n.id),
   }));
 }
@@ -139,6 +157,35 @@ export function validatePin(pin) {
 // Colleagues
 // ============================================================
 
+/** Gibt Mitarbeiterinnen mit Geburtstag- und Eintrittsdaten zurück (für Kalender-Events). */
+export function getMitarbeiter() {
+  if (_planData) {
+    return (_planData.mitarbeiter ?? []).map((m) => ({
+      id:             m.id,
+      name:           m.name,
+      geburtstag:     m.geburtstag     ?? null,
+      eintrittsdatum: m.eintrittsdatum ?? null,
+    }));
+  }
+  return mock.MOCK_MITARBEITER ?? [];
+}
+
+/**
+ * Gibt alle Urlaub-Einträge ALLER Mitarbeiter für einen Monat zurück.
+ * Kein Gruppen-Filter — alle Kolleginnen sehen wer Urlaub hat.
+ * @returns {Array<{ userId: string, date: string }>}
+ */
+export async function getVacations(month, year) {
+  if (_planData) {
+    const prefix = `${year}-${String(month).padStart(2, "0")}`;
+    return adaptShifts(_planData.wochen)
+      .filter((s) => s.date.startsWith(prefix) && s.type === "urlaub")
+      .map((s) => ({ userId: s.userId, date: s.date }));
+  }
+  // Mock: enthält nur user-001-Daten → leeres Array (Feature greift nur mit plan-export.json)
+  return [];
+}
+
 export async function getColleagues() {
   if (_planData) {
     const userId = (typeof localStorage !== "undefined") ? localStorage.getItem("kita-user-id") : null;
@@ -174,8 +221,45 @@ export async function getShifts(userId, month, year) {
 // Requests — immer intern (Anträge kommen nie aus dem Plan-Export)
 // ============================================================
 
+/**
+ * Wendet Entscheidungen der Leitung aus plan-export.json "antraege"-Feld
+ * auf die lokal gespeicherten Anträge an. Pure Funktion — testbar ohne Browser.
+ *
+ * Matching: userId + type + dateFrom (da die id client-seitig generiert wird
+ * und dem Leitungs-Export-Tool nicht bekannt ist).
+ *
+ * @param {Array} storedRequests  Anträge aus localStorage
+ * @param {Array} planAntraege    Anträge aus plan-export.json (kann leer/null sein)
+ * @param {string} userId
+ * @returns {Array} Gemergter Antrag-Array (neue Referenz wenn Änderung, sonst original)
+ */
+export function mergePlanAntraegeIntoRequests(storedRequests, planAntraege, userId) {
+  if (!planAntraege?.length || !storedRequests?.length) return storedRequests ?? [];
+
+  const relevant = planAntraege.filter((a) => (a.mitarbeiterId ?? a.userId) === userId);
+  if (!relevant.length) return storedRequests;
+
+  return storedRequests.map((r) => {
+    if (r.userId !== userId) return r;
+    const match = relevant.find(
+      (a) =>
+        (a.type ?? a.typ) === r.type &&
+        (a.dateFrom ?? a.von) === r.dateFrom
+    );
+    if (!match) return r;
+    const newStatus    = match.status ?? r.status;
+    const newNote      = match.begruendung ?? match.reviewNote ?? r.reviewNote ?? null;
+    const newReviewedAt = match.reviewedAt ?? r.reviewedAt ?? new Date().toISOString();
+    if (r.status === newStatus && r.reviewNote === newNote) return r;
+    return { ...r, status: newStatus, reviewNote: newNote, reviewedAt: newReviewedAt };
+  });
+}
+
 export async function getRequests(userId) {
-  if (_planData) return _lsGetRequests().filter((r) => r.userId === userId);
+  if (_planData) {
+    const stored = _lsGetRequests().filter((r) => r.userId === userId);
+    return mergePlanAntraegeIntoRequests(stored, _planData.antraege ?? [], userId);
+  }
   if (USE_MOCK) return mock.MOCK_REQUESTS.filter((r) => r.userId === userId);
   // Phase 8: return await graphApi.getRequests(userId);
 }
@@ -251,19 +335,103 @@ export async function respondToSwapRequest(notificationId, userId, accept) {
 }
 
 // ============================================================
+// Leitung-Dashboard: alle Anträge + Entscheidungen
+// ============================================================
+
+/**
+ * Gibt alle Anträge zurück (kein userId-Filter) — für Leitungs-Dashboard.
+ * Plan-Modus: pendingAntraege aus plan-export.json + localStorage-Anträge.
+ * Mock-Modus: alle MOCK_REQUESTS.
+ */
+export async function getAllRequests() {
+  if (_planData) {
+    const decisions = _lsGetDecisions();
+    const fromPlan = (_planData.pendingAntraege ?? []).map((a) => {
+      const dec = decisions[a.id];
+      return {
+        id:           a.id,
+        userId:       a.mitarbeiterId,
+        type:         a.type ?? a.typ,
+        dateFrom:     a.dateFrom ?? a.von,
+        dateTo:       a.dateTo ?? a.bis,
+        note:         a.note ?? a.notiz ?? null,
+        status:       dec?.status ?? a.status ?? "ausstehend",
+        createdAt:    a.createdAt ?? "",
+        reviewedAt:   dec?.reviewedAt ?? null,
+        reviewNote:   dec?.reviewNote ?? null,
+        colleagueId:  null,
+        colleagueName: null,
+        colleagueStatus: null,
+      };
+    });
+    const fromLS  = _lsGetRequests();
+    const planIds = new Set(fromPlan.map((r) => r.id));
+    return [...fromPlan, ...fromLS.filter((r) => !planIds.has(r.id))];
+  }
+  if (USE_MOCK) return mock.MOCK_REQUESTS.slice();
+}
+
+/** Genehmigt einen Antrag (Leitung). */
+export async function approveRequest(requestId, reviewNote = null) {
+  const now = new Date().toISOString();
+  if (_planData) {
+    const all = _lsGetRequests();
+    const idx = all.findIndex((r) => r.id === requestId);
+    if (idx !== -1) {
+      all[idx] = { ...all[idx], status: "genehmigt", reviewedAt: now, reviewNote };
+      _lsSaveRequests(all);
+    } else {
+      _lsSaveDecision(requestId, "genehmigt", reviewNote);
+    }
+    return { success: true };
+  }
+  if (USE_MOCK) {
+    const r = mock.MOCK_REQUESTS.find((r) => r.id === requestId);
+    if (r) { r.status = "genehmigt"; r.reviewedAt = now; r.reviewNote = reviewNote; }
+    return { success: !!r };
+  }
+}
+
+/** Lehnt einen Antrag ab (Leitung). */
+export async function rejectRequest(requestId, reviewNote = null) {
+  const now = new Date().toISOString();
+  if (_planData) {
+    const all = _lsGetRequests();
+    const idx = all.findIndex((r) => r.id === requestId);
+    if (idx !== -1) {
+      all[idx] = { ...all[idx], status: "abgelehnt", reviewedAt: now, reviewNote };
+      _lsSaveRequests(all);
+    } else {
+      _lsSaveDecision(requestId, "abgelehnt", reviewNote);
+    }
+    return { success: true };
+  }
+  if (USE_MOCK) {
+    const r = mock.MOCK_REQUESTS.find((r) => r.id === requestId);
+    if (r) { r.status = "abgelehnt"; r.reviewedAt = now; r.reviewNote = reviewNote; }
+    return { success: !!r };
+  }
+}
+
+// ============================================================
 // Notifications
 // ============================================================
 
-export async function getNotifications(userGroup) {
+export async function getNotifications(userGroup, userRole) {
+  // Leitung und Stellvertreterin sehen alle Mitteilungen unabhängig von Zielgruppe
+  const seeAll = userRole === "Leitung" || userRole === "Stellvertreterin";
   if (_planData) {
-    return adaptNotifications(_planData.infos).filter(
+    const adapted = adaptNotifications(_planData.infos);
+    return seeAll ? adapted : adapted.filter(
       (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
     );
   }
   if (USE_MOCK) {
-    return mock.MOCK_NOTIFICATIONS.filter(
-      (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
-    );
+    return seeAll
+      ? mock.MOCK_NOTIFICATIONS.slice()
+      : mock.MOCK_NOTIFICATIONS.filter(
+          (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
+        );
   }
   // Phase 8: return await graphApi.getNotifications(userGroup);
 }
