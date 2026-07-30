@@ -6,10 +6,15 @@ import { initAuth, getUser }              from "./auth.js";
 import {
   getShifts,
   getRequests,
+  getAllRequests,
   getNotifications,
   getColleagues,
+  getMitarbeiter,
+  getVacations,
   submitRequest,
   withdrawRequest,
+  approveRequest,
+  rejectRequest,
   confirmNotification,
   respondToSwapRequest,
   setPlanData,
@@ -17,22 +22,36 @@ import {
   validatePin,
 } from "./data/api.js";
 import { escapeHTML } from "./utils.js";
+import {
+  detectNewContent,
+  maybeAskPermission,
+  showNativeNotification,
+  isNotificationsEnabled,
+  requestNotificationPermission,
+  saveNotifPref,
+  getLastVisit,
+  setLastVisit,
+  getLastPlanExported,
+  setLastPlanExported,
+} from "./notifications.js";
 import { renderHome }          from "./screens/home.js";
 import { renderPlan, setOnMonthChange } from "./screens/plan.js";
 import { renderAntrag }        from "./screens/antrag.js";
 import { renderMeineAntraege } from "./screens/meine-antraege.js";
 import { renderInfos }         from "./screens/infos.js";
+import { renderDashboard }     from "./screens/dashboard.js";
 
 // ============================================================
 // DOM-Referenzen
 // ============================================================
 
 const screens = {
-  home:     document.getElementById("screen-home"),
-  plan:     document.getElementById("screen-plan"),
-  antrag:   document.getElementById("screen-antrag"),
-  antraege: document.getElementById("screen-antraege"),
-  infos:    document.getElementById("screen-infos"),
+  home:      document.getElementById("screen-home"),
+  plan:      document.getElementById("screen-plan"),
+  antrag:    document.getElementById("screen-antrag"),
+  antraege:  document.getElementById("screen-antraege"),
+  infos:     document.getElementById("screen-infos"),
+  dashboard: document.getElementById("screen-dashboard"),
 };
 
 const loadingOverlay = document.getElementById("loading-overlay");
@@ -47,6 +66,17 @@ let planYear  = 2026;
 
 // Install-Prompt (Android/Chrome)
 let deferredInstallPrompt = null;
+
+// ============================================================
+// Leitung-Erkennung
+// ============================================================
+
+/** Gibt true zurück wenn der Benutzer Leitungszugang hat. */
+function isLeadership(user) {
+  if (!user) return false;
+  const role = (user.role ?? "").toLowerCase();
+  return role === "leitung" || role === "stellvertreterin";
+}
 
 // ============================================================
 // Toast-System
@@ -76,7 +106,7 @@ function showToast(message, type = "", duration = 3000) {
 
 async function updateNotifBadge(user) {
   try {
-    const notifs = await getNotifications(user.group);
+    const notifs = await getNotifications(user.group, user.role);
     const unread = notifs.filter((n) => !n.confirmedBy.includes(user.id)).length;
     notifBadge.textContent = unread;
     notifBadge.hidden      = unread === 0;
@@ -141,7 +171,7 @@ async function navigate(screenName) {
         const [shifts, requests, notifications] = await Promise.all([
           getShifts(user.id, now.getMonth() + 1, now.getFullYear()),
           getRequests(user.id),
-          getNotifications(user.group),
+          getNotifications(user.group, user.role),
         ]);
         // Planmonat-Schichten laden (Mock: Aug 2026, Export: monat/jahr aus plan-export.json)
         const planShifts = await getShifts(user.id, planMonth, planYear);
@@ -170,8 +200,13 @@ async function navigate(screenName) {
       }
 
       case "plan": {
-        const shifts = await getShifts(user.id, planMonth, planYear);
-        renderPlan(container, user, shifts, planMonth, planYear);
+        const [shifts, notifications, mitarbeiter, vacations] = await Promise.all([
+          getShifts(user.id, planMonth, planYear),
+          getNotifications(user.group, user.role),
+          getMitarbeiter(),
+          getVacations(planMonth, planYear),
+        ]);
+        renderPlan(container, user, shifts, notifications, mitarbeiter, planMonth, planYear, vacations);
         break;
       }
 
@@ -207,10 +242,10 @@ async function navigate(screenName) {
       }
 
       case "infos": {
-        const notifications = await getNotifications(user.group);
+        const notifications = await getNotifications(user.group, user.role);
 
         const refreshInfos = async () => {
-          const fresh = await getNotifications(user.group);
+          const fresh = await getNotifications(user.group, user.role);
           renderInfos(container, fresh, user, confirmCb, swapCb);
           updateNotifBadge(user);
         };
@@ -229,6 +264,42 @@ async function navigate(screenName) {
 
         renderInfos(container, notifications, user, confirmCb, swapCb);
         updateNotifBadge(user);
+        break;
+      }
+
+      case "dashboard": {
+        if (!isLeadership(user)) {
+          navigate("home");
+          return;
+        }
+        const [allRequests, mitarbeiter, notifications] = await Promise.all([
+          getAllRequests(),
+          getMitarbeiter(),
+          getNotifications(user.group, user.role),
+        ]);
+
+        const refreshDashboard = async () => {
+          const [fresh, freshMit, freshNotifs] = await Promise.all([
+            getAllRequests(),
+            getMitarbeiter(),
+            getNotifications(user.group, user.role),
+          ]);
+          renderDashboard(container, user, fresh, freshMit, freshNotifs, onApprove, onReject);
+        };
+
+        const onApprove = (requestId) => showDecisionModal(requestId, "genehmigen", async (note) => {
+          await approveRequest(requestId, note);
+          showToast("Antrag genehmigt.", "success");
+          await refreshDashboard();
+        });
+
+        const onReject = (requestId) => showDecisionModal(requestId, "ablehnen", async (note) => {
+          await rejectRequest(requestId, note);
+          showToast("Antrag abgelehnt.", "");
+          await refreshDashboard();
+        });
+
+        renderDashboard(container, user, allRequests, mitarbeiter, notifications, onApprove, onReject);
         break;
       }
     }
@@ -250,9 +321,14 @@ async function navigate(screenName) {
 setOnMonthChange(async (month, year) => {
   planMonth = month;
   planYear  = year;
-  const user   = getUser();
-  const shifts = await getShifts(user.id, month, year);
-  renderPlan(screens.plan, user, shifts, month, year);
+  const user = getUser();
+  const [shifts, notifications, mitarbeiter, vacations] = await Promise.all([
+    getShifts(user.id, month, year),
+    getNotifications(user.group, user.role),
+    getMitarbeiter(),
+    getVacations(month, year),
+  ]);
+  renderPlan(screens.plan, user, shifts, notifications, mitarbeiter, month, year, vacations);
 });
 
 // ============================================================
@@ -448,6 +524,14 @@ function showSettings(user) {
           </div>
         </div>
         <div class="settings-row">
+          <span class="settings-row__label">Benachrichtigungen</span>
+          <label class="notif-toggle" aria-label="Benachrichtigungen ein/aus">
+            <input type="checkbox" class="notif-toggle__input" id="notif-toggle-input"
+              ${isNotificationsEnabled() ? "checked" : ""}>
+            <span class="notif-toggle__track"></span>
+          </label>
+        </div>
+        <div class="settings-row">
           <span class="settings-row__label">Sprache</span>
           <span class="settings-row__value">Deutsch</span>
         </div>
@@ -478,10 +562,134 @@ function showSettings(user) {
     );
   });
 
+  // Benachrichtigungs-Toggle
+  overlay.querySelector("#notif-toggle-input").addEventListener("change", async (e) => {
+    const wantEnabled = e.target.checked;
+    if (wantEnabled) {
+      if (typeof Notification === "undefined") {
+        e.target.checked = false;
+        showToast("Dein Browser unterstützt keine Benachrichtigungen.", "");
+        return;
+      }
+      if (Notification.permission === "denied") {
+        e.target.checked = false;
+        showToast("Bitte Benachrichtigungen in den Browser-Einstellungen erlauben.", "");
+        return;
+      }
+      const perm = await requestNotificationPermission();
+      const granted = perm === "granted";
+      e.target.checked = granted;
+      saveNotifPref(granted);
+      showToast(granted ? "Benachrichtigungen aktiviert." : "Benachrichtigungen nicht erlaubt.", granted ? "success" : "");
+    } else {
+      saveNotifPref(false);
+      showToast("Benachrichtigungen deaktiviert.", "");
+    }
+  });
+
   overlay.querySelector("#settings-logout").addEventListener("click", () => {
     localStorage.removeItem("kita-user-id");
     overlay.remove();
     location.reload();
+  });
+}
+
+// ============================================================
+// In-App-Benachrichtigungs-Banner
+// ============================================================
+
+/**
+ * Zeigt einen In-App-Banner wenn neue Inhalte erkannt wurden.
+ * @param {string} title
+ * @param {string} body
+ * @param {string} hash   Ziel-Screen
+ */
+function showInAppBanner(title, body, hash) {
+  const banner = document.createElement("div");
+  banner.className = "notif-in-app-banner";
+  banner.innerHTML = `
+    <div class="notif-in-app-banner__content">
+      <span class="notif-in-app-banner__icon">🔔</span>
+      <div class="notif-in-app-banner__text">
+        <p class="notif-in-app-banner__title">${escapeHTML(title)}</p>
+        ${body ? `<p class="notif-in-app-banner__body">${escapeHTML(body)}</p>` : ""}
+      </div>
+    </div>
+    <div class="notif-in-app-banner__actions">
+      <button class="notif-in-app-banner__open">Anzeigen</button>
+      <button class="notif-in-app-banner__close" aria-label="Schließen">✕</button>
+    </div>`;
+  document.body.appendChild(banner);
+
+  // Slide-in
+  requestAnimationFrame(() => banner.classList.add("notif-in-app-banner--visible"));
+
+  function dismiss() {
+    banner.classList.remove("notif-in-app-banner--visible");
+    setTimeout(() => banner.remove(), 320);
+  }
+
+  banner.querySelector(".notif-in-app-banner__open").addEventListener("click", () => {
+    dismiss();
+    if (window.location.hash === `#${hash}`) {
+      _currentScreen = null;
+    }
+    window.location.hash = hash;
+  });
+
+  banner.querySelector(".notif-in-app-banner__close").addEventListener("click", dismiss);
+
+  // Auto-dismiss nach 9 Sekunden
+  setTimeout(() => { if (banner.parentNode) dismiss(); }, 9000);
+}
+
+// ============================================================
+// Entscheidungs-Modal (Leitung: genehmigen / ablehnen)
+// ============================================================
+
+/**
+ * Zeigt ein Modal mit optionalem Begründungsfeld.
+ * @param {string}   requestId
+ * @param {"genehmigen"|"ablehnen"} action
+ * @param {function} onConfirm  Aufgerufen mit (reviewNote|null)
+ */
+function showDecisionModal(requestId, action, onConfirm) {
+  const existing = document.getElementById("decision-modal-overlay");
+  if (existing) existing.remove();
+
+  const isApprove = action === "genehmigen";
+  const overlay   = document.createElement("div");
+  overlay.id        = "decision-modal-overlay";
+  overlay.className = "decision-modal-overlay";
+
+  overlay.innerHTML = `
+    <div class="decision-modal">
+      <h3 class="decision-modal__title">${isApprove ? "Antrag genehmigen" : "Antrag ablehnen"}</h3>
+      <label class="decision-modal__label" for="decision-note">
+        Begründung <span class="decision-modal__optional">(optional)</span>
+      </label>
+      <textarea class="decision-modal__note" id="decision-note" rows="3"
+        placeholder="${isApprove ? "z.B. Wie besprochen…" : "z.B. Zu wenig Personal…"}"></textarea>
+      <div class="decision-modal__actions">
+        <button class="btn btn--ghost decision-modal__cancel">Abbrechen</button>
+        <button class="btn ${isApprove ? "btn--success" : "btn--danger"} decision-modal__confirm">
+          ${isApprove ? "Genehmigen" : "Ablehnen"}
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  overlay.querySelector("#decision-note").focus();
+
+  function close() { overlay.remove(); }
+
+  overlay.querySelector(".decision-modal__cancel").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+
+  overlay.querySelector(".decision-modal__confirm").addEventListener("click", async () => {
+    const note = overlay.querySelector("#decision-note").value.trim() || null;
+    close();
+    await onConfirm(note);
   });
 }
 
@@ -496,8 +704,14 @@ async function initApp() {
     document.documentElement.dataset.theme = _savedTheme;
   }
 
+  // Navigation-Nachrichten vom Service Worker (Klick auf OS-Benachrichtigung)
+  navigator.serviceWorker?.addEventListener("message", (e) => {
+    if (e.data?.type === "NAVIGATE") navigate(e.data.hash);
+  });
+
   try {
     // plan-export.json laden (wenn von Leitung veröffentlicht)
+    let planExportedIso = null;
     try {
       const resp = await fetch("plan-export.json", { cache: "no-cache" });
       if (resp.ok) {
@@ -505,7 +719,8 @@ async function initApp() {
         setPlanData(plan);
         if (plan.monat) planMonth = plan.monat;
         if (plan.jahr)  planYear  = plan.jahr;
-        console.log(`[Kita-App] Plan geladen: ${plan.exportiert ?? "unbekannt"} (${(plan.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
+        planExportedIso = plan.exportiert ?? null;
+        console.log(`[Kita-App] Plan geladen: ${planExportedIso ?? "unbekannt"} (${(plan.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
       }
     } catch {
       // Kein plan-export.json vorhanden — Mock-Daten bleiben aktiv
@@ -534,6 +749,12 @@ async function initApp() {
       showToast("Plan geladen ✓", "success", 2000);
     }
 
+    // Dashboard-Tab nur für Leitung sichtbar
+    if (isLeadership(user)) {
+      const navDashboard = document.getElementById("nav-dashboard");
+      if (navDashboard) navDashboard.hidden = false;
+    }
+
     // ✕-Button des iOS-Hinweises immer verdrahten (unabhängig von iOS-Erkennung)
     document.getElementById("ios-install-close")?.addEventListener("click", () => {
       iosHint.hidden = true;
@@ -546,6 +767,40 @@ async function initApp() {
     // Initiale Route
     const initial = getHashScreen();
     await navigate(initial);
+
+    // Auf neue Inhalte seit letztem Besuch prüfen (nach dem Rendern)
+    try {
+      const lastVisit     = getLastVisit();
+      const lastPlanExp   = getLastPlanExported();
+      const notifications = await getNotifications(user.group, user.role);
+
+      const newItems = detectNewContent(
+        user,
+        planExportedIso,
+        planMonth,
+        planYear,
+        notifications,
+        lastVisit,
+        lastPlanExp,
+      );
+
+      for (const item of newItems) {
+        // In-App-Banner anzeigen (kurze Verzögerung damit der Screen gerendert ist)
+        setTimeout(() => showInAppBanner(item.title, item.body, item.hash), 800);
+        // Native OS-Benachrichtigung (für zukünftige App-Öffnungen aus dem Hintergrund)
+        showNativeNotification(item.title, item.body, item.tag, item.hash);
+      }
+
+      // Stand für nächsten Besuch speichern
+      setLastPlanExported(planExportedIso);
+      setLastVisit();
+    } catch {
+      // Benachrichtigungs-Prüfung ist nicht kritisch
+    }
+
+    // Beim allerersten Start nach Login: Erlaubnis-Dialog zeigen (verzögert)
+    setTimeout(() => maybeAskPermission(), 3500);
+
   } catch (err) {
     console.error("[Kita-App] Init-Fehler:", err);
     loadingOverlay.innerHTML = `
