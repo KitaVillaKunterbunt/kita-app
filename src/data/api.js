@@ -15,9 +15,25 @@ const USE_MOCK = true;
 // Wird von app.js via setPlanData() gefüllt wenn plan-export.json geladen wurde.
 let _planData = null;
 
+/**
+ * Erkennt das Wrapper-Format { format:'wrapped', v, payload:<base64> }
+ * und gibt den entpackten Plan zurück. Unveränderte Daten andernfalls.
+ */
+export function unwrapPlanPayload(data) {
+  if (data?.format !== 'wrapped') return data;
+  try {
+    const json = typeof atob !== 'undefined'
+      ? atob(data.payload)
+      : Buffer.from(data.payload, 'base64').toString('utf-8');
+    return JSON.parse(json);
+  } catch {
+    return data;
+  }
+}
+
 /** Plan-Daten setzen (aufgerufen von app.js nach fetch von plan-export.json) */
 export function setPlanData(data) {
-  _planData = data ?? null;
+  _planData = unwrapPlanPayload(data) ?? null;
 }
 
 // Kein crypto.randomUUID() — schlägt auf nicht-HTTPS-Verbindungen fehl
