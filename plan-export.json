@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-07-30T04:32:46.631Z",
+  "exportiert": "2026-07-30T04:40:54.927Z",
   "monat": 10,
   "jahr": 2026,
   "mitarbeiter": [
@@ -5026,6 +5026,19 @@
       "gruppenNotiz": null
     }
   ],
-  "infos": [],
+  "infos": [
+    {
+      "id": "info-1785386452158-uc5w",
+      "erstelltAm": "2026-07-30T04:40:52.158Z",
+      "datum": null,
+      "titel": "Test",
+      "text": "Test",
+      "prioritaet": "sehrwichtig",
+      "zielgruppen": [
+        "alle"
+      ],
+      "anhang": null
+    }
+  ],
   "antraege": []
 }
