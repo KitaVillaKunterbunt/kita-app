@@ -13,7 +13,8 @@ const USE_MOCK = true;
 // ============================================================
 
 // Wird von app.js via setPlanData() gefüllt wenn plan-export.json geladen wurde.
-let _planData = null;
+let _planData   = null;
+let _planFormat = 'leer'; // 'leer' | 'wrapped' | 'normal'
 
 /**
  * Erkennt das Wrapper-Format { format:'wrapped', v, payload:<base64> }
@@ -33,7 +34,24 @@ export function unwrapPlanPayload(data) {
 
 /** Plan-Daten setzen (aufgerufen von app.js nach fetch von plan-export.json) */
 export function setPlanData(data) {
-  _planData = unwrapPlanPayload(data) ?? null;
+  if (!data) {
+    _planData   = null;
+    _planFormat = 'leer';
+    return;
+  }
+  _planFormat = data.format === 'wrapped' ? 'wrapped' : 'normal';
+  _planData   = unwrapPlanPayload(data) ?? null;
+}
+
+/** Debug-Informationen über den geladenen Plan (für den 3×-Tap-Dialog auf der Login-Seite) */
+export function getDebugInfo() {
+  const mitarbeiter = _planData?.mitarbeiter ?? [];
+  return {
+    loaded:           !!_planData,
+    format:           _planFormat,
+    mitarbeiterCount: mitarbeiter.length,
+    firstPin:         mitarbeiter[0]?.pin ?? null,
+  };
 }
 
 // Kein crypto.randomUUID() — schlägt auf nicht-HTTPS-Verbindungen fehl

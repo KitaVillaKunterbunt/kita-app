@@ -21,6 +21,7 @@ import {
   hasPlanData,
   validatePin,
   unwrapPlanPayload,
+  getDebugInfo,
 } from "./data/api.js";
 import { escapeHTML } from "./utils.js";
 import {
@@ -425,6 +426,46 @@ function showIOSHint() {
 }
 
 // ============================================================
+// Debug-Dialog (3× Tipp auf 🔑-Icon)
+// ============================================================
+
+function showDebugDialog() {
+  const existing = document.getElementById("debug-dialog-overlay");
+  if (existing) { existing.remove(); return; }
+
+  const info    = getDebugInfo();
+  const overlay = document.createElement("div");
+  overlay.id        = "debug-dialog-overlay";
+  overlay.className = "decision-modal-overlay";
+
+  const rows = [
+    ["Plan geladen",  info.loaded ? "✅ ja" : "❌ nein"],
+    ["Format",        info.format],
+    ["Mitarbeiter",   String(info.mitarbeiterCount)],
+    ["Erster PIN",    info.firstPin != null ? String(info.firstPin) : "—"],
+  ];
+
+  const tableRows = rows.map(([label, value]) => `
+    <tr>
+      <td style="padding:6px 0;color:var(--color-text-secondary);font-size:13px">${escapeHTML(label)}</td>
+      <td style="padding:6px 0;font-weight:600;font-size:13px;font-family:monospace;text-align:right">${escapeHTML(value)}</td>
+    </tr>`).join("");
+
+  overlay.innerHTML = `
+    <div class="decision-modal">
+      <h3 class="decision-modal__title">🐛 Debug-Info</h3>
+      <table style="width:100%;border-collapse:collapse">${tableRows}</table>
+      <div class="decision-modal__actions" style="margin-top:16px">
+        <button class="btn btn--primary" id="debug-close" style="width:100%">Schließen</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  overlay.querySelector("#debug-close").addEventListener("click", () => overlay.remove());
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+// ============================================================
 // PIN-Login
 // ============================================================
 
@@ -457,6 +498,19 @@ function showPinLogin() {
       </div>`;
 
     document.body.appendChild(overlay);
+
+    // 3× Tipp auf das Schlüssel-Icon → Debug-Dialog
+    let _debugTaps  = 0;
+    let _debugTimer = null;
+    overlay.querySelector(".pin-login-icon").addEventListener("click", () => {
+      _debugTaps++;
+      clearTimeout(_debugTimer);
+      _debugTimer = setTimeout(() => { _debugTaps = 0; }, 1500);
+      if (_debugTaps >= 3) {
+        _debugTaps = 0;
+        showDebugDialog();
+      }
+    });
 
     const input  = overlay.querySelector("#pin-input");
     const error  = overlay.querySelector("#pin-error");
