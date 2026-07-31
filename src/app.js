@@ -18,9 +18,9 @@ import {
   confirmNotification,
   respondToSwapRequest,
   setPlanData,
+  setPinsData,
   hasPlanData,
   validatePin,
-  unwrapPlanPayload,
   getDebugInfo,
 } from "./data/api.js";
 import { escapeHTML } from "./utils.js";
@@ -440,7 +440,7 @@ function showDebugDialog() {
 
   const rows = [
     ["Plan geladen",  info.loaded ? "✅ ja" : "❌ nein"],
-    ["Format",        info.format],
+    ["PINs geladen",  info.pinsLoaded ? "✅ ja" : "❌ nein"],
     ["Mitarbeiter",   String(info.mitarbeiterCount)],
     ["Erster PIN",    info.firstPin != null ? String(info.firstPin) : "—"],
   ];
@@ -771,14 +771,26 @@ async function initApp() {
       if (resp.ok) {
         const plan = await resp.json();
         setPlanData(plan);
-        const unwrapped = unwrapPlanPayload(plan);
-        if (unwrapped.monat) planMonth = unwrapped.monat;
-        if (unwrapped.jahr)  planYear  = unwrapped.jahr;
-        planExportedIso = unwrapped.exportiert ?? null;
-        console.log(`[Kita-App] Plan geladen: ${planExportedIso ?? "unbekannt"} (${(unwrapped.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
+        if (plan.monat) planMonth = plan.monat;
+        if (plan.jahr)  planYear  = plan.jahr;
+        planExportedIso = plan.exportiert ?? null;
+        console.log(`[Kita-App] Plan geladen: ${planExportedIso ?? "unbekannt"} (${(plan.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
       }
     } catch {
       // Kein plan-export.json vorhanden — Mock-Daten bleiben aktiv
+    }
+
+    // pins.json laden — separate Datei mit PINs, hat Priorität vor plan-export.json
+    try {
+      const pinsResp = await fetch("pins.json", { cache: "no-cache" });
+      if (pinsResp.ok) {
+        const pins = await pinsResp.json();
+        setPinsData(pins);
+        const dbg = getDebugInfo();
+        console.log(`[Kita-App] pins.json geladen — ${dbg.mitarbeiterCount} PINs, Erster: ${dbg.firstPin ?? '—'}`);
+      }
+    } catch {
+      // pins.json nicht verfügbar — Fallback auf mitarbeiter aus plan-export.json
     }
 
     await initAuth();
