@@ -156,7 +156,8 @@ export function getPlanMitarbeiter() {
  */
 export function validatePin(pin) {
   if (!_planData) return null;
-  const m = (_planData.mitarbeiter ?? []).find(
+  const data = unwrapPlanPayload(_planData);
+  const m = (data.mitarbeiter ?? []).find(
     (m) => String(m.pin) === String(pin).trim()
   );
   if (!m) return null;
