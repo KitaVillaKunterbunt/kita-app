@@ -84,8 +84,8 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // plan-export.json: komplett dem Browser überlassen (kein SW-Eingriff)
-  if (url.pathname.endsWith('/plan-export.json')) return;
+  // plan-export.json + pins.json: immer frisch vom Server, kein SW-Eingriff
+  if (url.pathname.endsWith('/plan-export.json') || url.pathname.endsWith('/pins.json')) return;
 
   event.respondWith(
     fetch(event.request)
