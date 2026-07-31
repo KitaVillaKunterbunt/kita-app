@@ -1,7 +1,8 @@
 // Service Worker — Kita-App
-// Strategie: Cache First für App-Shell
+// Strategie: Network First für App-Shell
+// → Immer neueste Version vom Netzwerk; Cache nur als Offline-Fallback.
 
-const CACHE_NAME = 'kita-app-v17';
+const CACHE_NAME = 'kita-app-v18';
 
 // Relative Pfade (aufgelöst gegenüber der Service-Worker-URL selbst) statt absoluter
 // Pfade ab der Domain-Wurzel, damit die App auch in einem Unterordner funktioniert
@@ -26,7 +27,7 @@ const APP_SHELL = [
   './src/notifications.js',
 ];
 
-// Install: App-Shell in Cache legen
+// Install: App-Shell in Cache legen (Offline-Basis)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -74,40 +75,39 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Fetch: Cache First für App-Shell
+// Fetch: Network First — immer Netzwerk versuchen, Cache nur als Offline-Fallback
 self.addEventListener('fetch', (event) => {
-  // Nur GET-Requests cachen
+  // Nur GET-Requests behandeln
   if (event.request.method !== 'GET') return;
 
-  // Externe Requests (z.B. Graph API Phase 2) nicht cachen
+  // Externe Requests (z.B. Graph API) nicht anfassen
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // plan-export.json: immer frisch vom Server — nie cachen (endsWith statt exaktem
-  // Pfadvergleich, damit das auch im Unterordner funktioniert, z.B. /kita-app/plan-export.json)
+  // plan-export.json: komplett dem Browser überlassen (kein SW-Eingriff)
   if (url.pathname.endsWith('/plan-export.json')) return;
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-      return fetch(event.request).then((response) => {
-        // Nur gültige Responses cachen
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
+    fetch(event.request)
+      .then((response) => {
+        // Nur gültige Responses in den Cache schreiben (aktualisiert den Offline-Stand)
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
         }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
         return response;
-      }).catch(() => {
-        // Offline-Fallback: index.html zurückgeben
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-      });
-    })
+      })
+      .catch(() => {
+        // Kein Netzwerk → Cache-Fallback
+        return caches.match(event.request).then((cached) => {
+          if (cached) return cached;
+          // Navigations-Fallback: index.html ausliefern
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+        });
+      })
   );
 });
