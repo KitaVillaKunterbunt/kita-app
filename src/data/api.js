@@ -19,13 +19,20 @@ let _planFormat = 'leer'; // 'leer' | 'wrapped' | 'normal'
 /**
  * Erkennt das Wrapper-Format { format:'wrapped', v, payload:<base64> }
  * und gibt den entpackten Plan zurück. Unveränderte Daten andernfalls.
+ *
+ * atob() ist reines Latin-1 — für UTF-8-Inhalte (Umlaute, Sonderzeichen) muss
+ * der rohe Byte-Array via TextDecoder korrekt dekodiert werden.
  */
 export function unwrapPlanPayload(data) {
   if (data?.format !== 'wrapped') return data;
   try {
-    const json = typeof atob !== 'undefined'
-      ? atob(data.payload)
-      : Buffer.from(data.payload, 'base64').toString('utf-8');
+    let json;
+    if (typeof TextDecoder !== 'undefined' && typeof atob !== 'undefined') {
+      const bytes = Uint8Array.from(atob(data.payload), (c) => c.charCodeAt(0));
+      json = new TextDecoder('utf-8').decode(bytes);
+    } else {
+      json = Buffer.from(data.payload, 'base64').toString('utf-8');
+    }
     return JSON.parse(json);
   } catch {
     return data;
