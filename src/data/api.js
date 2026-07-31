@@ -13,51 +13,30 @@ const USE_MOCK = true;
 // ============================================================
 
 // Wird von app.js via setPlanData() gefüllt wenn plan-export.json geladen wurde.
-let _planData   = null;
-let _planFormat = 'leer'; // 'leer' | 'wrapped' | 'normal'
+let _planData = null;
 
-/**
- * Erkennt das Wrapper-Format { format:'wrapped', v, payload:<base64> }
- * und gibt den entpackten Plan zurück. Unveränderte Daten andernfalls.
- *
- * atob() ist reines Latin-1 — für UTF-8-Inhalte (Umlaute, Sonderzeichen) muss
- * der rohe Byte-Array via TextDecoder korrekt dekodiert werden.
- */
-export function unwrapPlanPayload(data) {
-  if (data?.format !== 'wrapped') return data;
-  try {
-    let json;
-    if (typeof TextDecoder !== 'undefined' && typeof atob !== 'undefined') {
-      const bytes = Uint8Array.from(atob(data.payload), (c) => c.charCodeAt(0));
-      json = new TextDecoder('utf-8').decode(bytes);
-    } else {
-      json = Buffer.from(data.payload, 'base64').toString('utf-8');
-    }
-    return JSON.parse(json);
-  } catch {
-    return data;
-  }
-}
+// Wird von app.js via setPinsData() gefüllt wenn pins.json geladen wurde.
+// Priorität vor _planData.mitarbeiter für validatePin().
+let _pinsData = null;
 
 /** Plan-Daten setzen (aufgerufen von app.js nach fetch von plan-export.json) */
 export function setPlanData(data) {
-  if (!data) {
-    _planData   = null;
-    _planFormat = 'leer';
-    return;
-  }
-  _planFormat = data.format === 'wrapped' ? 'wrapped' : 'normal';
-  _planData   = unwrapPlanPayload(data) ?? null;
+  _planData = data ?? null;
 }
 
-/** Debug-Informationen über den geladenen Plan (für den 3×-Tap-Dialog auf der Login-Seite) */
+/** PIN-Liste setzen (aufgerufen von app.js nach fetch von pins.json) */
+export function setPinsData(data) {
+  _pinsData = Array.isArray(data) ? data : null;
+}
+
+/** Debug-Informationen (für den 3×-Tap-Dialog auf der Login-Seite) */
 export function getDebugInfo() {
-  const mitarbeiter = _planData?.mitarbeiter ?? [];
+  const list = _pinsData ?? _planData?.mitarbeiter ?? [];
   return {
     loaded:           !!_planData,
-    format:           _planFormat,
-    mitarbeiterCount: mitarbeiter.length,
-    firstPin:         mitarbeiter[0]?.pin ?? null,
+    pinsLoaded:       !!_pinsData,
+    mitarbeiterCount: list.length,
+    firstPin:         list[0]?.pin ?? null,
   };
 }
 
@@ -180,11 +159,8 @@ export function getPlanMitarbeiter() {
  * Gibt bei Treffer das User-Objekt zurück, sonst null.
  */
 export function validatePin(pin) {
-  if (!_planData) return null;
-  const data = unwrapPlanPayload(_planData);
-  const m = (data.mitarbeiter ?? []).find(
-    (m) => String(m.pin) === String(pin).trim()
-  );
+  const list = _pinsData ?? _planData?.mitarbeiter ?? [];
+  const m = list.find((m) => String(m.pin) === String(pin).trim());
   if (!m) return null;
   return {
     id:          m.id,
