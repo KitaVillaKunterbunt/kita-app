@@ -29,6 +29,16 @@ import {
   getAvailableMonths,
   getAllUserShifts,
 } from "./data/api.js";
+
+/** Nächsten verfügbaren Monat nahe dem heutigen Datum finden. */
+function _nearestAvailableMonth(available, now) {
+  if (available.length === 0) return null;
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const exact = available.find((m) => `${m.jahr}-${String(m.monat).padStart(2, "0")}` === todayKey);
+  if (exact) return exact;
+  const future = available.find((m) => `${m.jahr}-${String(m.monat).padStart(2, "0")}` > todayKey);
+  return future ?? available[available.length - 1];
+}
 import { escapeHTML } from "./utils.js";
 import {
   detectNewContent,
@@ -194,7 +204,7 @@ async function navigate(screenName) {
           getMitarbeiter(),
           getVacations(planMonth, planYear),
         ]);
-        renderPlan(container, user, shifts, notifications, mitarbeiter, planMonth, planYear, vacations);
+        renderPlan(container, user, shifts, notifications, mitarbeiter, planMonth, planYear, vacations, getAvailableMonths());
         break;
       }
 
@@ -316,7 +326,7 @@ setOnMonthChange(async (month, year) => {
     getMitarbeiter(),
     getVacations(month, year),
   ]);
-  renderPlan(screens.plan, user, shifts, notifications, mitarbeiter, month, year, vacations);
+  renderPlan(screens.plan, user, shifts, notifications, mitarbeiter, month, year, vacations, getAvailableMonths());
 });
 
 // ============================================================
@@ -839,6 +849,10 @@ async function initApp() {
     } catch {
       // pins.json nicht verfügbar — Fallback auf mitarbeiter aus plan-export.json
     }
+
+    // planMonth/planYear auf nächsten verfügbaren Monat setzen
+    const _nearest = _nearestAvailableMonth(getAvailableMonths(), now);
+    if (_nearest) { planMonth = _nearest.monat; planYear = _nearest.jahr; }
 
     await initAuth();
     let user = getUser();

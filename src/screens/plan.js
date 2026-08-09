@@ -253,17 +253,30 @@ function renderDayDetail(container, date, shift, notifsForDate, eventsForDate, v
  * @param {number} month
  * @param {number} year
  */
-export function renderPlan(container, user, shifts, notifications, mitarbeiter, month, year, vacations) {
+export function renderPlan(container, user, shifts, notifications, mitarbeiter, month, year, vacations, availableMonths) {
   _month = month;
   _year  = year;
   const notifMap    = buildNotifMap(notifications);
   const eventsMap   = buildEventsMap(mitarbeiter, year, month);
   const vacationMap = buildVacationMap(vacations, mitarbeiter);
 
-  const prevMonth = month === 1 ? 12 : month - 1;
-  const prevYear  = month === 1 ? year - 1 : year;
-  const nextMonth = month === 12 ? 1 : month + 1;
-  const nextYear  = month === 12 ? year + 1 : year;
+  // Navigation: nur zwischen verfügbaren Monaten (falls bekannt)
+  const currentKey = `${year}-${String(month).padStart(2, "0")}`;
+  const avail = availableMonths ?? [];
+  const idx = avail.findIndex(
+    (m) => `${m.jahr}-${String(m.monat).padStart(2, "0")}` === currentKey
+  );
+
+  let prevEntry = null;
+  let nextEntry = null;
+  if (avail.length > 0 && idx >= 0) {
+    prevEntry = idx > 0 ? avail[idx - 1] : null;
+    nextEntry = idx < avail.length - 1 ? avail[idx + 1] : null;
+  } else {
+    // Fallback: ±1 Monat ohne Datenbeschränkung
+    prevEntry = { monat: month === 1 ? 12 : month - 1, jahr: month === 1 ? year - 1 : year };
+    nextEntry = { monat: month === 12 ? 1 : month + 1, jahr: month === 12 ? year + 1 : year };
+  }
 
   container.innerHTML = `
     <div class="plan-calendar">
@@ -272,13 +285,15 @@ export function renderPlan(container, user, shifts, notifications, mitarbeiter, 
 
       <!-- Monatsnavigation -->
       <div class="calendar-nav">
-        <button class="calendar-nav-btn" id="plan-prev" aria-label="Vorheriger Monat">
+        <button class="calendar-nav-btn" id="plan-prev" aria-label="Vorheriger Monat"
+          ${!prevEntry ? "disabled" : ""}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="15 18 9 12 15 6"/>
           </svg>
         </button>
         <p class="calendar-nav-title">${MONTH_NAMES_DE[month]} ${year}</p>
-        <button class="calendar-nav-btn" id="plan-next" aria-label="Nächster Monat">
+        <button class="calendar-nav-btn" id="plan-next" aria-label="Nächster Monat"
+          ${!nextEntry ? "disabled" : ""}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
           </svg>
@@ -316,12 +331,12 @@ export function renderPlan(container, user, shifts, notifications, mitarbeiter, 
 
   // Event: Monat zurück
   container.querySelector("#plan-prev").addEventListener("click", () => {
-    if (_onMonthChange) _onMonthChange(prevMonth, prevYear);
+    if (prevEntry && _onMonthChange) _onMonthChange(prevEntry.monat, prevEntry.jahr);
   });
 
   // Event: Monat vor
   container.querySelector("#plan-next").addEventListener("click", () => {
-    if (_onMonthChange) _onMonthChange(nextMonth, nextYear);
+    if (nextEntry && _onMonthChange) _onMonthChange(nextEntry.monat, nextEntry.jahr);
   });
 
   // Event-Delegation: Tag antippen → Detail anzeigen

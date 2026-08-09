@@ -1034,6 +1034,12 @@ button.card:active {
   color: var(--c-primary);
 }
 
+.calendar-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* Kalender Legende */
 .calendar-legend {
   display: flex;

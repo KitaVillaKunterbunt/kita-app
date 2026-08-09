@@ -2,7 +2,7 @@
 // Strategie: Network First für App-Shell
 // → Immer neueste Version vom Netzwerk; Cache nur als Offline-Fallback.
 
-const CACHE_NAME = 'kita-app-v27';
+const CACHE_NAME = 'kita-app-v28';
 
 // Relative Pfade (aufgelöst gegenüber der Service-Worker-URL selbst) statt absoluter
 // Pfade ab der Domain-Wurzel, damit die App auch in einem Unterordner funktioniert
