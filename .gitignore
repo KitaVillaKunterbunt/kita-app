@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+public/.DS_Store
+public/src/.DS_Store
+*.zip
+.claude/
+public/plan-export.json
+public/pins.json
+plan-export.json
+dienstplan.html
