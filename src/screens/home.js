@@ -36,6 +36,23 @@ function isLeadership(user) {
   return role === "leitung" || role === "stellvertreterin";
 }
 
+const WEEKDAY_SHORT_DE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+
+/** Nächste Schicht ab morgen als Kurztext, z.B. "Mo 11.8 · Früh 07:00" */
+function nextShiftSub(shifts) {
+  const today = dateToISO(new Date());
+  const next = shifts
+    .filter((s) => s.date > today && s.type !== "frei" && s.startTime)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  if (!next) return null;
+  const d = new Date(next.date + "T00:00:00");
+  const wd = WEEKDAY_SHORT_DE[d.getDay()];
+  const day = d.getDate();
+  const mon = d.getMonth() + 1;
+  const typeLabel = next.startTime < "07:30" ? "Früh" : next.endTime > "16:30" ? "Spät" : "Dienst";
+  return `${wd} ${day}.${mon} · ${typeLabel} ${next.startTime}`;
+}
+
 function todayCardHTML(shifts, userId) {
   const today = dateToISO(new Date());
   const shift = shifts.find((s) => s.date === today) ?? null;
@@ -99,6 +116,7 @@ function _render() {
     {
       id:     "plan",
       label:  "Mein Plan",
+      sub:    nextShiftSub(_shifts),
       screen: "plan",
       color:  "plan",
       svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -174,6 +192,7 @@ function _render() {
           ${t.badge != null ? `<span class="home-tile__badge" aria-hidden="true">${t.badge}</span>` : ""}
           <span class="home-tile__icon">${t.svg}</span>
           <span class="home-tile__label">${escapeHTML(t.label)}</span>
+          ${t.sub ? `<span class="home-tile__sub">${escapeHTML(t.sub)}</span>` : ""}
         </button>`
     )
     .join("");

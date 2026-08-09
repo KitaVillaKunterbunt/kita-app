@@ -3250,6 +3250,15 @@ button.card:active {
   line-height: 1.3;
 }
 
+.home-tile__sub {
+  font-size: 9.5px;
+  font-weight: 400;
+  color: var(--c-text-secondary);
+  text-align: center;
+  line-height: 1.2;
+  margin-top: -4px;
+}
+
 .home-tile__badge {
   position: absolute;
   top: 7px;
@@ -3268,26 +3277,27 @@ button.card:active {
   font-variant-numeric: tabular-nums;
 }
 
-/* Kachel-Farben */
-.home-tile--plan    .home-tile__icon { background: var(--c-primary-light); color: var(--c-primary); }
-.home-tile--antrag  .home-tile__icon { background: var(--c-success-light);  color: var(--c-success); }
-.home-tile--list    .home-tile__icon { background: var(--c-warning-light);  color: var(--c-warning); }
-.home-tile--notif   .home-tile__icon { background: var(--c-danger-light);   color: var(--c-danger);  }
-.home-tile--leitung .home-tile__icon { background: rgba(109, 40, 217, 0.1); color: #7C3AED;          }
-.home-tile--krank   .home-tile__icon { background: var(--c-secondary-light); color: var(--c-secondary); }
-.home-tile--brett   .home-tile__icon { background: #FFF7ED; color: #C2410C; }
-
+/* Kachel-Icons: einheitlicher Hintergrund, semantische Icon-Farbe */
+:root                              { --tile-icon-bg: rgba(0,0,0,0.055); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .home-tile--leitung .home-tile__icon {
-    background: rgba(167, 139, 250, 0.15);
-    color: #A78BFA;
-  }
+  :root:not([data-theme="light"])  { --tile-icon-bg: rgba(255,255,255,0.09); }
 }
+:root[data-theme="dark"]           { --tile-icon-bg: rgba(255,255,255,0.09); }
 
-:root[data-theme="dark"] .home-tile--leitung .home-tile__icon {
-  background: rgba(167, 139, 250, 0.15);
-  color: #A78BFA;
+.home-tile__icon { background: var(--tile-icon-bg); }
+
+.home-tile--plan    .home-tile__icon { color: var(--c-primary); }
+.home-tile--antrag  .home-tile__icon { color: var(--c-success); }
+.home-tile--list    .home-tile__icon { color: var(--c-warning); }
+.home-tile--notif   .home-tile__icon { color: var(--c-danger);  }
+.home-tile--leitung .home-tile__icon { color: #7C3AED;          }
+.home-tile--brett   .home-tile__icon { color: #C2410C;          }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .home-tile--leitung .home-tile__icon { color: #A78BFA; }
+  :root:not([data-theme="light"]) .home-tile--brett   .home-tile__icon { color: #FB923C; }
 }
+:root[data-theme="dark"] .home-tile--leitung .home-tile__icon { color: #A78BFA; }
+:root[data-theme="dark"] .home-tile--brett   .home-tile__icon { color: #FB923C; }
 
 
 

@@ -2,7 +2,7 @@
 // Strategie: Network First für App-Shell
 // → Immer neueste Version vom Netzwerk; Cache nur als Offline-Fallback.
 
-const CACHE_NAME = 'kita-app-v24';
+const CACHE_NAME = 'kita-app-v25';
 
 // Relative Pfade (aufgelöst gegenüber der Service-Worker-URL selbst) statt absoluter
 // Pfade ab der Domain-Wurzel, damit die App auch in einem Unterordner funktioniert
@@ -29,12 +29,12 @@ const APP_SHELL = [
 
 // Install: App-Shell in Cache legen (Offline-Basis)
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(APP_SHELL);
     })
   );
-  // Kein skipWaiting() hier — wird von der App-Seite ausgelöst
 });
 
 // Nachricht von der App-Seite: sofort übernehmen
