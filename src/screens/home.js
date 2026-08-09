@@ -53,48 +53,60 @@ function nextShiftSub(shifts) {
   return `${wd} ${day}.${mon} · ${typeLabel} ${next.startTime}`;
 }
 
-function todayCardHTML(shifts, userId) {
+const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+
+function weekCardHTML(shifts) {
   const today = dateToISO(new Date());
-  const shift = shifts.find((s) => s.date === today) ?? null;
-  const dateLabel = new Date().toLocaleDateString("de-DE", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
+  const now = new Date();
+  const dow = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (dow === 0 ? 6 : dow - 1));
+  monday.setHours(0, 0, 0, 0);
 
-  if (!shift || shift.type === "frei" || !shift.startTime) {
-    return `
-      <div class="home-today-card">
-        <div class="home-today-card__left">
-          <span class="home-today-card__label">Heute · ${escapeHTML(dateLabel)}</span>
-          <span class="home-today-card__time home-today-card__time--free">Frei</span>
-        </div>
-      </div>`;
+  const rows = [];
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const dateStr = dateToISO(d);
+    const isToday = dateStr === today;
+    const shift = shifts.find((s) => s.date === dateStr) ?? null;
+
+    const dayLabel  = WEEKDAY_SHORT[d.getDay()];
+    const dateLabel = `${d.getDate()}.${d.getMonth() + 1}.`;
+
+    let timeText = "Frei";
+    let badgeHTML = "";
+
+    if (shift && shift.type !== "frei") {
+      if (shift.type === "urlaub") {
+        timeText = "Urlaub";
+        badgeHTML = `<span class="home-week-badge home-week-badge--urlaub">Urlaub</span>`;
+      } else if (shift.type === "krank") {
+        timeText = "Krank";
+        badgeHTML = `<span class="home-week-badge home-week-badge--krank">Krank</span>`;
+      } else if (shift.startTime) {
+        timeText = `${shift.startTime}–${shift.endTime ?? ""}`;
+        if (shift.startTime < "07:30") {
+          badgeHTML = `<span class="home-week-badge home-week-badge--frueh">Früh</span>`;
+        } else if (shift.endTime && shift.endTime > "16:30") {
+          badgeHTML = `<span class="home-week-badge home-week-badge--spaet">Spät</span>`;
+        }
+      }
+    }
+
+    rows.push(`
+      <div class="home-week-row${isToday ? " home-week-row--today" : ""}">
+        <span class="home-week-row__day">${dayLabel}</span>
+        <span class="home-week-row__date">${escapeHTML(dateLabel)}</span>
+        <span class="home-week-row__time${!shift || shift.type === "frei" ? " home-week-row__time--free" : ""}">${escapeHTML(timeText)}</span>
+        ${badgeHTML}
+      </div>`);
   }
-
-  let badgeHTML = "";
-  if (shift.type === "krank") {
-    badgeHTML = `<span class="home-today-badge home-today-badge--krank">Krank</span>`;
-  } else if (shift.type === "urlaub") {
-    badgeHTML = `<span class="home-today-badge home-today-badge--urlaub">Urlaub</span>`;
-  } else if (shift.startTime && shift.startTime < "07:30") {
-    badgeHTML = `<span class="home-today-badge home-today-badge--frueh">Frühdienst</span>`;
-  } else if (shift.endTime && shift.endTime > "16:30") {
-    badgeHTML = `<span class="home-today-badge home-today-badge--spaet">Spätdienst</span>`;
-  }
-
-  const subLine = shift.group
-    ? `<span class="home-today-card__sub">${escapeHTML(shift.group)}</span>`
-    : "";
 
   return `
-    <div class="home-today-card">
-      <div class="home-today-card__left">
-        <span class="home-today-card__label">Heute · ${escapeHTML(dateLabel)}</span>
-        <span class="home-today-card__time">${escapeHTML(shift.startTime)} – ${escapeHTML(shift.endTime)}</span>
-        ${subLine}
-      </div>
-      ${badgeHTML}
+    <div class="home-week-card">
+      <p class="home-week-card__title">Diese Woche</p>
+      ${rows.join("")}
     </div>`;
 }
 
@@ -115,8 +127,7 @@ function _render() {
   const tiles = [
     {
       id:     "plan",
-      label:  "Mein Plan",
-      sub:    nextShiftSub(_shifts),
+      label:  "Mein Monat",
       screen: "plan",
       color:  "plan",
       svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -221,7 +232,7 @@ function _render() {
 
       <div class="home-body">
 
-        ${todayCardHTML(_shifts, _user.id)}
+        ${weekCardHTML(_shifts)}
 
         <p class="home-section-label">Schnellzugriff</p>
 

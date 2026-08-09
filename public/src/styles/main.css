@@ -3097,87 +3097,112 @@ button.card:active {
   gap: var(--sp-md);
 }
 
-/* ── Heute-Karte ── */
-.home-today-card {
+/* ── Wochenkarte ── */
+.home-week-card {
   background: var(--c-surface);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
-  padding: 14px var(--sp-md);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-sm);
+  padding: 12px var(--sp-md) 10px;
 }
 
-.home-today-card__left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.home-today-card__label {
+.home-week-card__title {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--c-text-secondary);
+  margin-bottom: 8px;
 }
 
-.home-today-card__time {
-  font-size: 20px;
+.home-week-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 5px 6px;
+  border-radius: 8px;
+  min-height: 32px;
+}
+
+.home-week-row--today {
+  background: var(--c-primary-light);
+}
+
+.home-week-row__day {
+  width: 28px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--c-text);
-  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.home-week-row--today .home-week-row__day {
+  color: var(--c-primary);
+}
+
+.home-week-row__date {
+  width: 38px;
+  font-size: 11px;
+  color: var(--c-text-secondary);
+  flex-shrink: 0;
   font-variant-numeric: tabular-nums;
 }
 
-.home-today-card__time--free {
-  color: var(--c-text-secondary);
-  font-size: 17px;
-}
-
-.home-today-card__sub {
+.home-week-row__time {
+  flex: 1;
   font-size: 12px;
-  color: var(--c-text-secondary);
+  font-weight: 500;
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Heute-Badge */
-.home-today-badge {
+.home-week-row__time--free {
+  color: var(--c-text-muted);
+  font-weight: 400;
+}
+
+/* Woche-Badges */
+.home-week-badge {
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  padding: 4px 12px;
+  padding: 2px 8px;
   border-radius: var(--r-full);
 }
 
-.home-today-badge--frueh {
+.home-week-badge--frueh {
   background: var(--c-primary-light);
   color: var(--c-primary);
 }
 
-.home-today-badge--spaet {
+.home-week-badge--spaet {
   background: rgba(109, 40, 217, 0.1);
   color: #6D28D9;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .home-today-badge--spaet {
+  :root:not([data-theme="light"]) .home-week-badge--spaet {
     background: rgba(167, 139, 250, 0.15);
     color: #A78BFA;
   }
+  :root:not([data-theme="light"]) .home-week-row--today {
+    background: rgba(26, 86, 219, 0.18);
+  }
 }
 
-:root[data-theme="dark"] .home-today-badge--spaet {
+:root[data-theme="dark"] .home-week-badge--spaet {
   background: rgba(167, 139, 250, 0.15);
   color: #A78BFA;
 }
+:root[data-theme="dark"] .home-week-row--today {
+  background: rgba(26, 86, 219, 0.18);
+}
 
-.home-today-badge--urlaub {
+.home-week-badge--urlaub {
   background: var(--c-success-light);
   color: var(--c-success);
 }
 
-.home-today-badge--krank {
+.home-week-badge--krank {
   background: var(--c-danger-light);
   color: var(--c-danger);
 }
@@ -3196,7 +3221,7 @@ button.card:active {
 .home-tile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* ── Einzelne Kachel ── */
@@ -3204,7 +3229,7 @@ button.card:active {
   background: var(--c-surface);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
-  padding: 14px 8px 12px;
+  padding: 18px 6px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3229,17 +3254,17 @@ button.card:active {
 }
 
 .home-tile__icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .home-tile__icon svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 
 .home-tile__label {
