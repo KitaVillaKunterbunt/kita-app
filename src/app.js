@@ -596,7 +596,11 @@ function showSettings(user) {
         </div>
         <div class="settings-row">
           <span class="settings-row__label">Version</span>
-          <span class="settings-row__value">1.0.0</span>
+          <span class="settings-row__value" id="settings-version">…</span>
+        </div>
+        <div class="settings-row">
+          <span class="settings-row__label">Letztes Deploy</span>
+          <span class="settings-row__value" id="settings-deploy">…</span>
         </div>
       </div>
 
@@ -606,6 +610,36 @@ function showSettings(user) {
     </div>`;
 
   document.body.appendChild(overlay);
+
+  // Version + Deploy-Datum asynchron laden
+  (async () => {
+    try {
+      const [pkgResp, swResp] = await Promise.all([
+        fetch("package.json", { cache: "no-cache" }),
+        fetch("sw.js",         { method: "HEAD", cache: "no-cache" }),
+      ]);
+      if (pkgResp.ok) {
+        const pkg = await pkgResp.json();
+        const el = overlay.querySelector("#settings-version");
+        if (el) el.textContent = pkg.version ?? "–";
+      }
+      const deployEl = overlay.querySelector("#settings-deploy");
+      if (deployEl) {
+        const raw = swResp.ok ? swResp.headers.get("Last-Modified") : null;
+        if (raw) {
+          const d = new Date(raw);
+          deployEl.textContent = d.toLocaleDateString("de-DE", {
+            day: "2-digit", month: "2-digit", year: "numeric",
+            hour: "2-digit", minute: "2-digit",
+          });
+        } else {
+          deployEl.textContent = "–";
+        }
+      }
+    } catch {
+      // Nicht kritisch
+    }
+  })();
 
   overlay.querySelector("#settings-close").addEventListener("click", () => overlay.remove());
   overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
