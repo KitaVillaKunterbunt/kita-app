@@ -20,6 +20,7 @@ import {
   setPlanData,
   setPinsData,
   hasPlanData,
+  isDemoMode,
   validatePin,
   getDebugInfo,
 } from "./data/api.js";
@@ -796,7 +797,12 @@ async function initApp() {
     await initAuth();
     let user = getUser();
 
-    // Kein gespeicherter Login → immer PIN-Login zeigen
+    // Demo-Modus (keine echten Daten): direkt als Demo Leitung einloggen
+    if (!user && isDemoMode()) {
+      user = { id: "user-demo", displayName: "Demo Leitung", email: "", group: "Leitung", role: "leitung" };
+    }
+
+    // Echte Daten vorhanden, aber kein gespeicherter Login → PIN-Screen
     if (!user) {
       loadingOverlay.classList.add("hidden");
       await showPinLogin();

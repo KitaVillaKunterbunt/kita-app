@@ -63,6 +63,11 @@ export function hasPlanData() {
   return _planData !== null;
 }
 
+/** Gibt true zurück wenn weder echte Plan- noch PIN-Daten geladen sind (Demo-Modus) */
+export function isDemoMode() {
+  return _planData === null && _pinsData === null;
+}
+
 const LS_DECISIONS_KEY = "kita-decisions";
 
 function _lsGetDecisions() {
