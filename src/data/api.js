@@ -36,7 +36,7 @@ export function getDebugInfo() {
     loaded:           !!_planData,
     pinsLoaded:       !!_pinsData,
     mitarbeiterCount: list.length,
-    firstPin:         list[0]?.pin ?? null,
+    firstPinSet:      list[0]?.pin != null,
   };
 }
 

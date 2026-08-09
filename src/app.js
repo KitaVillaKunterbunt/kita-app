@@ -442,7 +442,7 @@ function showDebugDialog() {
     ["Plan geladen",  info.loaded ? "✅ ja" : "❌ nein"],
     ["PINs geladen",  info.pinsLoaded ? "✅ ja" : "❌ nein"],
     ["Mitarbeiter",   String(info.mitarbeiterCount)],
-    ["Erster PIN",    info.firstPin != null ? String(info.firstPin) : "—"],
+    ["Erster PIN",    info.firstPinSet ? "gesetzt" : "—"],
   ];
 
   const tableRows = rows.map(([label, value]) => `
@@ -787,7 +787,7 @@ async function initApp() {
         const pins = await pinsResp.json();
         setPinsData(pins);
         const dbg = getDebugInfo();
-        console.log(`[Kita-App] pins.json geladen — ${dbg.mitarbeiterCount} PINs, Erster: ${dbg.firstPin ?? '—'}`);
+        console.log(`[Kita-App] pins.json geladen — ${dbg.mitarbeiterCount} PINs, Erster: ${dbg.firstPinSet ? 'gesetzt' : '—'}`);
       }
     } catch {
       // pins.json nicht verfügbar — Fallback auf mitarbeiter aus plan-export.json
