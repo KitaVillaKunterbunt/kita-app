@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-09T19:01:07.387Z",
+  "exportiert": "2026-08-09T19:06:19.990Z",
   "monat": 8,
   "jahr": 2026,
   "mitarbeiter": [
@@ -4808,14 +4808,26 @@
   ],
   "infos": [
     {
-      "id": "info-1786302061838-j9k4",
-      "erstelltAm": "2026-08-09T19:01:01.838Z",
-      "datum": "2026-08-10",
-      "titel": "HALLO",
-      "text": "WAS HIER STEHT IST SUPER",
-      "prioritaet": "sehrwichtig",
+      "id": "info-1786302363487-lml2",
+      "erstelltAm": "2026-08-09T19:06:03.487Z",
+      "datum": null,
+      "titel": "Test",
+      "text": "Test",
+      "prioritaet": "wichtig",
       "zielgruppen": [
         "alle"
+      ],
+      "anhang": null
+    },
+    {
+      "id": "info-1786302377987-redd",
+      "erstelltAm": "2026-08-09T19:06:17.987Z",
+      "datum": null,
+      "titel": "Hallo",
+      "text": "olla",
+      "prioritaet": "normal",
+      "zielgruppen": [
+        "Leitung"
       ],
       "anhang": null
     }
