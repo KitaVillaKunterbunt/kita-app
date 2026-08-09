@@ -12,16 +12,60 @@ const USE_MOCK = true;
 // Plan-Daten (plan-export.json)
 // ============================================================
 
-// Wird von app.js via setPlanData() gefüllt wenn plan-export.json geladen wurde.
+// Merged view über alle geladenen Monate — alle anderen Funktionen lesen hieraus.
 let _planData = null;
 
+// Einzelne Monats-Pläne: key = "YYYY-MM" → Plan-Objekt
+let _planMonths = {};
+
 // Wird von app.js via setPinsData() gefüllt wenn pins.json geladen wurde.
-// Priorität vor _planData.mitarbeiter für validatePin().
 let _pinsData = null;
 
-/** Plan-Daten setzen (aufgerufen von app.js nach fetch von plan-export.json) */
+/** Alle Monatspläne zu einem einzigen Objekt zusammenführen. */
+function _buildMergedPlan() {
+  const months = Object.values(_planMonths);
+  if (months.length === 0) return null;
+
+  // Neuester Monat zuerst (für mitarbeiter, monat, jahr, exportiert)
+  months.sort((a, b) => {
+    const ak = `${a.jahr}-${String(a.monat).padStart(2, "0")}`;
+    const bk = `${b.jahr}-${String(b.monat).padStart(2, "0")}`;
+    return bk.localeCompare(ak);
+  });
+
+  const newest = months[0];
+  const allWochen = months.flatMap((p) => p.wochen ?? []);
+
+  // Infos aus allen Monaten zusammenführen, Duplikate per id entfernen
+  const seenInfoIds = new Set();
+  const allInfos = [];
+  for (const p of months) {
+    for (const info of p.infos ?? []) {
+      if (!seenInfoIds.has(info.id)) {
+        seenInfoIds.add(info.id);
+        allInfos.push(info);
+      }
+    }
+  }
+
+  return { ...newest, wochen: allWochen, infos: allInfos };
+}
+
+/**
+ * Plan-Daten setzen — akkumuliert pro Monat anstatt zu überschreiben.
+ * null → Reset. Objekte ohne monat/jahr landen unter Schlüssel "0000-00".
+ */
 export function setPlanData(data) {
-  _planData = data ?? null;
+  if (data === null || data === undefined) {
+    _planMonths = {};
+    _planData = null;
+    return;
+  }
+  const key = (data.monat && data.jahr)
+    ? `${data.jahr}-${String(data.monat).padStart(2, "0")}`
+    : "0000-00";
+  _planMonths[key] = data;
+  _planData = _buildMergedPlan();
 }
 
 /** PIN-Liste setzen (aufgerufen von app.js nach fetch von pins.json) */
@@ -38,6 +82,13 @@ export function getDebugInfo() {
     mitarbeiterCount: list.length,
     firstPinSet:      list[0]?.pin != null,
   };
+}
+
+/** Alle geladenen Monate sortiert zurückgeben. */
+export function getAvailableMonths() {
+  return Object.keys(_planMonths)
+    .sort()
+    .map((key) => ({ monat: _planMonths[key].monat, jahr: _planMonths[key].jahr }));
 }
 
 // Kein crypto.randomUUID() — schlägt auf nicht-HTTPS-Verbindungen fehl
@@ -63,35 +114,56 @@ export function hasPlanData() {
   return _planData !== null;
 }
 
-/** Exportiert-Timestamp des aktuell geladenen Plans (ISO-String oder null) */
+/** Neuester exportiert-Timestamp über alle geladenen Monate. */
 export function getPlanExportTimestamp() {
-  return _planData?.exportiert ?? null;
+  const months = Object.values(_planMonths);
+  if (months.length === 0) return null;
+  return months.map((p) => p.exportiert ?? "").sort().at(-1) || null;
+}
+
+/** Hilfsfunktion: Liste der zu prüfenden Quelldateien für Refresh. */
+function _refreshSources() {
+  const sources = new Set(["plan-export.json", "plan-export-public.json"]);
+  // Aktuell geladene Monate
+  for (const key of Object.keys(_planMonths)) {
+    sources.add(`plan-export-public-${key}.json`);
+  }
+  // 3 Monate Vorschau
+  const now = new Date();
+  for (let delta = 0; delta <= 2; delta++) {
+    let m = now.getMonth() + 1 + delta;
+    let y = now.getFullYear();
+    if (m > 12) { m -= 12; y++; }
+    sources.add(`plan-export-public-${y}-${String(m).padStart(2, "0")}.json`);
+  }
+  return [...sources];
 }
 
 /**
- * Holt Plan-Daten erneut vom Server.
- * Gibt true zurück wenn sich der Plan seit dem letzten Laden geändert hat
- * (anderer exportiert-Timestamp). _planData wird nur bei Änderung ersetzt.
+ * Holt alle Plan-Dateien neu vom Server.
+ * Gibt true zurück wenn sich mindestens ein Monat geändert hat.
  */
 export async function refreshPlanData() {
-  const sources = ["plan-export.json", "plan-export-public.json"];
-  for (const src of sources) {
+  const sources = _refreshSources();
+  const results = await Promise.allSettled(
+    sources.map((src) => fetch(src, { cache: "no-cache" }))
+  );
+  let changed = false;
+  for (let i = 0; i < sources.length; i++) {
+    const r = results[i];
+    if (r.status === "rejected" || !r.value.ok) continue;
     try {
-      const resp = await fetch(src, { cache: "no-cache" });
-      if (!resp.ok) continue;
-      const plan = await resp.json();
-      const oldTs = _planData?.exportiert ?? null;
-      const newTs = plan.exportiert ?? null;
-      if (newTs !== oldTs) {
-        _planData = plan;
-        return true;
+      const plan = await r.value.json();
+      if (!plan.monat || !plan.jahr) continue;
+      const key = `${plan.jahr}-${String(plan.monat).padStart(2, "0")}`;
+      if (_planMonths[key]?.exportiert !== plan.exportiert) {
+        _planMonths[key] = plan;
+        changed = true;
       }
-      return false;
-    } catch {
-      // Quelle nicht verfügbar — nächste versuchen
-    }
+    } catch { /* parse error ignorieren */ }
   }
-  return false;
+  if (changed) _planData = _buildMergedPlan();
+  return changed;
 }
 
 /**
@@ -281,6 +353,14 @@ export async function getShifts(userId, month, year) {
     );
   }
   // Phase 8: return await graphApi.getShifts(userId, month, year);
+}
+
+/** Alle Schichten eines Nutzers über alle geladenen Monate. */
+export async function getAllUserShifts(userId) {
+  if (_planData) {
+    return adaptShifts((_planData.wochen ?? []).filter((w) => w.mitarbeiterId === userId));
+  }
+  if (USE_MOCK) return mock.MOCK_SHIFTS.filter((s) => s.userId === userId);
 }
 
 // ============================================================

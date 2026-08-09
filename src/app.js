@@ -26,6 +26,8 @@ import {
   getDebugInfo,
   refreshPlanData,
   getPlanExportTimestamp,
+  getAvailableMonths,
+  getAllUserShifts,
 } from "./data/api.js";
 import { escapeHTML } from "./utils.js";
 import {
@@ -66,9 +68,10 @@ const toastEl        = document.getElementById("toast");
 const iosHint        = document.getElementById("ios-install-hint");
 const settingsBtn    = document.getElementById("settings-btn");
 
-// Plan-Screen: aktuell angezeigter Monat
-let planMonth = 8;
-let planYear  = 2026;
+// Plan-Screen: aktuell angezeigter Monat (startet beim aktuellen Kalendermonat)
+const _initDate = new Date();
+let planMonth = _initDate.getMonth() + 1;
+let planYear  = _initDate.getFullYear();
 
 // Install-Prompt (Android/Chrome)
 let deferredInstallPrompt = null;
@@ -174,33 +177,12 @@ async function navigate(screenName) {
   try {
     switch (target) {
       case "home": {
-        const [shifts, requests, notifications] = await Promise.all([
-          getShifts(user.id, now.getMonth() + 1, now.getFullYear()),
+        const [allShifts, requests, notifications] = await Promise.all([
+          getAllUserShifts(user.id),
           getRequests(user.id),
           getNotifications(user.group, user.role),
         ]);
-        // Planmonat-Schichten laden (Mock: Aug 2026, Export: monat/jahr aus plan-export.json)
-        const planShifts = await getShifts(user.id, planMonth, planYear);
-        const allShifts = [...shifts];
-        planShifts.forEach((s) => {
-          if (!allShifts.find((x) => x.id === s.id)) allShifts.push(s);
-        });
-        allShifts.sort((a, b) => a.date.localeCompare(b.date));
-
-        // Springe zur Planwoche wenn Plan noch in der Zukunft liegt
-        let homeOffset = 0;
-        if (hasPlanData()) {
-          const planFirst = new Date(planYear, planMonth - 1, 1);
-          const planDow = planFirst.getDay();
-          planFirst.setDate(planFirst.getDate() - (planDow === 0 ? 6 : planDow - 1));
-          const todayMon = new Date(now);
-          todayMon.setHours(0, 0, 0, 0);
-          const todayDow = todayMon.getDay();
-          todayMon.setDate(todayMon.getDate() - (todayDow === 0 ? 6 : todayDow - 1));
-          homeOffset = Math.round((planFirst - todayMon) / (7 * 24 * 3600 * 1000));
-          if (homeOffset < 0) homeOffset = 0;
-        }
-        renderHome(container, user, allShifts, requests, notifications, homeOffset);
+        renderHome(container, user, allShifts ?? [], requests, notifications);
         updateNotifBadge(user);
         break;
       }
@@ -802,21 +784,43 @@ async function initApp() {
   });
 
   try {
-    // Plan laden: plan-export.json (lokal, mit PINs) hat Vorrang vor
-    // plan-export-public.json (öffentlich auf GitHub Pages, ohne PINs)
+    // Plan laden: plan-export.json (lokal, mit PINs) hat Vorrang.
+    // Sonst: plan-export-public.json + pro-Monat-Dateien parallel laden.
     let planExportedIso = null;
     try {
-      const sources = ["plan-export.json", "plan-export-public.json"];
-      for (const src of sources) {
-        const resp = await fetch(src, { cache: "no-cache" });
-        if (resp.ok) {
-          const plan = await resp.json();
-          setPlanData(plan);
-          if (plan.monat) planMonth = plan.monat;
-          if (plan.jahr)  planYear  = plan.jahr;
-          planExportedIso = plan.exportiert ?? null;
-          console.log(`[Kita-App] Plan geladen (${src}): ${planExportedIso ?? "unbekannt"} (${(plan.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
-          break;
+      const localResp = await fetch("plan-export.json", { cache: "no-cache" });
+      if (localResp.ok) {
+        const plan = await localResp.json();
+        setPlanData(plan);
+        planExportedIso = plan.exportiert ?? null;
+        console.log(`[Kita-App] Plan geladen (plan-export.json): ${(plan.wochen ?? []).length} Schichten ${plan.monat}/${plan.jahr}`);
+      } else {
+        // Öffentliche Dateien: plan-export-public.json + pro-Monat-Dateien für ±2..+10 Monate
+        const publicSources = ["plan-export-public.json"];
+        for (let delta = -2; delta <= 10; delta++) {
+          let m = now.getMonth() + 1 + delta;
+          let y = now.getFullYear();
+          while (m > 12) { m -= 12; y++; }
+          while (m < 1)  { m += 12; y--; }
+          publicSources.push(`plan-export-public-${y}-${String(m).padStart(2, "0")}.json`);
+        }
+        const results = await Promise.allSettled(
+          publicSources.map((src) => fetch(src, { cache: "no-cache" }))
+        );
+        let loadedCount = 0;
+        for (let i = 0; i < publicSources.length; i++) {
+          const r = results[i];
+          if (r.status === "rejected" || !r.value.ok) continue;
+          try {
+            const plan = await r.value.json();
+            setPlanData(plan);
+            planExportedIso = plan.exportiert ?? planExportedIso;
+            loadedCount++;
+            console.log(`[Kita-App] Plan geladen (${publicSources[i]}): ${(plan.wochen ?? []).length} Schichten ${plan.monat}/${plan.jahr}`);
+          } catch { /* parse error */ }
+        }
+        if (loadedCount > 0) {
+          console.log(`[Kita-App] ${loadedCount} Monatsplan(e) geladen.`);
         }
       }
     } catch {
