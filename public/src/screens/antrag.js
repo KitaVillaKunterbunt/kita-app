@@ -400,6 +400,7 @@ export function renderAntrag(container, user, context = {}, onSubmit) {
 
   function render() {
     container.innerHTML = `
+      <button class="screen-back-btn" onclick="window.location.hash='home'">&#8592; Startseite</button>
       <h1 class="screen-title">Antrag stellen</h1>
 
       <div class="type-tabs" role="tablist" aria-label="Antragstyp">

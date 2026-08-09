@@ -195,6 +195,7 @@ export function renderMeineAntraege(container, requests, onWithdraw) {
          </div>`;
 
     container.innerHTML = `
+      <button class="screen-back-btn" onclick="window.location.hash='home'">&#8592; Startseite</button>
       <h1 class="screen-title">Meine Anträge</h1>
       <button class="btn btn--primary btn--full mb-md" data-nav="antrag">Neuen Antrag stellen</button>
       <div class="filter-tabs" role="tablist" aria-label="Statusfilter">

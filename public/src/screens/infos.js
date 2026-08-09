@@ -213,6 +213,7 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
          </div>`;
 
     container.innerHTML = `
+      <button class="screen-back-btn" onclick="window.location.hash='home'">&#8592; Startseite</button>
       <h1 class="screen-title">Mitteilungen</h1>
       <div class="filter-tabs" role="tablist" aria-label="Mitteilungsfilter">
         ${filterTabsHTML}

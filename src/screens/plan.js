@@ -267,6 +267,7 @@ export function renderPlan(container, user, shifts, notifications, mitarbeiter, 
 
   container.innerHTML = `
     <div class="plan-calendar">
+      <button class="screen-back-btn" onclick="window.location.hash='home'">&#8592; Startseite</button>
       <h1 class="screen-title">Mein Plan</h1>
 
       <!-- Monatsnavigation -->
