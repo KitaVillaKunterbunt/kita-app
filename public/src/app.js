@@ -765,20 +765,25 @@ async function initApp() {
   });
 
   try {
-    // plan-export.json laden (wenn von Leitung veröffentlicht)
+    // Plan laden: plan-export.json (lokal, mit PINs) hat Vorrang vor
+    // plan-export-public.json (öffentlich auf GitHub Pages, ohne PINs)
     let planExportedIso = null;
     try {
-      const resp = await fetch("plan-export.json", { cache: "no-cache" });
-      if (resp.ok) {
-        const plan = await resp.json();
-        setPlanData(plan);
-        if (plan.monat) planMonth = plan.monat;
-        if (plan.jahr)  planYear  = plan.jahr;
-        planExportedIso = plan.exportiert ?? null;
-        console.log(`[Kita-App] Plan geladen: ${planExportedIso ?? "unbekannt"} (${(plan.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
+      const sources = ["plan-export.json", "plan-export-public.json"];
+      for (const src of sources) {
+        const resp = await fetch(src, { cache: "no-cache" });
+        if (resp.ok) {
+          const plan = await resp.json();
+          setPlanData(plan);
+          if (plan.monat) planMonth = plan.monat;
+          if (plan.jahr)  planYear  = plan.jahr;
+          planExportedIso = plan.exportiert ?? null;
+          console.log(`[Kita-App] Plan geladen (${src}): ${planExportedIso ?? "unbekannt"} (${(plan.wochen ?? []).length} Schichten, ${planMonth}/${planYear})`);
+          break;
+        }
       }
     } catch {
-      // Kein plan-export.json vorhanden — Mock-Daten bleiben aktiv
+      // Kein Plan vorhanden — Mock-Daten bleiben aktiv
     }
 
     // pins.json laden — separate Datei mit PINs, hat Priorität vor plan-export.json

@@ -1,0 +1,4631 @@
+{
+  "exportiert": "2026-07-29T02:45:34.071Z",
+  "monat": 9,
+  "jahr": 2026,
+  "mitarbeiter": [
+    {
+      "id": "user-1",
+      "name": "Vanessa",
+      "gruppe": "Käfer (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-2",
+      "name": "Rieke",
+      "gruppe": "Käfer (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-3",
+      "name": "Vera",
+      "gruppe": "Käfer (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-4",
+      "name": "Doreen",
+      "gruppe": "Käfer (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-5",
+      "name": "Biance",
+      "gruppe": "Mäuse (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-6",
+      "name": "Julia",
+      "gruppe": "Mäuse (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-7",
+      "name": "Sabine",
+      "gruppe": "Mäuse (U3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-8",
+      "name": "Emilia",
+      "gruppe": "Mäuse (U3)",
+      "rolle": "Praktikantin"
+    },
+    {
+      "id": "user-9",
+      "name": "Larissa",
+      "gruppe": "Bären (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-10",
+      "name": "Celina",
+      "gruppe": "Bären (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-11",
+      "name": "Hedwig",
+      "gruppe": "Bären (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-12",
+      "name": "Simge",
+      "gruppe": "Bären (Ü3)",
+      "rolle": "Praktikantin"
+    },
+    {
+      "id": "user-13",
+      "name": "Gabi",
+      "gruppe": "Dino (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-14",
+      "name": "Andju",
+      "gruppe": "Dino (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-15",
+      "name": "Andreea",
+      "gruppe": "Dino (Ü3)",
+      "rolle": "Praktikantin"
+    },
+    {
+      "id": "user-16",
+      "name": "Laura",
+      "gruppe": "Igel (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-17",
+      "name": "Anke",
+      "gruppe": "Igel (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-18",
+      "name": "Janina",
+      "gruppe": "Igel (Ü3)",
+      "rolle": "Erzieherin"
+    },
+    {
+      "id": "user-19",
+      "name": "Svenja",
+      "gruppe": "Springer",
+      "rolle": "Stellvertreterin"
+    },
+    {
+      "id": "user-20",
+      "name": "Pierre",
+      "gruppe": "Leitung",
+      "rolle": "Leitung"
+    }
+  ],
+  "wochen": [
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-1",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-1",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": "Impfunterlagen für Timo mitbringen",
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-1",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-1",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-1",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-1",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-2",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-2",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "12:45",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null,
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-2",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-2",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-2",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null,
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-3",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-4",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-4",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-4",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null,
+      "gruppenNotiz": "Praktikantin Jana ab heute im Einsatz"
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-4",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-4",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-4",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "14:00",
+      "gruppe": "Käfer (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-5",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-6",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-6",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "14:15",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-6",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-6",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-6",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-6",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-7",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "10:45",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-7",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "12:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-7",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-7",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "12:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-7",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-8",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-8",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Mäuse (U3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-9",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-9",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-9",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-9",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-9",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-9",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-10",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-10",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "14:15",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-10",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-10",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-10",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-11",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "12:45",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-11",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "14:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-11",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-11",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-11",
+      "typ": "spaet",
+      "vonUhr": "08:30",
+      "bisUhr": "17:00",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-11",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "15:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-12",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-12",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Bären (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "17:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-13",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "16:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-13",
+      "typ": "spaet",
+      "vonUhr": "09:00",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-13",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "09:30",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "12:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "08:15",
+      "bisUhr": "17:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "09:30",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "15:15",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-14",
+      "typ": "teil",
+      "vonUhr": "09:30",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-14",
+      "typ": "spaet",
+      "vonUhr": "09:30",
+      "bisUhr": "16:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "14:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "14:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "14:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "14:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-15",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "15:30",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-15",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "14:00",
+      "gruppe": "Dino (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:15",
+      "bisUhr": "16:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:45",
+      "bisUhr": "17:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:15",
+      "bisUhr": "16:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:45",
+      "bisUhr": "17:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:15",
+      "bisUhr": "16:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:45",
+      "bisUhr": "17:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:15",
+      "bisUhr": "16:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-16",
+      "typ": "spaet",
+      "vonUhr": "08:45",
+      "bisUhr": "17:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-16",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:45",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "14:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-17",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "15:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "12:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:30",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "11:30",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "11:30",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "12:00",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "11:30",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "12:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:30",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "11:30",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "11:30",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "12:00",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "11:30",
+      "bisUhr": "15:30",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:00",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "08:15",
+      "bisUhr": "12:15",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-18",
+      "typ": "teil",
+      "vonUhr": "09:30",
+      "bisUhr": "13:00",
+      "gruppe": "Igel (Ü3)",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-19",
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "13:00",
+      "gruppe": "Springer",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-01",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-02",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": "Elterngespräch um 14:00 vorbereiten"
+    },
+    {
+      "datum": "2026-09-03",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-04",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-07",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-08",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-09",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null,
+      "gruppenNotiz": "Personalkonferenz 15:00 Uhr"
+    },
+    {
+      "datum": "2026-09-10",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-11",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-14",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-15",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-16",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-17",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-18",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-21",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-22",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-23",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-24",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-25",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "15:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-28",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-29",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    },
+    {
+      "datum": "2026-09-30",
+      "mitarbeiterId": "user-20",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "16:00",
+      "gruppe": "Leitung",
+      "raum": null,
+      "notiz": null
+    }
+  ],
+  "infos": [
+    {
+      "id": "info-001",
+      "titel": "Brandschutzübung am 10.09. um 09:30 Uhr",
+      "text": "Am Mittwoch, 10. September um 09:30 Uhr findet die Pflicht-Brandschutzübung statt. Alle Mitarbeitenden müssen anwesend sein. Bitte informiert die Eltern, dass die Kinder kurz ins Freie gebracht werden. Die Übung dauert ca. 20 Minuten. Bitte bestätigt den Erhalt dieser Mitteilung.",
+      "erstelltAm": "2026-07-30T08:00:00Z",
+      "datum": "2026-09-10",
+      "zielgruppen": [
+        "alle"
+      ],
+      "prioritaet": "sehrwichtig"
+    },
+    {
+      "id": "info-002",
+      "titel": "Elternabend am 17. September um 19:00 Uhr",
+      "text": "Der nächste Elternabend findet am Mittwoch, 17. September um 19:00 Uhr im großen Gruppenraum statt. Themen: Herbstprogramm, neue Betreuungszeiten, Bastelprojekte. Bitte gebt vorab an, ob ihr teilnehmen könnt.",
+      "erstelltAm": "2026-07-30T09:00:00Z",
+      "datum": "2026-09-17",
+      "zielgruppen": [
+        "alle"
+      ],
+      "prioritaet": "wichtig"
+    },
+    {
+      "id": "info-003",
+      "titel": "Hausmeister kommt am 4.9. um 14:00 Uhr",
+      "text": "Der Hausmeister kommt am Donnerstag, 4. September um 14:00 Uhr, um die defekte Heizung im Flur zu reparieren. Bitte den Bereich vor der Heizkörpernische freiräumen. Reparatur dauert ca. 30–60 Minuten.",
+      "erstelltAm": "2026-07-29T14:00:00Z",
+      "datum": "2026-09-04",
+      "zielgruppen": [
+        "alle"
+      ],
+      "prioritaet": "normal"
+    },
+    {
+      "id": "info-004",
+      "titel": "Neue Bastelmaterialien für Gruppe Käfer",
+      "text": "Im Schrank neben dem Waschbecken liegen neue Bastelfarben und Pinsel für die Käfer-Gruppe. Bitte sparsam verwenden — die Farben müssen bis Ende Oktober reichen. Fragen an Doreen.",
+      "erstelltAm": "2026-07-28T10:00:00Z",
+      "zielgruppen": [
+        "Käfer (U3)"
+      ],
+      "prioritaet": "normal"
+    },
+    {
+      "id": "info-005",
+      "titel": "Betriebsausflug: Abstimmung Termin",
+      "text": "Wir planen einen Betriebsausflug im Oktober. Bitte gebt bis zum 15. September an, welche Wochenenden für euch passen. Die Liste hängt im Pausenraum aus. Vorschläge für Ziele gerne direkt an Pierre.",
+      "erstelltAm": "2026-07-28T08:30:00Z",
+      "zielgruppen": [
+        "alle"
+      ],
+      "prioritaet": "normal"
+    }
+  ],
+  "pendingAntraege": [
+    {
+      "id": "pa-001",
+      "mitarbeiterId": "user-9",
+      "type": "urlaub",
+      "dateFrom": "2026-09-21",
+      "dateTo": "2026-09-25",
+      "note": "Familienurlaub — bitte genehmigen",
+      "status": "ausstehend",
+      "createdAt": "2026-07-28T08:00:00Z"
+    },
+    {
+      "id": "pa-002",
+      "mitarbeiterId": "user-5",
+      "type": "dienstwunsch",
+      "dateFrom": "2026-09-03",
+      "dateTo": "2026-09-03",
+      "note": "Möchte gerne Frühdienst statt Spätdienst",
+      "status": "ausstehend",
+      "createdAt": "2026-07-29T09:15:00Z"
+    },
+    {
+      "id": "pa-003",
+      "mitarbeiterId": "user-10",
+      "type": "urlaub",
+      "dateFrom": "2026-09-07",
+      "dateTo": "2026-09-08",
+      "note": null,
+      "status": "ausstehend",
+      "createdAt": "2026-07-30T07:30:00Z"
+    },
+    {
+      "id": "pa-004",
+      "mitarbeiterId": "user-6",
+      "type": "krankmeldung",
+      "dateFrom": "2026-07-30",
+      "dateTo": "2026-07-31",
+      "note": "Fieber",
+      "status": "ausstehend-leitung",
+      "createdAt": "2026-07-30T06:45:00Z"
+    }
+  ]
+}
