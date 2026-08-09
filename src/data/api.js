@@ -159,7 +159,7 @@ export function getPlanMitarbeiter() {
  * Gibt bei Treffer das User-Objekt zurück, sonst null.
  */
 export function validatePin(pin) {
-  const list = _pinsData ?? _planData?.mitarbeiter ?? [];
+  const list = _pinsData ?? _planData?.mitarbeiter ?? mock.MOCK_MITARBEITER;
   const m = list.find((m) => String(m.pin) === String(pin).trim());
   if (!m) return null;
   return {

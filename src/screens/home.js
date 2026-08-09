@@ -1,20 +1,18 @@
 // src/screens/home.js
-// Screen 1: Home — Kalenderwoche-Ansicht mit Wochennavigation
+// Screen 1: Home — Dashboard mit Heute-Karte und Kachel-Grid
 
 import { escapeHTML } from "../utils.js";
 
-// ---- Modul-State für Wochennavigation -----------------------
+// ── Modul-State ───────────────────────────────────────────────
 
-let _weekOffset    = 0;
 let _container     = null;
 let _user          = null;
 let _shifts        = [];
 let _requests      = [];
 let _notifications = [];
 
-// ---- Hilfsfunktionen ----------------------------------------
+// ── Hilfsfunktionen ──────────────────────────────────────────
 
-/** Gibt YYYY-MM-DD für ein Datum in lokaler Zeit zurück (kein UTC-Shift) */
 function dateToISO(date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -22,305 +20,223 @@ function dateToISO(date) {
   return `${y}-${m}-${d}`;
 }
 
-/** Gibt die ISO-Datumszeichenkette für heute zurück: YYYY-MM-DD */
-function todayStr() {
-  return dateToISO(new Date());
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 11) return "Guten Morgen";
+  if (h < 17) return "Guten Tag";
+  return "Guten Abend";
 }
 
-/**
- * Gibt Mo–So der Woche mit gegebenem Offset zurück.
- * offset=0 → aktuelle Woche, offset=1 → nächste Woche usw.
- * @param {number} offset
- * @returns {Date[]} Array mit 5 Date-Objekten (Mo bis Fr)
- */
-function getWeekDays(offset) {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const dow = now.getDay(); // 0=So, 1=Mo, ..., 6=Sa
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((dow === 0 ? 7 : dow) - 1) + offset * 7);
-  return Array.from({ length: 5 }, (_, i) => {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    return d;
+function firstName(displayName) {
+  return (displayName ?? "").split(" ")[0];
+}
+
+function isLeadership(user) {
+  const role = (user?.role ?? "").toLowerCase();
+  return role === "leitung" || role === "stellvertreterin";
+}
+
+function todayCardHTML(shifts, userId) {
+  const today = dateToISO(new Date());
+  const shift = shifts.find((s) => s.date === today) ?? null;
+  const dateLabel = new Date().toLocaleDateString("de-DE", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
   });
-}
 
-/**
- * Berechnet die ISO-Kalenderwochennummer eines Datums.
- * @param {Date} date
- * @returns {number}
- */
-function getISOWeekNumber(date) {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
-  const week1 = new Date(d.getFullYear(), 0, 4);
-  return (
-    1 +
-    Math.round(
-      ((d.getTime() - week1.getTime()) / 86400000 -
-        3 +
-        ((week1.getDay() + 6) % 7)) /
-        7
-    )
-  );
-}
-
-/**
- * Formatiert den Datumsbereich Mo–Fr einer Woche.
- * Gleicher Monat:       "1. – 5. September 2026"
- * Verschiedene Monate:  "29. Sept. – 3. Oktober 2026"
- * @param {Date} monday
- * @param {Date} friday
- * @returns {string}
- */
-function formatDateRange(monday, friday) {
-  if (
-    monday.getMonth() === friday.getMonth() &&
-    monday.getFullYear() === friday.getFullYear()
-  ) {
-    const d1 = monday.toLocaleDateString("de-DE", { day: "numeric" });
-    const d2 = friday.toLocaleDateString("de-DE", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-    return `${d1} – ${d2}`;
+  if (!shift || shift.type === "frei" || !shift.startTime) {
+    return `
+      <div class="home-today-card">
+        <div class="home-today-card__left">
+          <span class="home-today-card__label">Heute · ${escapeHTML(dateLabel)}</span>
+          <span class="home-today-card__time home-today-card__time--free">Frei</span>
+        </div>
+      </div>`;
   }
-  const d1 = monday.toLocaleDateString("de-DE", {
-    day: "numeric",
-    month: "long",
-  });
-  const d2 = friday.toLocaleDateString("de-DE", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-  return `${d1} – ${d2}`;
+
+  let badgeHTML = "";
+  if (shift.type === "krank") {
+    badgeHTML = `<span class="home-today-badge home-today-badge--krank">Krank</span>`;
+  } else if (shift.type === "urlaub") {
+    badgeHTML = `<span class="home-today-badge home-today-badge--urlaub">Urlaub</span>`;
+  } else if (shift.startTime && shift.startTime < "07:30") {
+    badgeHTML = `<span class="home-today-badge home-today-badge--frueh">Frühdienst</span>`;
+  } else if (shift.endTime && shift.endTime > "16:30") {
+    badgeHTML = `<span class="home-today-badge home-today-badge--spaet">Spätdienst</span>`;
+  }
+
+  const subLine = shift.group
+    ? `<span class="home-today-card__sub">${escapeHTML(shift.group)}</span>`
+    : "";
+
+  return `
+    <div class="home-today-card">
+      <div class="home-today-card__left">
+        <span class="home-today-card__label">Heute · ${escapeHTML(dateLabel)}</span>
+        <span class="home-today-card__time">${escapeHTML(shift.startTime)} – ${escapeHTML(shift.endTime)}</span>
+        ${subLine}
+      </div>
+      ${badgeHTML}
+    </div>`;
 }
 
-/** Kurzname des Wochentags auf Deutsch (passend zu getDay()) */
-const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+// ── Render ──────────────────────────────────────���─────────────
 
-/**
- * Gibt das Badge-HTML zurück — basierend auf Uhrzeit, nicht auf Typ-String.
- * Früh: Start vor 08:00 | Spät: Ende nach 16:00 | Teil/Urlaub/Krank: Typ-Label
- * @param {{ type:string, startTime:string|null, endTime:string|null }|null} shift
- * @returns {string}
- */
-function shiftBadgeHTML(shift) {
-  if (!shift) return "";
-  if (shift.startTime && shift.startTime < "07:30") return `<span class="shift-badge shift-badge--frueh">Früh</span>`;
-  if (shift.endTime   && shift.endTime   > "16:30") return `<span class="shift-badge shift-badge--spaet">Spät</span>`;
-  return "";
-}
-
-// ---- Render-Funktion ----------------------------------------
-
-function _renderWeekView() {
+function _render() {
   if (!_container) return;
 
-  const today    = todayStr();
-  const weekDays = getWeekDays(_weekOffset);
-  const monday   = weekDays[0];
-  const friday   = weekDays[4];
-  const kw        = getISOWeekNumber(monday);
-  const dateRange = formatDateRange(monday, friday);
-
-  // Wochenzeilen Mo–Fr rendern
-  const rowsHTML = weekDays
-    .map((day) => {
-      const dateISO  = dateToISO(day);
-      const shift    = _shifts.find((s) => s.date === dateISO) ?? null;
-      const isToday  = dateISO === today;
-
-      const weekdayLabel = WEEKDAY_SHORT[day.getDay()];
-      const dayLabel = day.toLocaleDateString("de-DE", {
-        day: "numeric",
-        month: "short",
-      }); // z.B. "1. Sep"
-
-      // Notizen ermitteln
-      const hasNote      = !!(shift?.note);
-      const hasGroupNote = !!(shift?.groupNote);
-      const hasAnyNote   = hasNote || hasGroupNote;
-      const noteIcon     = hasAnyNote
-        ? `<span class="week-row__note-icon" aria-label="Notiz vorhanden">📝</span>`
-        : "";
-
-      // Uhrzeit-Spalte
-      let timeHTML;
-      if (!shift || shift.type === "frei" || !shift.startTime) {
-        timeHTML = `<span class="week-row__time week-row__time--empty">—${noteIcon}</span>`;
-      } else {
-        timeHTML = `<span class="week-row__time">${escapeHTML(shift.startTime)} – ${escapeHTML(shift.endTime)}${noteIcon}</span>`;
-      }
-
-      // Badge-Spalte (zeit-basiert)
-      const badge = shiftBadgeHTML(shift);
-
-      // Notiz-Daten als Attribute (für Click-Handler)
-      const noteAttr      = hasNote      ? ` data-note="${escapeHTML(shift.note)}"` : "";
-      const groupNoteAttr = hasGroupNote ? ` data-group-note="${escapeHTML(shift.groupNote)}"` : "";
-      const hasNoteClass  = hasAnyNote   ? " week-row--has-note" : "";
-
-      return `
-        <div class="week-row${isToday ? " week-row--today" : ""}${hasNoteClass}" data-date="${dateISO}"${noteAttr}${groupNoteAttr} role="listitem">
-          <span class="week-row__day">${weekdayLabel}</span>
-          <span class="week-row__date">${escapeHTML(dayLabel)}</span>
-          ${timeHTML}
-          <span class="week-row__badge">${badge}</span>
-        </div>`;
-    })
-    .join("");
-
-  // Schnellzugriff-Karten
   const unreadCount  = (_notifications ?? []).filter(
     (n) => !n.confirmedBy.includes(_user.id)
   ).length;
   const pendingCount = (_requests ?? []).filter(
     (r) => r.status === "ausstehend"
   ).length;
+  const isLeader = isLeadership(_user);
 
-  const quickCards = [];
-  if (pendingCount > 0) {
-    quickCards.push(`
-      <button class="quick-card" data-nav="antraege">
-        <span class="quick-card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20">
-            <line x1="8" y1="6" x2="21" y2="6"/>
-            <line x1="8" y1="12" x2="21" y2="12"/>
-            <line x1="8" y1="18" x2="21" y2="18"/>
-            <line x1="3" y1="6" x2="3.01" y2="6"/>
-            <line x1="3" y1="12" x2="3.01" y2="12"/>
-            <line x1="3" y1="18" x2="3.01" y2="18"/>
-          </svg>
-        </span>
-        <span class="quick-card__text">
-          <strong>${pendingCount} Antrag${pendingCount !== 1 ? "räge" : ""} ausstehend</strong>
-          <small>Tippen um Details zu sehen</small>
-        </span>
-        <svg class="quick-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
-      </button>`);
-  }
-  if (unreadCount > 0) {
-    quickCards.push(`
-      <button class="quick-card" data-nav="infos">
-        <span class="quick-card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20">
-            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 01-3.46 0"/>
-          </svg>
-        </span>
-        <span class="quick-card__text">
-          <strong>${unreadCount} ungelesene Mitteilung${unreadCount !== 1 ? "en" : ""}</strong>
-          <small>Tippen um zu lesen</small>
-        </span>
-        <svg class="quick-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
-      </button>`);
-  }
+  // Kachel-Definitionen
+  const tiles = [
+    {
+      id:     "plan",
+      label:  "Mein Plan",
+      screen: "plan",
+      color:  "plan",
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>`,
+    },
+    {
+      id:     "antrag",
+      label:  "Antrag stellen",
+      screen: "antrag",
+      color:  "antrag",
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>`,
+    },
+    {
+      id:     "antraege",
+      label:  "Meine Anträge",
+      screen: "antraege",
+      color:  "list",
+      badge:  pendingCount > 0 ? pendingCount : null,
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>`,
+    },
+    {
+      id:     "infos",
+      label:  "Mitteilungen",
+      screen: "infos",
+      color:  "notif",
+      badge:  unreadCount > 0 ? unreadCount : null,
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 01-3.46 0"/>
+            </svg>`,
+    },
+    ...(isLeader ? [{
+      id:     "dashboard",
+      label:  "Dashboard",
+      screen: "dashboard",
+      color:  "leitung",
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>`,
+    }] : []),
+    {
+      id:     "brett",
+      label:  "Schwarzes Brett",
+      screen: "infos",
+      color:  "brett",
+      svg: `<span style="font-size:22px;line-height:1" aria-hidden="true">📋</span>`,
+    },
+  ];
+
+  const tilesHTML = tiles
+    .map(
+      (t) => `
+        <button class="home-tile home-tile--${t.color}" data-screen="${escapeHTML(t.screen)}" aria-label="${escapeHTML(t.label)}">
+          ${t.badge != null ? `<span class="home-tile__badge" aria-hidden="true">${t.badge}</span>` : ""}
+          <span class="home-tile__icon">${t.svg}</span>
+          <span class="home-tile__label">${escapeHTML(t.label)}</span>
+        </button>`
+    )
+    .join("");
+
+  const notifBadge = unreadCount > 0
+    ? `<div class="home-header__notif" aria-label="${unreadCount} neue Mitteilungen">
+         <span class="home-header__notif-dot" aria-hidden="true"></span>
+         ${unreadCount} neu
+       </div>`
+    : "";
 
   _container.innerHTML = `
     <div class="home-screen">
 
-      <!-- KW-Header -->
-      <header class="kw-header">
-        <div class="kw-header__left">
-          <button class="kw-nav-btn" id="week-prev" aria-label="Vorherige Woche">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                 stroke-linecap="round" stroke-linejoin="round"
-                 width="20" height="20" aria-hidden="true">
-              <polyline points="15 18 9 12 15 6"/>
-            </svg>
-          </button>
-          <span class="kw-header__kw">KW ${kw}</span>
-          <button class="kw-nav-btn" id="week-next" aria-label="Nächste Woche">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                 stroke-linecap="round" stroke-linejoin="round"
-                 width="20" height="20" aria-hidden="true">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
+      <div class="home-header">
+        <div class="home-header__top">
+          <div class="home-header__logo">
+            <span class="home-header__logo-icon" aria-hidden="true">🏡</span>
+            <span class="home-header__logo-name">Villa Kunterbunt</span>
+          </div>
+          ${notifBadge}
         </div>
-      </header>
-      <p class="kw-date-range">${escapeHTML(dateRange)}</p>
-
-      <!-- Wochenliste Mo–So -->
-      <div class="week-list" role="list" aria-label="Dienste diese Woche">
-        ${rowsHTML}
+        <p class="home-header__greeting">${escapeHTML(greeting())},</p>
+        <p class="home-header__name">${escapeHTML(firstName(_user.displayName))}</p>
       </div>
 
-      <!-- Schnellzugriff -->
-      ${quickCards.length > 0
-        ? `<div class="quick-access">${quickCards.join("")}</div>`
-        : ""}
+      <div class="home-body">
+
+        ${todayCardHTML(_shifts, _user.id)}
+
+        <p class="home-section-label">Schnellzugriff</p>
+
+        <div class="home-tile-grid" role="list">
+          ${tilesHTML}
+        </div>
+
+      </div>
 
     </div>`;
 
-  // Event-Handler: Wochennavigation
-  _container.querySelector("#week-prev").addEventListener("click", () => {
-    _weekOffset -= 1;
-    _renderWeekView();
-  });
-  _container.querySelector("#week-next").addEventListener("click", () => {
-    _weekOffset += 1;
-    _renderWeekView();
-  });
-
-  // Event-Handler: Schnellzugriff-Navigation
-  _container.querySelectorAll("[data-nav]").forEach((btn) => {
+  // Kachel-Navigation
+  _container.querySelectorAll(".home-tile[data-screen]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      window.location.hash = btn.dataset.nav;
-    });
-  });
-
-  // Event-Handler: Notiz-Detail ein-/ausklappen
-  _container.querySelectorAll(".week-row--has-note").forEach((row) => {
-    row.addEventListener("click", () => {
-      const next    = row.nextElementSibling;
-      const isOpen  = next?.classList.contains("week-row-detail");
-
-      // Alle offenen Details schließen
-      _container.querySelectorAll(".week-row-detail").forEach((d) => d.remove());
-      _container.querySelectorAll(".week-row--open").forEach((r) => r.classList.remove("week-row--open"));
-
-      if (!isOpen) {
-        const note      = row.dataset.note      ?? "";
-        const groupNote = row.dataset.groupNote ?? "";
-        const detail    = document.createElement("div");
-        detail.className = "week-row-detail";
-        detail.innerHTML = [
-          note      ? `<p class="week-row-detail__item"><span class="week-row-detail__icon">📝</span><span>${escapeHTML(note)}</span></p>` : "",
-          groupNote ? `<p class="week-row-detail__item week-row-detail__item--group"><span class="week-row-detail__icon">👥</span><span>${escapeHTML(groupNote)}</span></p>` : "",
-        ].join("");
-        row.after(detail);
-        row.classList.add("week-row--open");
-      }
+      window.location.hash = btn.dataset.screen;
     });
   });
 }
 
-// ---- Hauptexport --------------------------------------------
+// ── Export ────────────────────────────────────────────────────
 
 /**
- * Rendert den Home-Screen (Kalenderwoche-Ansicht).
+ * Rendert den Home-Screen (Dashboard mit Heute-Karte und Kachel-Grid).
  * @param {HTMLElement} container
- * @param {{ id:string, displayName:string, group:string }} user
- * @param {Array} shifts         Dienste (alle verfügbaren Monate)
+ * @param {{ id:string, displayName:string, group:string, role?:string }} user
+ * @param {Array} shifts
  * @param {Array} requests
  * @param {Array} notifications
  */
-export function renderHome(container, user, shifts, requests, notifications, initialOffset = 0) {
-  _weekOffset    = initialOffset;
+export function renderHome(container, user, shifts, requests, notifications) {
   _container     = container;
   _user          = user;
   _shifts        = shifts        ?? [];
   _requests      = requests      ?? [];
   _notifications = notifications ?? [];
-  _renderWeekView();
+  _render();
 }

@@ -24,10 +24,12 @@ export function formatPlanNotificationTitle(monat, jahr) {
   return `Neuer Dienstplan ${MONAT_NAMEN[(monat ?? 1) - 1] ?? ''} ${jahr ?? ''}`;
 }
 
-/** True wenn plan-export.json ein neueres exportiert-Datum hat */
+/** True wenn plan-export.json ein neueres exportiert-Datum hat als zuletzt gesehen.
+ *  Beim ersten App-Start (lastExportedIso = null) wird false zurückgegeben —
+ *  das aktuelle Datum wird einfach gespeichert, ohne Banner zu zeigen. */
 export function hasNewPlan(lastExportedIso, currentExportedIso) {
   if (!currentExportedIso) return false;
-  if (!lastExportedIso) return true;
+  if (!lastExportedIso) return false;
   return new Date(currentExportedIso) > new Date(lastExportedIso);
 }
 

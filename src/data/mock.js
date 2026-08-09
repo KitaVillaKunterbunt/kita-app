@@ -315,8 +315,10 @@ export const MOCK_NOTIFICATIONS = [
 // Mitarbeiter-Events (Geburtstage + Jubiläen) — für Demo/Mock-Modus
 // geburtstag: "MM-DD" | eintrittsdatum: "YYYY-MM-DD"
 // ============================================================
+// Demo-PINs sind bewusst öffentlich — Fallback wenn keine plan-export.json geladen (z.B. GitHub Pages Demo).
 export const MOCK_MITARBEITER = [
-  { id: "user-001", name: "Vanessa Müller",  geburtstag: "08-12", eintrittsdatum: "2021-08-01" },
-  { id: "user-002", name: "Lisa Bauer",       geburtstag: "08-20", eintrittsdatum: "2011-08-20" },
-  { id: "user-003", name: "Sandra Hoffmann",  geburtstag: "09-05", eintrittsdatum: "2006-08-05" },
+  { id: "user-001", name: "Vanessa Müller",  pin: "1234", gruppe: "Bären",   rolle: "mitarbeiterin", geburtstag: "08-12", eintrittsdatum: "2021-08-01" },
+  { id: "user-002", name: "Lisa Bauer",       pin: "5678", gruppe: "Mäuse",   rolle: "mitarbeiterin", geburtstag: "08-20", eintrittsdatum: "2011-08-20" },
+  { id: "user-003", name: "Sandra Hoffmann",  pin: "9999", gruppe: "Dinos",   rolle: "mitarbeiterin", geburtstag: "09-05", eintrittsdatum: "2006-08-05" },
+  { id: "user-demo", name: "Demo Leitung",    pin: "0000", gruppe: "Leitung", rolle: "leitung"                                                          },
 ];

@@ -796,8 +796,8 @@ async function initApp() {
     await initAuth();
     let user = getUser();
 
-    // Plan vorhanden, aber kein gespeicherter Login → PIN-Login zeigen
-    if (!user && hasPlanData()) {
+    // Kein gespeicherter Login → immer PIN-Login zeigen
+    if (!user) {
       loadingOverlay.classList.add("hidden");
       await showPinLogin();
       await initAuth();
