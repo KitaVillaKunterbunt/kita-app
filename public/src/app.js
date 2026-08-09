@@ -21,6 +21,7 @@ import {
   setPinsData,
   hasPlanData,
   isDemoMode,
+  getDemoUser,
   validatePin,
   getDebugInfo,
 } from "./data/api.js";
@@ -802,9 +803,13 @@ async function initApp() {
     await initAuth();
     let user = getUser();
 
-    // Demo-Modus (keine echten Daten): direkt als Demo Leitung einloggen
+    // Demo-Modus: kein pins.json + kein PIN in Plan → erste Person aus Plan (oder Mock)
     if (!user && isDemoMode()) {
-      user = { id: "user-demo", displayName: "Demo Leitung", email: "", group: "Leitung", role: "leitung" };
+      const demo = getDemoUser();
+      if (demo) {
+        user = demo;
+        localStorage.setItem("kita-user-id", demo.id);
+      }
     }
 
     // Echte Daten vorhanden, aber kein gespeicherter Login → PIN-Screen

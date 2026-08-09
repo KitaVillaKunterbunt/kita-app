@@ -63,9 +63,21 @@ export function hasPlanData() {
   return _planData !== null;
 }
 
-/** Gibt true zurück wenn weder echte Plan- noch PIN-Daten geladen sind (Demo-Modus) */
+/**
+ * Demo-Modus: keine pins.json UND entweder kein Plan oder Plan ohne PIN-Felder.
+ * Trifft auf GitHub Pages mit plan-export-public.json zu.
+ */
 export function isDemoMode() {
-  return _planData === null && _pinsData === null;
+  if (_pinsData !== null) return false;
+  if (_planData === null) return true;
+  return !(_planData.mitarbeiter ?? []).some(m => m.pin != null);
+}
+
+/** Ersten Mitarbeiter aus Plan (oder Mock) als Demo-User zurückgeben. */
+export function getDemoUser() {
+  const m = (_planData?.mitarbeiter ?? mock.MOCK_MITARBEITER)[0];
+  if (!m) return null;
+  return { id: m.id, displayName: m.name, email: m.email ?? "", group: m.gruppe, role: m.rolle ?? "mitarbeiterin" };
 }
 
 const LS_DECISIONS_KEY = "kita-decisions";
