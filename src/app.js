@@ -24,6 +24,8 @@ import {
   getDemoUser,
   validatePin,
   getDebugInfo,
+  refreshPlanData,
+  getPlanExportTimestamp,
 } from "./data/api.js";
 import { escapeHTML } from "./utils.js";
 import {
@@ -883,6 +885,35 @@ async function initApp() {
 
     // Beim allerersten Start nach Login: Erlaubnis-Dialog zeigen (verzögert)
     setTimeout(() => maybeAskPermission(), 3500);
+
+    // Auto-Refresh: alle 5 Minuten Plan neu laden und bei Änderung Mitteilungen aktualisieren
+    setInterval(async () => {
+      try {
+        const changed = await refreshPlanData();
+        if (!changed) return;
+
+        // Badge neu laden
+        await updateNotifBadge(user);
+
+        // Infos-Screen neu rendern wenn gerade offen
+        if (_currentScreen === "infos") {
+          _currentScreen = null;
+          await navigate("infos");
+        }
+
+        // Banner: neue Mitteilungen ankündigen
+        const notifications = await getNotifications(user.group, user.role);
+        const lastPlanExp   = getPlanExportTimestamp();
+        const newItems = detectNewContent(user, lastPlanExp, planMonth, planYear, notifications, getLastVisit(), lastPlanExp);
+        for (const item of newItems) {
+          setTimeout(() => showInAppBanner(item.title, item.body, item.hash), 300);
+          showNativeNotification(item.title, item.body, item.tag, item.hash);
+        }
+        setLastPlanExported(lastPlanExp);
+      } catch {
+        // Polling-Fehler sind nicht kritisch
+      }
+    }, 5 * 60 * 1000);
 
   } catch (err) {
     console.error("[Kita-App] Init-Fehler:", err);

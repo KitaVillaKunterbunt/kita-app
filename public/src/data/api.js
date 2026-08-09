@@ -63,6 +63,37 @@ export function hasPlanData() {
   return _planData !== null;
 }
 
+/** Exportiert-Timestamp des aktuell geladenen Plans (ISO-String oder null) */
+export function getPlanExportTimestamp() {
+  return _planData?.exportiert ?? null;
+}
+
+/**
+ * Holt Plan-Daten erneut vom Server.
+ * Gibt true zurück wenn sich der Plan seit dem letzten Laden geändert hat
+ * (anderer exportiert-Timestamp). _planData wird nur bei Änderung ersetzt.
+ */
+export async function refreshPlanData() {
+  const sources = ["plan-export.json", "plan-export-public.json"];
+  for (const src of sources) {
+    try {
+      const resp = await fetch(src, { cache: "no-cache" });
+      if (!resp.ok) continue;
+      const plan = await resp.json();
+      const oldTs = _planData?.exportiert ?? null;
+      const newTs = plan.exportiert ?? null;
+      if (newTs !== oldTs) {
+        _planData = plan;
+        return true;
+      }
+      return false;
+    } catch {
+      // Quelle nicht verfügbar — nächste versuchen
+    }
+  }
+  return false;
+}
+
 /**
  * Demo-Modus: keine pins.json UND entweder kein Plan oder Plan ohne PIN-Felder.
  * Trifft auf GitHub Pages mit plan-export-public.json zu.
