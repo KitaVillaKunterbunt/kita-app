@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-09T18:57:05.175Z",
+  "exportiert": "2026-08-09T19:01:07.387Z",
   "monat": 8,
   "jahr": 2026,
   "mitarbeiter": [
@@ -4806,6 +4806,19 @@
       "gruppenNotiz": null
     }
   ],
-  "infos": [],
+  "infos": [
+    {
+      "id": "info-1786302061838-j9k4",
+      "erstelltAm": "2026-08-09T19:01:01.838Z",
+      "datum": "2026-08-10",
+      "titel": "HALLO",
+      "text": "WAS HIER STEHT IST SUPER",
+      "prioritaet": "sehrwichtig",
+      "zielgruppen": [
+        "alle"
+      ],
+      "anhang": null
+    }
+  ],
   "antraege": []
 }
