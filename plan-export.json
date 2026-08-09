@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-09T19:06:19.990Z",
+  "exportiert": "2026-08-09T19:09:07.013Z",
   "monat": 8,
   "jahr": 2026,
   "mitarbeiter": [
@@ -4808,26 +4808,14 @@
   ],
   "infos": [
     {
-      "id": "info-1786302363487-lml2",
-      "erstelltAm": "2026-08-09T19:06:03.487Z",
+      "id": "info-1786302542732-k7z8",
+      "erstelltAm": "2026-08-09T19:09:02.732Z",
       "datum": null,
-      "titel": "Test",
-      "text": "Test",
-      "prioritaet": "wichtig",
-      "zielgruppen": [
-        "alle"
-      ],
-      "anhang": null
-    },
-    {
-      "id": "info-1786302377987-redd",
-      "erstelltAm": "2026-08-09T19:06:17.987Z",
-      "datum": null,
-      "titel": "Hallo",
-      "text": "olla",
+      "titel": "Handwerker",
+      "text": "Kommen Morgen",
       "prioritaet": "normal",
       "zielgruppen": [
-        "Leitung"
+        "alle"
       ],
       "anhang": null
     }
