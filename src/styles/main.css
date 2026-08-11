@@ -2235,6 +2235,29 @@ button.card:active {
 /* ─────────────────────────────────────────────────────────────
    USER-PICKER (Person aus Liste wählen, kein PIN vorhanden)
 ───────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   ARCHIV-AKTIONEN (Leitung: Löschen)
+───────────────────────────────────────────────────────────── */
+.archiv-leeren-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px auto;
+}
+
+.notif-delete-btn {
+  margin-top: 8px;
+  color: var(--c-danger);
+  border-color: var(--c-danger);
+}
+
+.notif-delete-btn:hover {
+  background: color-mix(in srgb, var(--c-danger) 10%, transparent);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   USER-PICKER (Person aus Liste wählen, kein PIN vorhanden)
+───────────────────────────────────────────────────────────── */
 .user-picker-list {
   max-height: 55vh;
   overflow-y: auto;

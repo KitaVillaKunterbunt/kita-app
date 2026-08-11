@@ -24,6 +24,8 @@ import {
   getDemoUser,
   getPlanMitarbeiter,
   validatePin,
+  deleteNotification,
+  deleteNotifications,
   getDebugInfo,
   refreshPlanData,
   getPlanExportTimestamp,
@@ -247,7 +249,7 @@ async function navigate(screenName) {
 
         const refreshInfos = async () => {
           const fresh = await getNotifications(user.group, user.role);
-          renderInfos(container, fresh, user, confirmCb, swapCb);
+          renderInfos(container, fresh, user, confirmCb, swapCb, deleteCb, deleteAllCb);
           updateNotifBadge(user);
         };
 
@@ -263,7 +265,19 @@ async function navigate(screenName) {
           await refreshInfos();
         };
 
-        renderInfos(container, notifications, user, confirmCb, swapCb);
+        const deleteCb = async (notifId) => {
+          deleteNotification(notifId);
+          showToast("Mitteilung gelöscht.", "success");
+          await refreshInfos();
+        };
+
+        const deleteAllCb = async (notifIds) => {
+          deleteNotifications(notifIds);
+          showToast(`${notifIds.length} Mitteilung${notifIds.length !== 1 ? "en" : ""} gelöscht.`, "success");
+          await refreshInfos();
+        };
+
+        renderInfos(container, notifications, user, confirmCb, swapCb, deleteCb, deleteAllCb);
         updateNotifBadge(user);
         break;
       }

@@ -4,7 +4,7 @@
 import { escapeHTML } from "../utils.js";
 
 // Schwellwert in Tagen ab dem eine Info ins Archiv wandert
-const ARCHIVE_DAYS = 14;
+const ARCHIVE_DAYS = 30;
 
 const FILTERS = {
   aktuell:     "Aktuell",
@@ -21,6 +21,11 @@ function formatDate(isoStr) {
 function isArchived(notif) {
   const ageDays = (Date.now() - new Date(notif.createdAt).getTime()) / 86400000;
   return ageDays > ARCHIVE_DAYS;
+}
+
+function isLeitungUser(user) {
+  const role = (user.role ?? "").trim().toLowerCase();
+  return ["leitung", "stellvertreterin", "stellvertretung", "kita-leitung"].includes(role);
 }
 
 // ============================================================
@@ -80,7 +85,7 @@ function swapCardHTML(notif, userId, onSwapRespond) {
     </div>`;
 }
 
-function notifCardHTML(notif, userId) {
+function notifCardHTML(notif, userId, showDeleteBtn) {
   const priority    = notif.priority ?? (notif.type === "wichtig" ? "wichtig" : "normal");
   const isSehrWichtig = priority === "sehrwichtig";
   const isWichtig     = priority === "wichtig";
@@ -95,6 +100,12 @@ function notifCardHTML(notif, userId) {
     </button>`;
   } else if (isSehrWichtig && isConfirmed) {
     actionHTML = `<p class="text-small mt-sm" style="color:var(--c-success);font-weight:600;">✓ Bestätigt</p>`;
+  }
+
+  if (showDeleteBtn) {
+    actionHTML += `<button class="btn btn--ghost btn--sm notif-delete-btn mt-sm" data-action="delete" data-notif-id="${escapeHTML(notif.id)}" aria-label="Mitteilung löschen">
+      🗑 Löschen
+    </button>`;
   }
 
   const priorityLabel = isSehrWichtig ? "Sehr wichtig" : isWichtig ? "Wichtig" : "Info";
@@ -162,12 +173,15 @@ function applyFilter(notifications, filter, user) {
 /**
  * @param {HTMLElement} container
  * @param {Array} notifications
- * @param {{ id:string, group:string }} user
- * @param {function} onConfirm       async (notifId) => void
- * @param {function} onSwapRespond   async (notifId, accept:boolean) => void
+ * @param {{ id:string, group:string, role:string }} user
+ * @param {function} onConfirm        async (notifId) => void
+ * @param {function} onSwapRespond    async (notifId, accept:boolean) => void
+ * @param {function} [onDelete]       async (notifId) => void  — nur Leitung
+ * @param {function} [onDeleteAll]    async (notifIds[]) => void — nur Leitung
  */
-export function renderInfos(container, notifications, user, onConfirm, onSwapRespond) {
+export function renderInfos(container, notifications, user, onConfirm, onSwapRespond, onDelete, onDeleteAll) {
   let activeFilter = "aktuell";
+  const isLeitung = isLeitungUser(user);
 
   // Tauschanfragen (immer im aktuell-Tab oben)
   const pendingSwaps = notifications.filter(
@@ -183,6 +197,7 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
   function render() {
     const filtered = applyFilter(notifications, activeFilter, user);
     const urgentCount = unconfirmedSehrWichtig();
+    const isArchivTab = activeFilter === "archiv";
 
     const filterTabsHTML = Object.entries(FILTERS).map(([key, label]) => {
       let badge = "";
@@ -200,16 +215,24 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
       swapsHTML = pendingSwaps.map((n) => swapCardHTML(n, user.id, onSwapRespond)).join("");
     }
 
+    // Leitung im Archiv-Tab: Lösch-Button pro Karte + "Archiv leeren"-Button
+    const showDeleteBtn = isLeitung && isArchivTab && !!onDelete;
+    const archivLeerenBtn = isLeitung && isArchivTab && filtered.length > 0 && onDeleteAll
+      ? `<button class="btn btn--danger btn--sm archiv-leeren-btn" id="archiv-leeren">
+           🗑 Archiv leeren
+         </button>`
+      : "";
+
     const listHTML = filtered.length > 0 || swapsHTML
       ? swapsHTML + filtered.map((n) =>
-          n.type === "tausch" ? "" : notifCardHTML(n, user.id)
+          n.type === "tausch" ? "" : notifCardHTML(n, user.id, showDeleteBtn)
         ).join("")
       : `<div class="empty-state">
            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
              <path d="M13.73 21a2 2 0 01-3.46 0"/>
            </svg>
-           <p>${activeFilter === "archiv" ? "Kein Archiv vorhanden." : "Keine Mitteilungen in dieser Kategorie."}</p>
+           <p>${isArchivTab ? "Kein Archiv vorhanden." : "Keine Mitteilungen in dieser Kategorie."}</p>
          </div>`;
 
     container.innerHTML = `
@@ -218,6 +241,7 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
       <div class="filter-tabs" role="tablist" aria-label="Mitteilungsfilter">
         ${filterTabsHTML}
       </div>
+      ${archivLeerenBtn}
       <div id="notif-list">${listHTML}</div>`;
 
     attachListeners();
@@ -231,6 +255,16 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
       });
     });
 
+    // "Archiv leeren"-Button
+    container.querySelector("#archiv-leeren")?.addEventListener("click", async () => {
+      if (!onDeleteAll) return;
+      const archivedIds = notifications
+        .filter((n) => isArchived(n) && n.type !== "tausch")
+        .map((n) => n.id);
+      if (archivedIds.length === 0) return;
+      await onDeleteAll(archivedIds);
+    });
+
     const list = container.querySelector("#notif-list");
 
     list.addEventListener("click", async (e) => {
@@ -241,6 +275,16 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
         confirmBtn.disabled = true;
         confirmBtn.textContent = "Wird bestätigt …";
         await onConfirm(confirmBtn.dataset.notifId);
+        return;
+      }
+
+      // Einzelne Mitteilung löschen (Leitung, Archiv)
+      const deleteBtn = e.target.closest("[data-action='delete']");
+      if (deleteBtn && onDelete) {
+        e.stopPropagation();
+        deleteBtn.disabled = true;
+        deleteBtn.textContent = "Wird gelöscht …";
+        await onDelete(deleteBtn.dataset.notifId);
         return;
       }
 

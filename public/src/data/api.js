@@ -202,6 +202,42 @@ function _lsSaveDecision(requestId, status, reviewNote) {
 // In-Memory-Bestätigungen für plan-export-Notifications (Fallback bis SharePoint)
 const _confirmedBy = {};
 
+// ============================================================
+// Gelöschte Mitteilungen (localStorage-persistent)
+// ============================================================
+
+const LS_DELETED_NOTIFS = "kita-deleted-notifs";
+
+function _getDeletedNotifIds() {
+  if (typeof localStorage === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(LS_DELETED_NOTIFS) ?? "[]"); }
+  catch { return []; }
+}
+
+/** Einzelne Mitteilung dauerhaft löschen (Leitung). */
+export function deleteNotification(notifId) {
+  const ids = _getDeletedNotifIds();
+  if (!ids.includes(notifId)) {
+    ids.push(notifId);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(LS_DELETED_NOTIFS, JSON.stringify(ids));
+    }
+  }
+  return { success: true };
+}
+
+/** Mehrere Mitteilungen auf einmal löschen (z.B. "Archiv leeren"). */
+export function deleteNotifications(notifIds) {
+  const ids = _getDeletedNotifIds();
+  for (const id of notifIds) {
+    if (!ids.includes(id)) ids.push(id);
+  }
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(LS_DELETED_NOTIFS, JSON.stringify(ids));
+  }
+  return { success: true };
+}
+
 function _planConfirmedBy(notifId) {
   return _confirmedBy[notifId] ?? [];
 }
@@ -566,8 +602,10 @@ export async function rejectRequest(requestId, reviewNote = null) {
 export async function getNotifications(userGroup, userRole) {
   // Leitung und Stellvertreterin sehen alle Mitteilungen unabhängig von Zielgruppe
   const seeAll = userRole === "Leitung" || userRole === "Stellvertreterin";
+  const deletedIds = _getDeletedNotifIds();
   if (_planData) {
-    const adapted = adaptNotifications(_planData.infos);
+    const adapted = adaptNotifications(_planData.infos)
+      .filter((n) => !deletedIds.includes(n.id));
     return seeAll ? adapted : adapted.filter(
       (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
     );
