@@ -289,7 +289,7 @@ async function navigate(screenName) {
 
       case "dashboard": {
         if (!isLeadership(user)) {
-          navigate("home");
+          window.location.hash = "home";
           return;
         }
         const [allRequests, mitarbeiter, notifications] = await Promise.all([
@@ -700,15 +700,11 @@ function showSettings(user) {
   // Version + Deploy-Datum asynchron laden
   (async () => {
     try {
-      const [pkgResp, swResp] = await Promise.all([
-        fetch("package.json", { cache: "no-cache" }),
-        fetch("sw.js",         { method: "HEAD", cache: "no-cache" }),
+      const versionEl = overlay.querySelector("#settings-version");
+      if (versionEl) versionEl.textContent = "1.0.0";
+      const [swResp] = await Promise.all([
+        fetch("sw.js", { method: "HEAD", cache: "no-cache" }),
       ]);
-      if (pkgResp.ok) {
-        const pkg = await pkgResp.json();
-        const el = overlay.querySelector("#settings-version");
-        if (el) el.textContent = pkg.version ?? "–";
-      }
       const deployEl = overlay.querySelector("#settings-deploy");
       if (deployEl) {
         const raw = swResp.ok ? swResp.headers.get("Last-Modified") : null;
@@ -895,7 +891,7 @@ async function initApp() {
     let planExportedIso = null;
     try {
       const localSources = ["plan-export.json"];
-      for (let delta = -2; delta <= 10; delta++) {
+      for (let delta = -1; delta <= 3; delta++) {
         let m = _loadNow.getMonth() + 1 + delta;
         let y = _loadNow.getFullYear();
         while (m > 12) { m -= 12; y++; }
@@ -920,7 +916,7 @@ async function initApp() {
       if (localLoaded === 0) {
         // Öffentliche Dateien: plan-export-public.json + pro-Monat für -2..+10 Monate
         const publicSources = ["plan-export-public.json"];
-        for (let delta = -2; delta <= 10; delta++) {
+        for (let delta = -1; delta <= 3; delta++) {
           let m = _loadNow.getMonth() + 1 + delta;
           let y = _loadNow.getFullYear();
           while (m > 12) { m -= 12; y++; }

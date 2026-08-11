@@ -286,6 +286,7 @@ svg {
 ───────────────────────────────────────────────────────────── */
 .screen {
   padding: var(--sp-md);
+  padding-bottom: calc(var(--sp-md) + var(--nav-height) + var(--safe-bottom));
   min-height: calc(100dvh - var(--nav-height) - var(--safe-bottom));
   animation: fadeIn 0.20s ease-out both;
 }
@@ -363,6 +364,7 @@ svg {
 }
 
 /* Navigation Items */
+.nav-item[hidden] { display: none !important; }
 .nav-item {
   display: flex;
   flex-direction: column;

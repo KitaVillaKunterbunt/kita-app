@@ -95,7 +95,7 @@ function notifCardHTML(notif, userId, showDeleteBtn) {
 
   let actionHTML = "";
   if (isSehrWichtig && !isConfirmed) {
-    actionHTML = `<button class="btn btn--danger btn--sm mt-md" data-action="confirm" data-notif-id="${escapeHTML(notif.id)}">
+    actionHTML = `<button class="btn btn--primary btn--sm mt-md" data-action="confirm" data-notif-id="${escapeHTML(notif.id)}">
       ✓ Gelesen &amp; bestätigt
     </button>`;
   } else if (isSehrWichtig && isConfirmed) {
