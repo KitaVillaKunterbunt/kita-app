@@ -3042,6 +3042,7 @@ button.card:active {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
+  padding-right: 52px;
 }
 
 .home-header__logo {

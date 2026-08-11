@@ -169,31 +169,16 @@ describe("API: withdrawRequest()", () => {
 // ============================================================
 
 describe("API: getNotifications()", () => {
-  it('gibt "alle"- UND "Bären"-Mitteilungen für Gruppe "Bären" zurück', async () => {
+  it("gibt leeres Array zurück ohne Plan-Daten (keine Mock-Mitteilungen mehr)", async () => {
     const notifs = await getNotifications("Bären");
-
-    const hasAlle = notifs.some((n) => n.targetGroups.includes("alle"));
-    const hasBaeren = notifs.some((n) => n.targetGroups.includes("Bären"));
-
-    expect(hasAlle).toBe(true);
-    expect(hasBaeren).toBe(true);
+    expect(Array.isArray(notifs)).toBe(true);
+    expect(notifs).toHaveLength(0);
   });
 
-  it('gibt NUR "alle"-Mitteilungen für Gruppe "Löwen" zurück (keine Bären-exklusiven)', async () => {
+  it("gibt leeres Array zurück für beliebige Gruppe ohne Plan-Daten", async () => {
     const notifs = await getNotifications("Löwen");
-
-    expect(notifs.length).toBeGreaterThan(0);
-
-    // Jede zurückgegebene Mitteilung muss "alle" in targetGroups enthalten
-    notifs.forEach((n) => {
-      expect(n.targetGroups).toContain("alle");
-    });
-
-    // Kein Bären-exklusiver Eintrag darf erscheinen
-    const baerensOnly = notifs.filter(
-      (n) => n.targetGroups.includes("Bären") && !n.targetGroups.includes("alle")
-    );
-    expect(baerensOnly).toHaveLength(0);
+    expect(Array.isArray(notifs)).toBe(true);
+    expect(notifs).toHaveLength(0);
   });
 });
 

@@ -3,9 +3,10 @@
 
 import { escapeHTML } from "../utils.js";
 
-/** ISO-Datum für heute */
+/** ISO-Datum für heute (lokale Zeit) */
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 /** Shift als lesbaren String formatieren */
@@ -36,7 +37,30 @@ function buildUrlaub() {
     </div>`;
 }
 
-function buildDienstwunsch() {
+function buildDienstwunsch(shifts) {
+  const TYPE_LABEL = { frueh: "Frühdienst", spaet: "Spätdienst", teil: "Teildienst" };
+  const FALLBACK = [
+    { value: "07:00–14:00", label: "Frühdienst (07:00–14:00)" },
+    { value: "12:00–19:00", label: "Spätdienst (12:00–19:00)" },
+    { value: "09:00–15:00", label: "Teildienst (09:00–15:00)" },
+  ];
+
+  const seen = new Set();
+  const options = [];
+  for (const s of (shifts ?? [])) {
+    if (!s.startTime || !["frueh", "spaet", "teil"].includes(s.type)) continue;
+    const value = `${s.startTime}–${s.endTime ?? ""}`;
+    if (!seen.has(value)) {
+      seen.add(value);
+      options.push({ value, label: `${TYPE_LABEL[s.type]} (${value})` });
+    }
+  }
+  const shiftOptions = options.length > 0 ? options : FALLBACK;
+
+  const optionsHTML = shiftOptions
+    .map((o) => `<option value="${escapeHTML(o.value)}">${escapeHTML(o.label)}</option>`)
+    .join("");
+
   return `
     <div class="form-group">
       <label class="form-label">Datum wählen</label>
@@ -44,13 +68,17 @@ function buildDienstwunsch() {
     </div>
     <div class="form-group">
       <label class="form-label" for="field-wunsch">Gewünschte Schicht</label>
-      <select class="form-select" id="field-wunsch" name="wunsch" required>
+      <select class="form-select" id="field-wunsch" name="wunsch">
         <option value="">Bitte wählen …</option>
-        <option value="Frühdienst">Frühdienst (07:00–14:00)</option>
-        <option value="Spätdienst">Spätdienst (12:00–19:00)</option>
-        <option value="Teildienst">Teildienst (09:00–15:00)</option>
+        ${optionsHTML}
+        <option value="__custom__">Eigener Wunsch …</option>
       </select>
-      <p class="form-error" id="err-wunsch">Bitte eine Schicht wählen.</p>
+      <p class="form-error" id="err-wunsch">Bitte eine Schicht wählen oder eigenen Wunsch eingeben.</p>
+    </div>
+    <div class="form-group" id="custom-wunsch-group" hidden>
+      <label class="form-label" for="field-wunsch-custom">Eigener Wunsch</label>
+      <input class="form-input" type="text" id="field-wunsch-custom" name="wunschCustom"
+             placeholder="z. B. 08:00–15:00" maxlength="60">
     </div>
     <div class="form-group">
       <label class="form-label" for="field-note">Begründung (optional)</label>
@@ -136,7 +164,13 @@ function validate(form, activeType) {
 
   if (activeType === "dienstwunsch") {
     const wunsch = form.querySelector("#field-wunsch");
-    if (!wunsch?.value) { showErr("err-wunsch"); } else { clearErr("err-wunsch"); }
+    const customInput = form.querySelector("#field-wunsch-custom");
+    const isCustom = wunsch?.value === "__custom__";
+    if (!wunsch?.value || (isCustom && !customInput?.value?.trim())) {
+      showErr("err-wunsch");
+    } else {
+      clearErr("err-wunsch");
+    }
   }
 
   if (activeType === "diensttausch") {
@@ -159,7 +193,9 @@ function collectData(form, userId, activeType, shifts, colleagues) {
   const note      = form.querySelector("#field-note")?.value?.trim() || null;
 
   if (activeType === "dienstwunsch") {
-    const wunsch = form.querySelector("#field-wunsch")?.value ?? "";
+    const wunschVal = form.querySelector("#field-wunsch")?.value ?? "";
+    const wunschCustom = form.querySelector("#field-wunsch-custom")?.value?.trim() ?? "";
+    const wunsch = wunschVal === "__custom__" ? wunschCustom : wunschVal;
     return {
       userId, type: "dienstwunsch",
       dateFrom, dateTo: dateFrom,
@@ -391,7 +427,7 @@ export function renderAntrag(container, user, context = {}, onSubmit) {
 
   function buildFields() {
     switch (activeType) {
-      case "dienstwunsch": return buildDienstwunsch();
+      case "dienstwunsch": return buildDienstwunsch(shifts);
       case "diensttausch": return buildDiensttausch(shifts, colleagues);
       case "krankmeldung": return buildKrankmeldung();
       default:             return buildUrlaub();
@@ -437,10 +473,18 @@ export function renderAntrag(container, user, context = {}, onSubmit) {
 
     const form = container.querySelector("#antrag-form");
 
-    // Kalender-Picker für Urlaub & Dienstwunsch
-    const initY = context.planYear  ?? new Date().getFullYear();
-    const initM = context.planMonth ?? (new Date().getMonth() + 1);
-    attachCalendarPicker(form, initY, initM);
+    // Kalender immer auf heutigen Monat öffnen
+    const _today = new Date();
+    attachCalendarPicker(form, _today.getFullYear(), _today.getMonth() + 1);
+
+    // Custom-Wunsch Feld ein/ausblenden
+    const _wunschSel = form.querySelector("#field-wunsch");
+    const _customGrp = form.querySelector("#custom-wunsch-group");
+    if (_wunschSel && _customGrp) {
+      _wunschSel.addEventListener("change", () => {
+        _customGrp.hidden = _wunschSel.value !== "__custom__";
+      });
+    }
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!validate(form, activeType)) return;

@@ -794,47 +794,60 @@ async function initApp() {
   });
 
   try {
-    // Plan laden: plan-export.json (lokal, mit PINs) hat Vorrang.
-    // Sonst: plan-export-public.json + pro-Monat-Dateien parallel laden.
+    // Plan laden: lokale Dateien (mit PINs) haben Vorrang.
+    // Lokal: plan-export.json + plan-export-YYYY-MM.json (gitignored)
+    // Fallback: plan-export-public.json + plan-export-public-YYYY-MM.json (GitHub Pages)
+    const _loadNow = new Date();
     let planExportedIso = null;
     try {
-      const localResp = await fetch("plan-export.json", { cache: "no-cache" });
-      if (localResp.ok) {
-        const plan = await localResp.json();
-        setPlanData(plan);
-        planExportedIso = plan.exportiert ?? null;
-        console.log(`[Kita-App] Plan geladen (plan-export.json): ${(plan.wochen ?? []).length} Schichten ${plan.monat}/${plan.jahr}`);
-      } else {
-        // Öffentliche Dateien: plan-export-public.json + pro-Monat-Dateien für ±2..+10 Monate
+      const localSources = ["plan-export.json"];
+      for (let delta = -2; delta <= 10; delta++) {
+        let m = _loadNow.getMonth() + 1 + delta;
+        let y = _loadNow.getFullYear();
+        while (m > 12) { m -= 12; y++; }
+        while (m < 1)  { m += 12; y--; }
+        localSources.push(`plan-export-${y}-${String(m).padStart(2, "0")}.json`);
+      }
+      const localResults = await Promise.allSettled(
+        localSources.map((src) => fetch(src, { cache: "no-cache" }))
+      );
+      let localLoaded = 0;
+      for (let i = 0; i < localSources.length; i++) {
+        const r = localResults[i];
+        if (r.status === "rejected" || !r.value.ok) continue;
+        try {
+          const plan = await r.value.json();
+          setPlanData(plan);
+          planExportedIso = plan.exportiert ?? planExportedIso;
+          localLoaded++;
+        } catch { /* parse error */ }
+      }
+
+      if (localLoaded === 0) {
+        // Öffentliche Dateien: plan-export-public.json + pro-Monat für -2..+10 Monate
         const publicSources = ["plan-export-public.json"];
         for (let delta = -2; delta <= 10; delta++) {
-          let m = now.getMonth() + 1 + delta;
-          let y = now.getFullYear();
+          let m = _loadNow.getMonth() + 1 + delta;
+          let y = _loadNow.getFullYear();
           while (m > 12) { m -= 12; y++; }
           while (m < 1)  { m += 12; y--; }
           publicSources.push(`plan-export-public-${y}-${String(m).padStart(2, "0")}.json`);
         }
-        const results = await Promise.allSettled(
+        const publicResults = await Promise.allSettled(
           publicSources.map((src) => fetch(src, { cache: "no-cache" }))
         );
-        let loadedCount = 0;
-        for (let i = 0; i < publicSources.length; i++) {
-          const r = results[i];
+        for (let i = 0; i < publicResults.length; i++) {
+          const r = publicResults[i];
           if (r.status === "rejected" || !r.value.ok) continue;
           try {
             const plan = await r.value.json();
             setPlanData(plan);
             planExportedIso = plan.exportiert ?? planExportedIso;
-            loadedCount++;
-            console.log(`[Kita-App] Plan geladen (${publicSources[i]}): ${(plan.wochen ?? []).length} Schichten ${plan.monat}/${plan.jahr}`);
           } catch { /* parse error */ }
-        }
-        if (loadedCount > 0) {
-          console.log(`[Kita-App] ${loadedCount} Monatsplan(e) geladen.`);
         }
       }
     } catch {
-      // Kein Plan vorhanden — Mock-Daten bleiben aktiv
+      // Kein Plan vorhanden — Demo-Modus
     }
 
     // pins.json laden — separate Datei mit PINs, hat Priorität vor plan-export.json

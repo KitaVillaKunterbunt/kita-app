@@ -572,13 +572,8 @@ export async function getNotifications(userGroup, userRole) {
       (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
     );
   }
-  if (USE_MOCK) {
-    return seeAll
-      ? mock.MOCK_NOTIFICATIONS.slice()
-      : mock.MOCK_NOTIFICATIONS.filter(
-          (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
-        );
-  }
+  // Keine Mock-Mitteilungen — nur echte aus plan-export.json
+  return [];
   // Phase 8: return await graphApi.getNotifications(userGroup);
 }
 

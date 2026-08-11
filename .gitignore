@@ -6,5 +6,7 @@ public/src/.DS_Store
 .claude/
 public/plan-export.json
 public/pins.json
+public/plan-export-????-??.json
 plan-export.json
+plan-export-????-??.json
 dienstplan.html
