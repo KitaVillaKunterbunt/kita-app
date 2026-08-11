@@ -851,7 +851,7 @@ async function initApp() {
     }
 
     // planMonth/planYear auf nächsten verfügbaren Monat setzen
-    const _nearest = _nearestAvailableMonth(getAvailableMonths(), now);
+    const _nearest = _nearestAvailableMonth(getAvailableMonths(), new Date());
     if (_nearest) { planMonth = _nearest.monat; planYear = _nearest.jahr; }
 
     await initAuth();
