@@ -810,9 +810,29 @@ function showSettings(user) {
   });
 
   overlay.querySelector("#settings-logout").addEventListener("click", () => {
-    localStorage.removeItem("kita-user-id");
-    overlay.remove();
-    location.reload();
+    const confirmOverlay = document.createElement("div");
+    confirmOverlay.className = "decision-modal-overlay";
+    confirmOverlay.innerHTML = `
+      <div class="decision-modal">
+        <h3 class="decision-modal__title">Abmelden?</h3>
+        <p style="font-size:14px;color:var(--c-text-muted);margin-bottom:16px">
+          Du musst deinen PIN erneut eingeben.
+        </p>
+        <div class="decision-modal__actions">
+          <button class="btn btn--secondary decision-modal__cancel">Abbrechen</button>
+          <button class="btn btn--danger decision-modal__confirm">Abmelden</button>
+        </div>
+      </div>`;
+    document.body.appendChild(confirmOverlay);
+
+    const close = () => confirmOverlay.remove();
+    confirmOverlay.addEventListener("click", (e) => { if (e.target === confirmOverlay) close(); });
+    confirmOverlay.querySelector(".decision-modal__cancel").addEventListener("click", close);
+    confirmOverlay.querySelector(".decision-modal__confirm").addEventListener("click", () => {
+      localStorage.removeItem("kita-user-id");
+      overlay.remove();
+      location.reload();
+    });
   });
 }
 
