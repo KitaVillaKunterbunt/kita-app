@@ -22,6 +22,7 @@ import {
   hasPlanData,
   isDemoMode,
   getDemoUser,
+  getPlanMitarbeiter,
   validatePin,
   getDebugInfo,
   refreshPlanData,
@@ -93,8 +94,8 @@ let deferredInstallPrompt = null;
 /** Gibt true zurück wenn der Benutzer Leitungszugang hat. */
 function isLeadership(user) {
   if (!user) return false;
-  const role = (user.role ?? "").toLowerCase();
-  return role === "leitung" || role === "stellvertreterin";
+  const role = (user.role ?? "").trim().toLowerCase();
+  return ["leitung", "stellvertreterin", "stellvertretung", "kita-leitung"].includes(role);
 }
 
 // ============================================================
@@ -126,7 +127,9 @@ function showToast(message, type = "", duration = 3000) {
 async function updateNotifBadge(user) {
   try {
     const notifs = await getNotifications(user.group, user.role);
-    const unread = notifs.filter((n) => !n.confirmedBy.includes(user.id)).length;
+    const unread = notifs.filter(
+      (n) => !n.confirmedBy.includes(user.id) && (n.priority ?? n.type) === "sehrwichtig"
+    ).length;
     notifBadge.textContent = unread;
     notifBadge.hidden      = unread === 0;
   } catch {
@@ -459,6 +462,54 @@ function showDebugDialog() {
   document.body.appendChild(overlay);
   overlay.querySelector("#debug-close").addEventListener("click", () => overlay.remove());
   overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+// ============================================================
+// User-Picker (kein PIN vorhanden — Person aus Liste wählen)
+// ============================================================
+
+function showUserPicker() {
+  const persons = getPlanMitarbeiter();
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "pin-login-overlay";
+
+    const listHTML = persons.map((p) => {
+      const initials = (p.name ?? "?")
+        .split(" ")
+        .map((w) => w[0] ?? "")
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+      return `
+        <button class="user-picker-item" data-id="${escapeHTML(p.id)}">
+          <span class="user-picker-item__avatar">${escapeHTML(initials)}</span>
+          <span class="user-picker-item__name">${escapeHTML(p.name)}</span>
+          ${p.gruppe ? `<span class="user-picker-item__group">${escapeHTML(p.gruppe)}</span>` : ""}
+        </button>`;
+    }).join("");
+
+    overlay.innerHTML = `
+      <div class="pin-login-card">
+        <div class="pin-login-icon">👋</div>
+        <h1 class="pin-login-title">Kita-App</h1>
+        <p class="pin-login-sub">Wer bist du?</p>
+        <div class="user-picker-list">
+          ${listHTML || "<p style='color:var(--c-text-secondary)'>Keine Mitarbeiterinnen gefunden.</p>"}
+        </div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelectorAll(".user-picker-item").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const p = persons.find((x) => x.id === btn.dataset.id);
+        overlay.remove();
+        if (!p) { resolve(null); return; }
+        resolve({ id: p.id, displayName: p.name, email: "", group: p.gruppe, role: p.rolle ?? "mitarbeiterin" });
+      });
+    });
+  });
 }
 
 // ============================================================
@@ -870,21 +921,30 @@ async function initApp() {
     await initAuth();
     let user = getUser();
 
-    // Demo-Modus: kein pins.json + kein PIN in Plan → erste Person aus Plan (oder Mock)
-    if (!user && isDemoMode()) {
-      const demo = getDemoUser();
-      if (demo) {
-        user = demo;
-        localStorage.setItem("kita-user-id", demo.id);
-      }
-    }
-
-    // Echte Daten vorhanden, aber kein gespeicherter Login → PIN-Screen
     if (!user) {
       loadingOverlay.classList.add("hidden");
-      await showPinLogin();
-      await initAuth();
-      user = getUser();
+
+      if (!hasPlanData()) {
+        // Kein Plan überhaupt → Demo-Modus mit Mock-Daten
+        const demo = getDemoUser();
+        if (demo) {
+          user = demo;
+          localStorage.setItem("kita-user-id", demo.id);
+          showToast("Demo-Modus — keine Plandaten vorhanden", "", 4000);
+        }
+      } else if (isDemoMode()) {
+        // Plan vorhanden, aber keine PINs → Person aus Liste wählen
+        const picked = await showUserPicker();
+        if (picked) {
+          user = picked;
+          localStorage.setItem("kita-user-id", picked.id);
+        }
+      } else {
+        // Plan + PINs vorhanden → PIN-Screen
+        await showPinLogin();
+        await initAuth();
+        user = getUser();
+      }
     }
 
     if (!user) throw new Error("Kein User nach Auth");
@@ -935,10 +995,12 @@ async function initApp() {
       );
 
       for (const item of newItems) {
-        // In-App-Banner anzeigen (kurze Verzögerung damit der Screen gerendert ist)
+        // In-App-Banner immer anzeigen
         setTimeout(() => showInAppBanner(item.title, item.body, item.hash), 800);
-        // Native OS-Benachrichtigung (für zukünftige App-Öffnungen aus dem Hintergrund)
-        showNativeNotification(item.title, item.body, item.tag, item.hash);
+        // Native Push nur für neue Pläne und sehr wichtige Mitteilungen
+        if (item.type === "plan" || item.priority === "sehrwichtig") {
+          showNativeNotification(item.title, item.body, item.tag, item.hash);
+        }
       }
 
       // Stand für nächsten Besuch speichern
@@ -972,7 +1034,9 @@ async function initApp() {
         const newItems = detectNewContent(user, lastPlanExp, planMonth, planYear, notifications, getLastVisit(), lastPlanExp);
         for (const item of newItems) {
           setTimeout(() => showInAppBanner(item.title, item.body, item.hash), 300);
-          showNativeNotification(item.title, item.body, item.tag, item.hash);
+          if (item.type === "plan" || item.priority === "sehrwichtig") {
+            showNativeNotification(item.title, item.body, item.tag, item.hash);
+          }
         }
         setLastPlanExported(lastPlanExp);
       } catch {

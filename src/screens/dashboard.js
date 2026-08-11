@@ -147,7 +147,10 @@ export function renderDashboard(container, user, allRequests, mitarbeiter, notif
   container.innerHTML = `
     <div class="dashboard">
       <button class="screen-back-btn" onclick="window.location.hash='home'">&#8592; Startseite</button>
-      <h1 class="dashboard__title">Dashboard</h1>
+      <div class="dashboard__header">
+        <h1 class="dashboard__title">Dashboard</h1>
+        <span class="dashboard__leitung-badge">Leitung</span>
+      </div>
 
       <section class="dashboard-card">
         <h2 class="dashboard-card__title">

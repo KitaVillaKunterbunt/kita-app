@@ -65,11 +65,12 @@ export function detectNewContent(user, planExportedIso, planMonat, planJahr, not
     const first = newNotifs[0];
     const preview = first.body ? first.body.slice(0, 80) + (first.body.length > 80 ? '…' : '') : '';
     results.push({
-      type:  'notification',
-      title: `Neue Mitteilung: ${first.title}`,
-      body:  preview,
-      hash:  'infos',
-      tag:   `notif-${first.id}`,
+      type:     'notification',
+      priority: first.priority ?? (first.type === 'sehrwichtig' ? 'sehrwichtig' : 'normal'),
+      title:    `Neue Mitteilung: ${first.title}`,
+      body:     preview,
+      hash:     'infos',
+      tag:      `notif-${first.id}`,
     });
   }
 

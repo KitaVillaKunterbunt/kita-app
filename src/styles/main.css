@@ -2233,6 +2233,67 @@ button.card:active {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   USER-PICKER (Person aus Liste wählen, kein PIN vorhanden)
+───────────────────────────────────────────────────────────── */
+.user-picker-list {
+  max-height: 55vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 -4px;
+  padding: 0 4px;
+  text-align: left;
+}
+
+.user-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.user-picker-item:hover,
+.user-picker-item:focus {
+  border-color: var(--c-primary);
+  background: color-mix(in srgb, var(--c-primary) 8%, transparent);
+  outline: none;
+}
+
+.user-picker-item__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-picker-item__name {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  flex: 1;
+}
+
+.user-picker-item__group {
+  font-size: 11px;
+  color: var(--c-text-secondary);
+}
+
+/* ─────────────────────────────────────────────────────────────
    SETTINGS-BUTTON (Zahnrad oben rechts)
 ───────────────────────────────────────────────────────────── */
 .settings-btn {
@@ -2819,11 +2880,29 @@ button.card:active {
   padding-bottom: calc(var(--nav-height) + 24px);
 }
 
+.dashboard__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
 .dashboard__title {
   font-size: 22px;
   font-weight: 700;
   color: var(--c-text);
-  margin: 0 0 16px;
+  margin: 0;
+}
+
+.dashboard__leitung-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--c-primary);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 20px;
 }
 
 .dashboard-card {

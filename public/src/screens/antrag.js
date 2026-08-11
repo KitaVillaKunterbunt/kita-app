@@ -38,21 +38,24 @@ function buildUrlaub() {
 }
 
 function buildDienstwunsch(shifts) {
-  const TYPE_LABEL = { frueh: "Frühdienst", spaet: "Spätdienst", teil: "Teildienst" };
   const FALLBACK = [
     { value: "07:00–14:00", label: "Frühdienst (07:00–14:00)" },
     { value: "12:00–19:00", label: "Spätdienst (12:00–19:00)" },
-    { value: "09:00–15:00", label: "Teildienst (09:00–15:00)" },
   ];
 
   const seen = new Set();
   const options = [];
   for (const s of (shifts ?? [])) {
-    if (!s.startTime || !["frueh", "spaet", "teil"].includes(s.type)) continue;
+    if (!s.startTime || !["frueh", "spaet"].includes(s.type)) continue;
+    // Frühdienst: Beginn muss 07:00 oder früher sein
+    if (s.type === "frueh" && s.startTime > "07:00") continue;
+    // Spätdienst: Ende muss 17:00 oder später sein
+    if (s.type === "spaet" && s.endTime && s.endTime < "17:00") continue;
+    const label = s.type === "frueh" ? "Frühdienst" : "Spätdienst";
     const value = `${s.startTime}–${s.endTime ?? ""}`;
     if (!seen.has(value)) {
       seen.add(value);
-      options.push({ value, label: `${TYPE_LABEL[s.type]} (${value})` });
+      options.push({ value, label: `${label} (${value})` });
     }
   }
   const shiftOptions = options.length > 0 ? options : FALLBACK;
