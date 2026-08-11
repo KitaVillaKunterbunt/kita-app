@@ -180,19 +180,18 @@
             });
           }
 
-          // Fall A: SW wartet bereits beim Laden → Banner + Auto-Aktivierung
+          // Fall A: SW wartet bereits beim Laden → nur Banner zeigen
           if (reg.waiting) {
             showUpdateBanner(reg.waiting);
-            activateSW(reg.waiting);
           }
 
-          // Fall B: Neuer SW wird während der Session installiert → sofort aktivieren
+          // Fall B: Neuer SW wird während der Session installiert → nur Banner zeigen
           reg.addEventListener('updatefound', () => {
             const sw = reg.installing;
             if (!sw) return;
             sw.addEventListener('statechange', () => {
               if (sw.state === 'installed' && navigator.serviceWorker.controller) {
-                activateSW(sw);
+                showUpdateBanner(sw);
               }
             });
           });
