@@ -34,6 +34,7 @@ import {
   getPlanExportTimestamp,
   getAvailableMonths,
   getAllUserShifts,
+  setMockData,
 } from "./data/api.js";
 
 /** Nächsten verfügbaren Monat nahe dem heutigen Datum finden. */
@@ -1010,7 +1011,8 @@ async function initApp() {
       loadingOverlay.classList.add("hidden");
 
       if (!hasPlanData()) {
-        // Kein Plan überhaupt → Demo-Modus mit Mock-Daten
+        // Kein Plan überhaupt → Demo-Modus: mock.js jetzt laden (lazy)
+        setMockData(await import("./data/mock.js"));
         const demo = getDemoUser();
         if (demo) {
           user = demo;

@@ -20,8 +20,12 @@ import {
   setPinsData,
   validatePin,
   getDebugInfo,
+  setMockData,
 } from "../public/src/data/api.js";
+import * as mockModule from "../public/src/data/mock.js";
 import { MOCK_REQUESTS, MOCK_NOTIFICATIONS } from "../public/src/data/mock.js";
+
+setMockData(mockModule);
 
 // Initialen Zustand der mutierbaren Arrays sichern (tief genug für unsere Zwecke)
 const snapshotRequests = MOCK_REQUESTS.map((r) => ({ ...r }));

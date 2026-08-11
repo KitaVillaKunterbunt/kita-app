@@ -4,9 +4,20 @@
 //   2. Mock-Daten        (Entwicklung / Fallback)
 //   3. Graph API         (Phase 8, SharePoint)
 
-import * as mock from "./mock.js";
-
 const USE_MOCK = true;
+
+// Placeholder — wird durch setMockData() ersetzt sobald Demo-Modus erkannt wird.
+// Leere Arrays verhindern Crashes falls Funktionen vor dem Laden aufgerufen werden.
+let mock = {
+  MOCK_USER:          null,
+  MOCK_MITARBEITER:   [],
+  MOCK_COLLEAGUES:    [],
+  MOCK_SHIFTS:        [],
+  MOCK_REQUESTS:      [],
+  MOCK_NOTIFICATIONS: [],
+};
+
+export function setMockData(m) { mock = m; }
 
 // ============================================================
 // Plan-Daten (plan-export.json)

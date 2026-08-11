@@ -3,8 +3,11 @@
 // und das Zusammenspiel von note + groupNote im Schicht-Objekt.
 
 import { describe, it, expect } from "@jest/globals";
-import { getShifts }            from "../public/src/data/api.js";
+import { getShifts, setMockData } from "../public/src/data/api.js";
+import * as mockModule from "../public/src/data/mock.js";
 import { MOCK_SHIFTS }          from "../public/src/data/mock.js";
+
+setMockData(mockModule);
 
 // ============================================================
 // Mock-Daten: note und groupNote vorhanden
