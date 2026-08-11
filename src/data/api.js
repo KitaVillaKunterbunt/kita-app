@@ -214,6 +214,62 @@ function _getDeletedNotifIds() {
   catch { return []; }
 }
 
+// ============================================================
+// Schwarzes Brett
+// ============================================================
+
+const LS_BRETT_KEY = "kita-brett";
+
+function _getBrettLocal() {
+  if (typeof localStorage === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(LS_BRETT_KEY) ?? "[]"); }
+  catch { return []; }
+}
+
+function _adaptBrettEntries(aushänge) {
+  return (aushänge ?? []).map((a) => ({
+    id:        a.id,
+    title:     a.titel     ?? a.title     ?? "",
+    body:      a.inhalt    ?? a.body      ?? "",
+    category:  a.kategorie ?? a.category  ?? "sonstiges",
+    createdAt: a.erstelltAm ?? a.createdAt ?? "",
+    source:    "plan",
+  }));
+}
+
+/** Gibt alle Brett-Einträge zurück — aus Plan + localStorage. */
+export function getBrettEntries() {
+  const fromPlan = _adaptBrettEntries(_planData?.aushänge ?? []);
+  const local    = _getBrettLocal();
+  return [...fromPlan, ...local];
+}
+
+/** Neuen Eintrag von der Leitung in localStorage speichern. */
+export function addBrettEntry(entry) {
+  const local = _getBrettLocal();
+  local.push({
+    id:        _genId(),
+    title:     entry.title,
+    body:      entry.body      ?? "",
+    category:  entry.category  ?? "sonstiges",
+    createdAt: new Date().toISOString(),
+    source:    "lokal",
+  });
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(LS_BRETT_KEY, JSON.stringify(local));
+  }
+  return { success: true };
+}
+
+/** Lokalen Brett-Eintrag löschen (Plan-Einträge nur über Plan-Export entfernbar). */
+export function deleteBrettEntry(id) {
+  const filtered = _getBrettLocal().filter((e) => e.id !== id);
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(LS_BRETT_KEY, JSON.stringify(filtered));
+  }
+  return { success: true };
+}
+
 /** Einzelne Mitteilung dauerhaft löschen (Leitung). */
 export function deleteNotification(notifId) {
   const ids = _getDeletedNotifIds();

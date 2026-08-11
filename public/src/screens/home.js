@@ -190,7 +190,7 @@ function _render() {
     {
       id:     "brett",
       label:  "Schwarzes Brett",
-      screen: "infos",
+      screen: "brett",
       color:  "brett",
       svg: `<span style="font-size:22px;line-height:1" aria-hidden="true">📋</span>`,
     },

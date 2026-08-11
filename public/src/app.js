@@ -26,6 +26,9 @@ import {
   validatePin,
   deleteNotification,
   deleteNotifications,
+  getBrettEntries,
+  addBrettEntry,
+  deleteBrettEntry,
   getDebugInfo,
   refreshPlanData,
   getPlanExportTimestamp,
@@ -61,6 +64,7 @@ import { renderAntrag }        from "./screens/antrag.js";
 import { renderMeineAntraege } from "./screens/meine-antraege.js";
 import { renderInfos }         from "./screens/infos.js";
 import { renderDashboard }     from "./screens/dashboard.js";
+import { renderBrett }         from "./screens/brett.js";
 
 // ============================================================
 // DOM-Referenzen
@@ -73,6 +77,7 @@ const screens = {
   antraege:  document.getElementById("screen-antraege"),
   infos:     document.getElementById("screen-infos"),
   dashboard: document.getElementById("screen-dashboard"),
+  brett:     document.getElementById("screen-brett"),
 };
 
 const loadingOverlay = document.getElementById("loading-overlay");
@@ -315,6 +320,30 @@ async function navigate(screenName) {
         });
 
         renderDashboard(container, user, allRequests, mitarbeiter, notifications, onApprove, onReject);
+        break;
+      }
+
+      case "brett": {
+        const entries = getBrettEntries();
+
+        const refreshBrett = async () => {
+          const fresh = getBrettEntries();
+          renderBrett(container, fresh, user, addCb, deleteCb);
+        };
+
+        const addCb = async (entryData) => {
+          addBrettEntry(entryData);
+          showToast("Aushang hinzugefügt.", "success");
+          await refreshBrett();
+        };
+
+        const deleteCb = async (entryId) => {
+          deleteBrettEntry(entryId);
+          showToast("Aushang gelöscht.", "success");
+          await refreshBrett();
+        };
+
+        renderBrett(container, entries, user, addCb, deleteCb);
         break;
       }
     }
