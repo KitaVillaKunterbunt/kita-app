@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-11T11:04:46.941Z",
+  "exportiert": "2026-08-11T12:21:41.303Z",
   "monat": 8,
   "jahr": 2026,
   "mitarbeiter": [
@@ -4786,6 +4786,31 @@
       "gruppenNotiz": null
     }
   ],
-  "infos": [],
+  "infos": [
+    {
+      "id": "info-1786450879097-g2r1",
+      "erstelltAm": "2026-08-11T12:21:19.097Z",
+      "datum": "2026-08-14",
+      "titel": "Test",
+      "text": "Könnt ihr das lesen ?",
+      "prioritaet": "normal",
+      "zielgruppen": [
+        "alle"
+      ],
+      "anhang": null
+    },
+    {
+      "id": "info-1786450895640-49fg",
+      "erstelltAm": "2026-08-11T12:21:35.640Z",
+      "datum": "2026-08-21",
+      "titel": "Test 2",
+      "text": "Und das ?",
+      "prioritaet": "sehrwichtig",
+      "zielgruppen": [
+        "alle"
+      ],
+      "anhang": null
+    }
+  ],
   "antraege": []
 }
