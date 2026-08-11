@@ -35,6 +35,9 @@ import {
   getAvailableMonths,
   getAllUserShifts,
   setMockData,
+  validatePinForUser,
+  getUserDisplayName,
+  userHasPin,
 } from "./data/api.js";
 
 /** Nächsten verfügbaren Monat nahe dem heutigen Datum finden. */
@@ -675,6 +678,288 @@ function showPinLogin() {
 }
 
 // ============================================================
+// Erst-Login-Flow (Mitarbeiternummer → PIN-Setup oder PIN-Login)
+// ============================================================
+
+function showLoginFlow() {
+  const API_BASE =
+    window.location.hostname === "localhost" ? "http://localhost:3001" : "";
+
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "pin-login-overlay";
+    document.body.appendChild(overlay);
+
+    function render(html) {
+      overlay.innerHTML = `<div class="pin-login-card">${html}</div>`;
+    }
+
+    // ── Schritt 1: Mitarbeiternummer ──────────────────────────
+    function showStep1(errorMsg) {
+      render(`
+        <div class="pin-login-icon">🔑</div>
+        <h1 class="pin-login-title">Kita-App</h1>
+        <p class="pin-login-sub">Bitte gib deine Mitarbeiternummer ein</p>
+        <input
+          class="pin-login-input"
+          id="lf-number"
+          type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          min="1"
+          placeholder="z.B. 3"
+          autocomplete="off"
+        >
+        <p class="pin-login-error" id="lf-error" ${errorMsg ? "" : "hidden"}>${escapeHTML(errorMsg ?? "")}</p>
+        <button class="btn btn--primary btn--lg pin-login-btn" id="lf-next">
+          Weiter
+        </button>
+      `);
+
+      const input = overlay.querySelector("#lf-number");
+      const error = overlay.querySelector("#lf-error");
+      const btn   = overlay.querySelector("#lf-next");
+
+      async function next() {
+        const num = input.value.trim();
+        if (!num || isNaN(num) || Number(num) < 1) {
+          error.textContent = "Bitte eine gültige Nummer eingeben.";
+          error.hidden = false;
+          return;
+        }
+        btn.disabled = true;
+        try {
+          const resp = await fetch(`${API_BASE}/api/auth-check`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ number: num }),
+          });
+          const data = await resp.json();
+          if (!resp.ok || !data.found) {
+            error.textContent = "Mitarbeiternummer nicht gefunden.";
+            error.hidden = false;
+            btn.disabled = false;
+            return;
+          }
+          if (data.hasPin) {
+            showStep2Login(data.userId);
+          } else {
+            showStep2Setup(data.userId);
+          }
+        } catch {
+          error.textContent = "Server nicht erreichbar. Ist server.js gestartet?";
+          error.hidden = false;
+          btn.disabled = false;
+        }
+      }
+
+      btn.addEventListener("click", next);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") next(); });
+      requestAnimationFrame(() => input.focus());
+    }
+
+    // ── Schritt 2a: PIN-Setup (Erstanmeldung) ─────────────────
+    function showStep2Setup(userId) {
+      const displayName = getUserDisplayName(userId);
+      render(`
+        <div class="pin-login-icon">✨</div>
+        <h1 class="pin-login-title">Hallo, ${escapeHTML(displayName)}!</h1>
+        <p class="pin-login-sub">Wähle einen PIN (4–8 Ziffern)</p>
+        <input
+          class="pin-login-input"
+          id="lf-pin1"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="8"
+          placeholder="Neuer PIN"
+          autocomplete="new-password"
+        >
+        <input
+          class="pin-login-input"
+          id="lf-pin2"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="8"
+          placeholder="PIN bestätigen"
+          autocomplete="new-password"
+          style="margin-top:var(--sp-sm)"
+        >
+        <p class="pin-login-error" id="lf-error" hidden></p>
+        <button class="btn btn--primary btn--lg pin-login-btn" id="lf-save">
+          PIN speichern & einloggen
+        </button>
+        <button class="btn btn--secondary pin-login-btn" id="lf-back" style="margin-top:var(--sp-xs)">
+          Zurück
+        </button>
+      `);
+
+      const pin1  = overlay.querySelector("#lf-pin1");
+      const pin2  = overlay.querySelector("#lf-pin2");
+      const error = overlay.querySelector("#lf-error");
+      const save  = overlay.querySelector("#lf-save");
+      const back  = overlay.querySelector("#lf-back");
+
+      back.addEventListener("click", showStep1);
+
+      async function doSave() {
+        const p1 = pin1.value.trim();
+        const p2 = pin2.value.trim();
+
+        if (!/^\d{4,8}$/.test(p1)) {
+          error.textContent = "PIN muss 4–8 Ziffern haben.";
+          error.hidden = false;
+          return;
+        }
+        if (p1 !== p2) {
+          error.textContent = "PINs stimmen nicht überein.";
+          error.hidden = false;
+          pin2.value = "";
+          pin2.focus();
+          return;
+        }
+
+        save.disabled = true;
+        try {
+          const resp = await fetch(`${API_BASE}/api/set-pin`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, pin: p1 }),
+          });
+          const data = await resp.json();
+          if (!resp.ok) {
+            if (resp.status === 409) {
+              error.textContent = "PIN bereits gesetzt — bitte normal einloggen.";
+            } else {
+              error.textContent = data.error ?? "Fehler beim Speichern.";
+            }
+            error.hidden = false;
+            save.disabled = false;
+            return;
+          }
+          // PIN gesetzt → sofort einloggen
+          const member = validatePinForUser(userId, p1);
+          if (member) {
+            localStorage.setItem("kita-user-id", member.id);
+            overlay.remove();
+            resolve(member);
+          } else {
+            // pins.json lokal noch nicht aktuell → direkt aus userId bauen
+            overlay.remove();
+            resolve({ id: userId, displayName, email: "", group: "", role: "mitarbeiterin" });
+          }
+        } catch {
+          error.textContent = "Server nicht erreichbar.";
+          error.hidden = false;
+          save.disabled = false;
+        }
+      }
+
+      save.addEventListener("click", doSave);
+      pin2.addEventListener("keydown", (e) => { if (e.key === "Enter") doSave(); });
+      requestAnimationFrame(() => pin1.focus());
+    }
+
+    // ── Schritt 2b: PIN-Login (normaler Login) ────────────────
+    function showStep2Login(userId) {
+      const displayName = getUserDisplayName(userId);
+      render(`
+        <div class="pin-login-icon">🔑</div>
+        <h1 class="pin-login-title">Hallo, ${escapeHTML(displayName)}!</h1>
+        <p class="pin-login-sub">Bitte gib deinen PIN ein</p>
+        <input
+          class="pin-login-input"
+          id="lf-pin"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="10"
+          autocomplete="one-time-code"
+          placeholder="••••••"
+        >
+        <p class="pin-login-error" id="lf-error" hidden></p>
+        <button class="btn btn--primary btn--lg pin-login-btn" id="lf-submit">
+          Anmelden
+        </button>
+        <button class="btn btn--secondary pin-login-btn" id="lf-back" style="margin-top:var(--sp-xs)">
+          Zurück
+        </button>
+      `);
+
+      const input = overlay.querySelector("#lf-pin");
+      const error = overlay.querySelector("#lf-error");
+      const submit = overlay.querySelector("#lf-submit");
+      const back  = overlay.querySelector("#lf-back");
+
+      back.addEventListener("click", showStep1);
+
+      function showError(msg) {
+        error.textContent = msg;
+        error.hidden = false;
+      }
+      function setLocked(locked) {
+        input.disabled  = locked;
+        submit.disabled = locked;
+      }
+
+      function tryLogin() {
+        const now = Date.now();
+        if (_pinLockUntil > now) {
+          const secs = Math.ceil((_pinLockUntil - now) / 1000);
+          showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
+          return;
+        }
+
+        const pin    = input.value.trim();
+        const member = validatePinForUser(userId, pin);
+
+        if (member) {
+          _pinFailCount = 0;
+          _pinLockUntil = 0;
+          localStorage.setItem("kita-user-id", member.id);
+          overlay.remove();
+          resolve(member);
+          return;
+        }
+
+        _pinFailCount++;
+        input.value = "";
+
+        if (_pinFailCount >= 5) {
+          _pinLockUntil = Date.now() + 30_000;
+          _pinFailCount = 0;
+          setLocked(true);
+          showError("Zu viele Versuche. Bitte wende dich an die Leitung.");
+          setTimeout(() => {
+            _pinLockUntil = 0;
+            setLocked(false);
+            error.hidden = true;
+            input.focus();
+          }, 30_000);
+        } else {
+          showError(`Falscher PIN — noch ${5 - _pinFailCount} Versuch${5 - _pinFailCount === 1 ? "" : "e"}.`);
+          input.focus();
+        }
+      }
+
+      submit.addEventListener("click", tryLogin);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+
+      if (_pinLockUntil > Date.now()) {
+        setLocked(true);
+        const secs = Math.ceil((_pinLockUntil - Date.now()) / 1000);
+        showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
+      }
+
+      requestAnimationFrame(() => input.focus());
+    }
+
+    showStep1();
+  });
+}
+
+// ============================================================
 // Einstellungen / Abmelden
 // ============================================================
 
@@ -1047,10 +1332,13 @@ async function initApp() {
           localStorage.setItem("kita-user-id", picked.id);
         }
       } else {
-        // Plan + PINs vorhanden → PIN-Screen
-        await showPinLogin();
-        await initAuth();
-        user = getUser();
+        // Plan + PINs vorhanden → Login-Flow (Nummer → PIN)
+        const loggedIn = await showLoginFlow();
+        if (loggedIn) user = loggedIn;
+        else {
+          await initAuth();
+          user = getUser();
+        }
       }
     }
 

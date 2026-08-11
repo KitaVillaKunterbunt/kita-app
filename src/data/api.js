@@ -81,7 +81,48 @@ export function setPlanData(data) {
 
 /** PIN-Liste setzen (aufgerufen von app.js nach fetch von pins.json) */
 export function setPinsData(data) {
-  _pinsData = Array.isArray(data) ? data : null;
+  if (Array.isArray(data)) {
+    _pinsData = data;
+  } else if (data?.pins && typeof data.pins === "object") {
+    // Format: { aktualisiert, pins: { "user-1": "1234" | null } }
+    _pinsData = Object.entries(data.pins).map(([id, pin]) => ({ id, pin }));
+  } else {
+    _pinsData = null;
+  }
+}
+
+/** Gibt den Anzeigenamen eines Mitarbeiters anhand der ID zurück. */
+export function getUserDisplayName(userId) {
+  const list = _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
+  return list.find((m) => m.id === userId)?.name ?? userId;
+}
+
+/** Gibt true zurück wenn der User einen PIN gesetzt hat, false wenn null, null wenn unbekannt. */
+export function userHasPin(userId) {
+  if (!_pinsData) return null;
+  const entry = _pinsData.find((m) => m.id === userId);
+  if (!entry) return null;
+  return entry.pin !== null && entry.pin !== undefined;
+}
+
+/**
+ * Validiert den PIN für einen bestimmten User (userId-spezifisch).
+ * Gibt User-Objekt zurück oder null bei Fehler.
+ */
+export function validatePinForUser(userId, pin) {
+  const list = _pinsData ?? _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
+  const entry = list.find((m) => m.id === userId);
+  if (!entry || entry.pin == null || String(entry.pin) !== String(pin).trim()) return null;
+
+  const mitarbeiter = _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
+  const full = mitarbeiter.find((m) => m.id === userId) ?? entry;
+  return {
+    id:          full.id,
+    displayName: full.name ?? full.id,
+    email:       full.email ?? "",
+    group:       full.gruppe ?? "",
+    role:        full.rolle ?? "mitarbeiterin",
+  };
 }
 
 /** Debug-Informationen (für den 3×-Tap-Dialog auf der Login-Seite) */
