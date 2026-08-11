@@ -4,6 +4,7 @@
 
 import { readFileSync, writeFileSync, readdirSync } from "fs";
 import { createInterface } from "readline";
+import { randomInt } from "crypto";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -53,12 +54,12 @@ function loadNames() {
 // ── PIN-Generierung ────────────────────────────────────────────
 
 function randomPin(digits, forbidden) {
-  const max = 10 ** digits;
   const min = 10 ** (digits - 1);
+  const max = 10 ** digits;
   let pin;
   let attempts = 0;
   do {
-    pin = String(Math.floor(Math.random() * (max - min)) + min);
+    pin = String(randomInt(min, max));
     attempts++;
     if (attempts > 10_000) die("Zu viele Kollisionen bei der PIN-Generierung.");
   } while (forbidden.has(pin));
