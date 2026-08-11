@@ -94,6 +94,10 @@ let planYear  = _initDate.getFullYear();
 // Install-Prompt (Android/Chrome)
 let deferredInstallPrompt = null;
 
+// PIN-Brute-Force-Schutz (session-only, kein localStorage)
+let _pinFailCount = 0;
+let _pinLockUntil = 0;
+
 // ============================================================
 // Leitung-Erkennung
 // ============================================================
@@ -579,9 +583,7 @@ function showPinLogin() {
           autocomplete="one-time-code"
           placeholder="••••••"
         >
-        <p class="pin-login-error" id="pin-error" hidden>
-          Falscher PIN — bitte erneut versuchen.
-        </p>
+        <p class="pin-login-error" id="pin-error" hidden></p>
         <button class="btn btn--primary btn--lg pin-login-btn" id="pin-submit">
           Anmelden
         </button>
@@ -606,22 +608,66 @@ function showPinLogin() {
     const error  = overlay.querySelector("#pin-error");
     const submit = overlay.querySelector("#pin-submit");
 
+    function showError(msg) {
+      error.textContent = msg;
+      error.hidden = false;
+    }
+
+    function setLocked(locked) {
+      input.disabled  = locked;
+      submit.disabled = locked;
+    }
+
     function tryLogin() {
-      const pin = input.value.trim();
+      const now = Date.now();
+
+      if (_pinLockUntil > now) {
+        const secs = Math.ceil((_pinLockUntil - now) / 1000);
+        showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
+        return;
+      }
+
+      const pin    = input.value.trim();
       const member = validatePin(pin);
+
       if (member) {
+        _pinFailCount = 0;
+        _pinLockUntil = 0;
         localStorage.setItem("kita-user-id", member.id);
         overlay.remove();
         resolve(member);
+        return;
+      }
+
+      _pinFailCount++;
+      input.value = "";
+
+      if (_pinFailCount >= 5) {
+        _pinLockUntil = Date.now() + 30_000;
+        _pinFailCount = 0;
+        setLocked(true);
+        showError("Zu viele Versuche. Bitte wende dich an die Leitung.");
+        setTimeout(() => {
+          _pinLockUntil = 0;
+          setLocked(false);
+          error.hidden = true;
+          input.focus();
+        }, 30_000);
       } else {
-        error.hidden = false;
-        input.value  = "";
+        showError(`Falscher PIN — noch ${5 - _pinFailCount} Versuch${5 - _pinFailCount === 1 ? "" : "e"}.`);
         input.focus();
       }
     }
 
     submit.addEventListener("click", tryLogin);
     input.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+
+    // Falls Session bereits gesperrt ist (Overlay neu geöffnet während Sperre läuft)
+    if (_pinLockUntil > Date.now()) {
+      setLocked(true);
+      const secs = Math.ceil((_pinLockUntil - Date.now()) / 1000);
+      showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
+    }
 
     requestAnimationFrame(() => input.focus());
   });
