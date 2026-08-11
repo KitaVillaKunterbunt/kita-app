@@ -1,5 +1,5 @@
 // src/screens/antrag.js
-// Screen 3: Antrag stellen — Urlaub / Dienstwunsch / Diensttausch / Krankmeldung
+// Screen 3: Antrag stellen — Urlaub / Dienstwunsch / Diensttausch
 
 import { escapeHTML } from "../utils.js";
 
@@ -432,7 +432,6 @@ export function renderAntrag(container, user, context = {}, onSubmit) {
     switch (activeType) {
       case "dienstwunsch": return buildDienstwunsch(shifts);
       case "diensttausch": return buildDiensttausch(shifts, colleagues);
-      case "krankmeldung": return buildKrankmeldung();
       default:             return buildUrlaub();
     }
   }
