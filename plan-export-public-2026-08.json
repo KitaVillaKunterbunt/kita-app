@@ -3983,17 +3983,6 @@
       "gruppenNotiz": null
     },
     {
-      "datum": "2026-08-18",
-      "mitarbeiterId": "user-17",
-      "typ": "krank",
-      "vonUhr": null,
-      "bisUhr": null,
-      "gruppe": "Igel (Ü3)",
-      "raum": null,
-      "notiz": null,
-      "gruppenNotiz": null
-    },
-    {
       "datum": "2026-08-19",
       "mitarbeiterId": "user-17",
       "typ": "teil",
