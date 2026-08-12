@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kita Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f0f0ec;
+      --surface:   #ffffff;
+      --border:    #d8d8d2;
+      --text:      #1a1a1a;
+      --text-sub:  #6b6b6b;
+      --accent:    #2d6a4f;
+      --accent-fg: #ffffff;
+      --danger:    #c0392b;
+      --warn:      #e67e22;
+      --ok:        #27ae60;
+      --disabled:  #999;
+      --row-dis:   #f5f0f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:       #161616;
+        --surface:  #1e1e1e;
+        --border:   #333;
+        --text:     #e8e8e8;
+        --text-sub: #999;
+        --row-dis:  #1a1515;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg:       #161616;
+      --surface:  #1e1e1e;
+      --border:   #333;
+      --text:     #e8e8e8;
+      --text-sub: #999;
+      --row-dis:  #1a1515;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+    }
+
+    /* ── Login ────────────────────────────────────────────── */
+    #login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 1rem;
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .login-card h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .login-card p { color: var(--text-sub); font-size: 0.9rem; }
+
+    /* ── App ──────────────────────────────────────────────── */
+    #app { display: none; }
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .app-header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .main { padding: 1.5rem; max-width: 1000px; margin: 0 auto; }
+
+    /* ── Inputs & Buttons ─────────────────────────────────── */
+    input[type="password"],
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+    }
+    input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn--primary   { background: var(--accent);  color: var(--accent-fg); }
+    .btn--danger    { background: var(--danger);  color: #fff; }
+    .btn--secondary { background: var(--border);  color: var(--text); }
+    .btn--warn      { background: var(--warn);    color: #fff; }
+    .btn--sm        { padding: 0.3rem 0.65rem; font-size: 0.8rem; }
+
+    /* ── Toolbar ──────────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .toolbar h2 { font-size: 1rem; font-weight: 600; }
+
+    /* ── Tabelle ──────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+    }
+    thead th {
+      text-align: left;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-sub);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr.is-disabled { background: var(--row-dis); opacity: 0.7; }
+    tbody td {
+      padding: 0.65rem 0.9rem;
+      vertical-align: middle;
+    }
+    .name-cell { font-weight: 600; }
+    .sub { font-size: 0.78rem; color: var(--text-sub); margin-top: 1px; }
+
+    /* ── Badges ───────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge--ok   { background: #d4edda; color: #155724; }
+    .badge--warn { background: #fff3cd; color: #856404; }
+    .badge--dis  { background: #f8d7da; color: #721c24; }
+
+    /* ── PIN-Zelle ────────────────────────────────────────── */
+    .pin-cell { display: flex; align-items: center; gap: 0.4rem; }
+    .pin-value { font-family: monospace; font-size: 0.95rem; letter-spacing: 0.1em; }
+
+    /* ── Aktionen ─────────────────────────────────────────── */
+    .actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+    /* ── Modal ────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .modal h3 { font-size: 1rem; font-weight: 700; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    /* ── Toast ────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      z-index: 200;
+      white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── Error ────────────────────────────────────────────── */
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ── Login ────────────────────────────────────────────────── -->
+<div id="login">
+  <div class="login-card">
+    <h1>🔐 Kita Admin</h1>
+    <p>Bitte Passwort eingeben</p>
+    <input type="password" id="login-pw" placeholder="Admin-Passwort" autocomplete="current-password">
+    <p class="error-msg" id="login-err">Falsches Passwort</p>
+    <button class="btn btn--primary" id="login-btn">Einloggen</button>
+  </div>
+</div>
+
+<!-- ── App ──────────────────────────────────────────────────── -->
+<div id="app">
+  <div class="app-header">
+    <h1>🔑 Kita Admin — Mitarbeiterverwaltung</h1>
+    <button class="btn btn--secondary btn--sm" id="logout-btn">Abmelden</button>
+  </div>
+  <div class="main">
+    <div class="toolbar">
+      <h2 id="emp-count">Mitarbeiter</h2>
+      <button class="btn btn--primary btn--sm" id="add-btn">+ Mitarbeiter hinzufügen</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Nr.</th>
+            <th>Status</th>
+            <th>PIN-Status</th>
+            <th>PIN</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody id="emp-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ─────────────────────────────────────────────────── -->
+<div id="toast"></div>
+
+<script>
+  const API = "http://localhost:3001";
+  let token = sessionStorage.getItem("admin-token") ?? null;
+
+  // ── API-Wrapper ────────────────────────────────────────────
+  async function api(path, body) {
+    const opts = {
+      method: body ? "POST" : "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    };
+    const resp = await fetch(API + path, opts);
+    if (resp.status === 401) { logout(); throw new Error("Sitzung abgelaufen"); }
+    return { ok: resp.ok, status: resp.status, data: await resp.json() };
+  }
+
+  // ── Toast ──────────────────────────────────────────────────
+  let _toastTimer = null;
+  function toast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
+  }
+
+  function escapeHTML(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // ── Auth ───────────────────────────────────────────────────
+  function logout() {
+    sessionStorage.removeItem("admin-token");
+    token = null;
+    document.getElementById("app").style.display   = "none";
+    document.getElementById("login").style.display = "";
+    document.getElementById("login-pw").value      = "";
+  }
+
+  async function doLogin() {
+    const pw  = document.getElementById("login-pw").value;
+    const err = document.getElementById("login-err");
+    const btn = document.getElementById("login-btn");
+    err.classList.remove("show");
+    btn.disabled = true;
+    try {
+      const r = await fetch(API + "/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pw }),
+      });
+      const d = await r.json();
+      if (!r.ok || !d.token) {
+        err.classList.add("show");
+        document.getElementById("login-pw").value = "";
+        return;
+      }
+      token = d.token;
+      sessionStorage.setItem("admin-token", token);
+      showApp();
+    } catch {
+      err.textContent = "Server nicht erreichbar. Läuft server.js?";
+      err.classList.add("show");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ── Mitarbeiter laden ──────────────────────────────────────
+  async function loadEmployees() {
+    const r = await api("/api/admin/data");
+    if (!r.ok) { toast("Fehler beim Laden"); return []; }
+    return r.data.employees ?? [];
+  }
+
+  function renderTable(employees) {
+    document.getElementById("emp-count").textContent =
+      `${employees.length} Mitarbeiter${employees.length === 1 ? "in" : "innen"}`;
+
+    const tbody = document.getElementById("emp-body");
+    if (employees.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-sub);padding:2rem">
+        Keine Mitarbeiterinnen in pins.json
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = employees.map((e) => {
+      const statusBadge = e.disabled
+        ? `<span class="badge badge--dis">Deaktiviert</span>`
+        : `<span class="badge badge--ok">Aktiv</span>`;
+
+      const pinBadge = e.hasPin
+        ? `<span class="badge badge--ok">Gesetzt</span>`
+        : `<span class="badge badge--warn">Kein PIN</span>`;
+
+      const pinDisplay = e.pin != null
+        ? `<span class="pin-value" data-pin="${escapeHTML(e.pin)}" data-shown="false">••••</span>
+           <button class="btn btn--secondary btn--sm" onclick="togglePin(this)">Anzeigen</button>`
+        : `<span style="color:var(--text-sub);font-size:0.85rem">—</span>`;
+
+      const resetBtn = e.hasPin
+        ? `<button class="btn btn--warn btn--sm" onclick="resetPin('${escapeHTML(e.userId)}')">PIN zurücksetzen</button>`
+        : "";
+
+      const toggleBtn = e.disabled
+        ? `<button class="btn btn--secondary btn--sm" onclick="activateEmployee('${escapeHTML(e.userId)}')">Aktivieren</button>`
+        : `<button class="btn btn--danger btn--sm" onclick="deactivateEmployee('${escapeHTML(e.userId)}')">Deaktivieren</button>`;
+
+      return `
+        <tr class="${e.disabled ? "is-disabled" : ""}" id="row-${escapeHTML(e.userId)}">
+          <td class="name-cell">
+            ${escapeHTML(e.name)}
+            ${e.gruppe ? `<div class="sub">${escapeHTML(e.gruppe)}</div>` : ""}
+          </td>
+          <td>${escapeHTML(e.number)}</td>
+          <td>${statusBadge}</td>
+          <td>${pinBadge}</td>
+          <td><div class="pin-cell">${pinDisplay}</div></td>
+          <td><div class="actions">${resetBtn}${toggleBtn}</div></td>
+        </tr>`;
+    }).join("");
+  }
+
+  function togglePin(btn) {
+    const span = btn.previousElementSibling;
+    const shown = span.dataset.shown === "true";
+    if (shown) {
+      span.textContent  = "••••";
+      span.dataset.shown = "false";
+      btn.textContent   = "Anzeigen";
+    } else {
+      span.textContent  = span.dataset.pin;
+      span.dataset.shown = "true";
+      btn.textContent   = "Verbergen";
+    }
+  }
+
+  // ── Aktionen ───────────────────────────────────────────────
+  async function resetPin(userId) {
+    if (!confirm(`PIN für ${userId} zurücksetzen? Die Person muss sich dann neu einen PIN setzen.`)) return;
+    const r = await api("/api/admin/reset-pin", { userId });
+    if (r.ok) { toast("PIN zurückgesetzt"); await refresh(); }
+    else toast("Fehler: " + (r.data.error ?? "Unbekannt"));
+  }
+
+  async function deactivateEmployee(userId) {
+    if (!confirm(`${userId} deaktivieren? Login wird blockiert.`)) return;
+    const r = await api("/api/admin/deactivate", { userId });
+    if (r.ok) { toast("Deaktiviert"); await refresh(); }
+    else toast("Fehler: " + (r.data.error ?? "Unbekannt"));
+  }
+
+  async function activateEmployee(userId) {
+    const r = await api("/api/admin/activate", { userId });
+    if (r.ok) { toast("Aktiviert"); await refresh(); }
+    else toast("Fehler: " + (r.data.error ?? "Unbekannt"));
+  }
+
+  async function refresh() {
+    const employees = await loadEmployees();
+    renderTable(employees);
+  }
+
+  // ── Mitarbeiter hinzufügen ─────────────────────────────────
+  function showAddModal() {
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    overlay.innerHTML = `
+      <div class="modal">
+        <h3>Mitarbeiter hinzufügen</h3>
+        <p style="font-size:0.875rem;color:var(--text-sub)">
+          Fügt einen neuen Eintrag in pins.json hinzu (pin = null).<br>
+          Der Name kommt aus der Plan-Datei.
+        </p>
+        <label>
+          <span style="font-size:0.875rem;font-weight:600">Mitarbeiternummer</span>
+          <input type="number" id="modal-number" min="1" placeholder="z.B. 12" style="margin-top:0.35rem">
+        </label>
+        <p class="error-msg" id="modal-err"></p>
+        <div class="modal-actions">
+          <button class="btn btn--secondary" id="modal-cancel">Abbrechen</button>
+          <button class="btn btn--primary"   id="modal-save">Hinzufügen</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+    const numInput = overlay.querySelector("#modal-number");
+    const errEl    = overlay.querySelector("#modal-err");
+    const saveBtn  = overlay.querySelector("#modal-save");
+
+    overlay.querySelector("#modal-cancel").addEventListener("click", () => overlay.remove());
+
+    saveBtn.addEventListener("click", async () => {
+      const number = numInput.value.trim();
+      if (!number) {
+        errEl.textContent = "Bitte eine Nummer eingeben.";
+        errEl.classList.add("show");
+        return;
+      }
+      saveBtn.disabled = true;
+      const r = await api("/api/admin/add-employee", { number });
+      if (r.ok) {
+        overlay.remove();
+        toast(`Mitarbeiter user-${number} hinzugefügt`);
+        await refresh();
+      } else {
+        errEl.textContent = r.data.error ?? "Fehler";
+        errEl.classList.add("show");
+        saveBtn.disabled = false;
+      }
+    });
+
+    numInput.addEventListener("keydown", (e) => { if (e.key === "Enter") saveBtn.click(); });
+    requestAnimationFrame(() => numInput.focus());
+  }
+
+  // ── App anzeigen ───────────────────────────────────────────
+  async function showApp() {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display   = "";
+    await refresh();
+  }
+
+  // ── Init ───────────────────────────────────────────────────
+  document.getElementById("login-btn").addEventListener("click", doLogin);
+  document.getElementById("login-pw").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") doLogin();
+  });
+  document.getElementById("logout-btn").addEventListener("click", logout);
+  document.getElementById("add-btn").addEventListener("click", showAddModal);
+
+  // Token aus Session prüfen
+  if (token) {
+    showApp().catch(() => { logout(); });
+  } else {
+    document.getElementById("login-pw").focus();
+  }
+</script>
+</body>
+</html>

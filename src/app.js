@@ -735,6 +735,12 @@ function showLoginFlow() {
             body: JSON.stringify({ number: num }),
           });
           const data = await resp.json();
+          if (resp.status === 403 && data.disabled) {
+            error.textContent = "Dein Account ist deaktiviert. Bitte wende dich an die Leitung.";
+            error.hidden = false;
+            btn.disabled = false;
+            return;
+          }
           if (!resp.ok || !data.found) {
             error.textContent = "Mitarbeiternummer nicht gefunden.";
             error.hidden = false;

@@ -1,6 +1,7 @@
 node_modules/
 .mcp.json
 .DS_Store
+.env
 public/.DS_Store
 public/src/.DS_Store
 *.zip
