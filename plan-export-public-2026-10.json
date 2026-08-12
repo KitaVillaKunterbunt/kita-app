@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-11T12:20:47.436Z",
+  "exportiert": "2026-08-12T20:19:37.880Z",
   "monat": 10,
   "jahr": 2026,
   "mitarbeiter": [
@@ -8,160 +8,140 @@
       "name": "Vanessa",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "ebfde217801bb3ce19ad09f4339c8a7fe8bad70b3183b4fdecb75822c2d1694a"
     },
     {
       "id": "user-2",
       "name": "Rieke",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "8e3c95a30763a9ab09992e8fdf787cd809be62c703e74a91ccc43c4ccb177108"
     },
     {
       "id": "user-3",
       "name": "Vera",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "e402c4e6a79dc65b5238510a8ec4c00c6a36b1328c448c60c43435a4ab888593"
     },
     {
       "id": "user-4",
       "name": "Doreen",
       "gruppe": "Käfer (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "c9d7726fe67197b9313617658f4b4efa138d2d8e154f7e38ac6183b9457491d2"
     },
     {
       "id": "user-5",
       "name": "Biance",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "10a91716f00ff165d66cab2cabff3fd3bf24612d310ee427fbb4dc32fdb03348"
     },
     {
       "id": "user-6",
       "name": "Julia",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "e53361ee0d1c4783935681d53025b20b3e2b7f5fbaab64d846b2e01f737ceca6"
     },
     {
       "id": "user-7",
       "name": "Sabine",
       "gruppe": "Mäuse (U3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "d9f9dbceee1d7ad63929aeb7f3d6beafd682240046f89f6e1c83d341418a203c"
     },
     {
       "id": "user-8",
-      "name": "Emely",
+      "name": "Emilia",
       "gruppe": "Mäuse (U3)",
       "rolle": "Praktikantin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "01eedebd48eb1d3c7909301bfdb970cf080b7ec8c3eb0878ec2cc4dd0e24adbe"
     },
     {
       "id": "user-9",
       "name": "Larissa",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "aba2a87e42327c876599ca58365be3d5099855db4d931b4fa7fc8aa12346e802"
     },
     {
       "id": "user-10",
       "name": "Celina",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "d4c6572b57e1fdb58358bd6f4cb40fcc039454f6aec98fe24129b343225721ef"
     },
     {
       "id": "user-11",
       "name": "Hedwig",
       "gruppe": "Bären (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "d108c5832abc9a409229d47671c9e1fbf6dfdfb987df612555d656d60da1221b"
     },
     {
       "id": "user-12",
       "name": "Simge",
       "gruppe": "Bären (Ü3)",
       "rolle": "Praktikantin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "b102d410b07c82d80a0ac3d65c5276d839bbfbdd3f279cac4a269ebb271dd053"
     },
     {
       "id": "user-13",
       "name": "Gabi",
       "gruppe": "Dino (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "d29f91973620fb1745b73d91a140698d56b5c165492be156b25ba7b0113f51b7"
     },
     {
       "id": "user-14",
       "name": "Andju",
       "gruppe": "Dino (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "f8e305a0ffc21a8043bd3d6822f11ec55d160b7cf54be3566eb213752b5b25c8"
     },
     {
       "id": "user-15",
       "name": "Andreea",
       "gruppe": "Dino (Ü3)",
       "rolle": "Praktikantin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "0dfddf0e5cead7ac7ca11570641581510efcffec87cc22b44c8669d5f84f0152"
     },
     {
       "id": "user-16",
       "name": "Laura",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "068d467d162eae7f3bc6b855f08f92a57cd4c4703555532e644c1e4535f19e16"
     },
     {
       "id": "user-17",
       "name": "Anke",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "fc208950a1be806098773535c7a0b5668f2ddcd3fc2a16d4c676ec777722a5a5"
     },
     {
       "id": "user-18",
       "name": "Janina",
       "gruppe": "Igel (Ü3)",
       "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "aeadb77cf9351cfbd24268dc84b4d9a77dc631c12c14e44d12d1c68c106cba89"
     },
     {
       "id": "user-19",
       "name": "Svenja",
       "gruppe": "Springer",
       "rolle": "Stellvertreterin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "867db60036409bf9c572632222bd7395e81c91d7d13a73afad7ee83bd00164e8"
     },
     {
       "id": "user-20",
       "name": "Pierre",
       "gruppe": "Leitung",
       "rolle": "Leitung",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "pinHash": "0293ce9c59069f4410359191c438f409d2e70c350c0e771591790777c474f4b2"
     }
   ],
   "wochen": [
@@ -1864,7 +1844,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1875,7 +1855,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1919,7 +1899,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1930,7 +1910,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1974,7 +1954,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1985,7 +1965,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -2029,7 +2009,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -2040,7 +2020,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -2084,7 +2064,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -2095,7 +2075,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:30",
+      "bisUhr": "16:00",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
