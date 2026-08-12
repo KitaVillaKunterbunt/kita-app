@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-09T14:12:29.218Z",
+  "exportiert": "2026-08-12T20:07:59.196Z",
   "monat": 9,
   "jahr": 2026,
   "mitarbeiter": [
@@ -7,161 +7,121 @@
       "id": "user-1",
       "name": "Vanessa",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-2",
       "name": "Rieke",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-3",
       "name": "Vera",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-4",
       "name": "Doreen",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-5",
       "name": "Biance",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-6",
       "name": "Julia",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-7",
       "name": "Sabine",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-8",
       "name": "Emilia",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Praktikantin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Praktikantin"
     },
     {
       "id": "user-9",
       "name": "Larissa",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-10",
       "name": "Celina",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-11",
       "name": "Hedwig",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-12",
       "name": "Simge",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Praktikantin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Praktikantin"
     },
     {
       "id": "user-13",
       "name": "Gabi",
       "gruppe": "Dino (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-14",
       "name": "Andju",
       "gruppe": "Dino (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-15",
       "name": "Andreea",
       "gruppe": "Dino (Ü3)",
-      "rolle": "Praktikantin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Praktikantin"
     },
     {
       "id": "user-16",
       "name": "Laura",
       "gruppe": "Igel (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-17",
       "name": "Anke",
       "gruppe": "Igel (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-18",
       "name": "Janina",
       "gruppe": "Igel (Ü3)",
-      "rolle": "Erzieherin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Erzieherin"
     },
     {
       "id": "user-19",
       "name": "Svenja",
       "gruppe": "Springer",
-      "rolle": "Stellvertreterin",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Stellvertreterin"
     },
     {
       "id": "user-20",
       "name": "Pierre",
       "gruppe": "Leitung",
-      "rolle": "Leitung",
-      "geburtstag": null,
-      "eintrittsdatum": null
+      "rolle": "Leitung"
     }
   ],
   "wochen": [
