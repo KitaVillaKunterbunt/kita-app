@@ -6,6 +6,16 @@
 
 const USE_MOCK = true;
 
+async function sha256(str) {
+  const data = new TextEncoder().encode(str);
+  if (typeof globalThis !== 'undefined' && globalThis.crypto?.subtle) {
+    const buf = await globalThis.crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  const { createHash } = await import('node:crypto');
+  return createHash('sha256').update(str, 'utf8').digest('hex');
+}
+
 // Placeholder — wird durch setMockData() ersetzt sobald Demo-Modus erkannt wird.
 // Leere Arrays verhindern Crashes falls Funktionen vor dem Laden aufgerufen werden.
 let mock = {
@@ -29,8 +39,6 @@ let _planData = null;
 // Einzelne Monats-Pläne: key = "YYYY-MM" → Plan-Objekt
 let _planMonths = {};
 
-// Wird von app.js via setPinsData() gefüllt wenn pins.json geladen wurde.
-let _pinsData = null;
 
 /** Alle Monatspläne zu einem einzigen Objekt zusammenführen. */
 function _buildMergedPlan() {
@@ -79,17 +87,6 @@ export function setPlanData(data) {
   _planData = _buildMergedPlan();
 }
 
-/** PIN-Liste setzen (aufgerufen von app.js nach fetch von pins.json) */
-export function setPinsData(data) {
-  if (Array.isArray(data)) {
-    _pinsData = data;
-  } else if (data?.pins && typeof data.pins === "object") {
-    // Format: { aktualisiert, pins: { "user-1": "1234" | null } }
-    _pinsData = Object.entries(data.pins).map(([id, pin]) => ({ id, pin }));
-  } else {
-    _pinsData = null;
-  }
-}
 
 /** Gibt den Anzeigenamen eines Mitarbeiters anhand der ID zurück. */
 export function getUserDisplayName(userId) {
@@ -97,42 +94,32 @@ export function getUserDisplayName(userId) {
   return list.find((m) => m.id === userId)?.name ?? userId;
 }
 
-/** Gibt true zurück wenn der User einen PIN gesetzt hat, false wenn null, null wenn unbekannt. */
-export function userHasPin(userId) {
-  if (!_pinsData) return null;
-  const entry = _pinsData.find((m) => m.id === userId);
-  if (!entry) return null;
-  return entry.pin !== null && entry.pin !== undefined;
-}
-
 /**
- * Validiert den PIN für einen bestimmten User (userId-spezifisch).
+ * Validiert den PIN für einen bestimmten User (userId-spezifisch) via SHA-256.
  * Gibt User-Objekt zurück oder null bei Fehler.
  */
-export function validatePinForUser(userId, pin) {
-  const list = _pinsData ?? _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
-  const entry = list.find((m) => m.id === userId);
-  if (!entry || entry.pin == null || String(entry.pin) !== String(pin).trim()) return null;
-
+export async function validatePinForUser(userId, pin) {
   const mitarbeiter = _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
-  const full = mitarbeiter.find((m) => m.id === userId) ?? entry;
+  const m = mitarbeiter.find((e) => e.id === userId);
+  if (!m?.pinHash) return null;
+  const hash = await sha256(userId + ':' + String(pin).trim());
+  if (hash !== m.pinHash) return null;
   return {
-    id:          full.id,
-    displayName: full.name ?? full.id,
-    email:       full.email ?? "",
-    group:       full.gruppe ?? "",
-    role:        full.rolle ?? "mitarbeiterin",
+    id:          m.id,
+    displayName: m.name ?? m.id,
+    email:       m.email ?? "",
+    group:       m.gruppe ?? "",
+    role:        m.rolle ?? "mitarbeiterin",
   };
 }
 
 /** Debug-Informationen (für den 3×-Tap-Dialog auf der Login-Seite) */
 export function getDebugInfo() {
-  const list = _pinsData ?? _planData?.mitarbeiter ?? [];
+  const list = _planData?.mitarbeiter ?? [];
   return {
-    loaded:           !!_planData,
-    pinsLoaded:       !!_pinsData,
-    mitarbeiterCount: list.length,
-    firstPinSet:      list[0]?.pin != null,
+    loaded:            !!_planData,
+    mitarbeiterCount:  list.length,
+    firstPinHashSet:   list[0]?.pinHash != null,
   };
 }
 
@@ -219,13 +206,12 @@ export async function refreshPlanData() {
 }
 
 /**
- * Demo-Modus: keine pins.json UND entweder kein Plan oder Plan ohne PIN-Felder.
- * Trifft auf GitHub Pages mit plan-export-public.json zu.
+ * Demo-Modus: kein Plan oder Plan ohne pinHash-Felder.
+ * Trifft auf GitHub Pages mit plan-export-public.json ohne pinHash zu.
  */
 export function isDemoMode() {
-  if (_pinsData !== null) return false;
   if (_planData === null) return true;
-  return !(_planData.mitarbeiter ?? []).some(m => m.pin != null);
+  return !(_planData.mitarbeiter ?? []).some(m => m.pinHash != null);
 }
 
 /** Ersten Mitarbeiter aus Plan (oder Mock) als Demo-User zurückgeben. */
@@ -419,34 +405,38 @@ export function getPlanMitarbeiter() {
 }
 
 /**
- * Prüft einen PIN gegen die Mitarbeiterliste aus plan-export.json.
+ * Prüft einen PIN gegen alle Mitarbeiter via SHA-256.
  * Gibt bei Treffer das User-Objekt zurück, sonst null.
  */
-export function validatePin(pin) {
-  const list = _pinsData ?? _planData?.mitarbeiter ?? mock.MOCK_MITARBEITER;
-  const m = list.find((m) => String(m.pin) === String(pin).trim());
-  if (!m) return null;
-  return {
-    id:          m.id,
-    displayName: m.name,
-    email:       m.email ?? "",
-    group:       m.gruppe,
-    role:        m.rolle ?? "mitarbeiterin",
-  };
+export async function validatePin(pin) {
+  const list = _planData?.mitarbeiter ?? mock.MOCK_MITARBEITER;
+  const trimmed = String(pin).trim();
+  for (const m of list) {
+    if (!m.pinHash) continue;
+    const hash = await sha256(m.id + ':' + trimmed);
+    if (hash === m.pinHash) {
+      return {
+        id:          m.id,
+        displayName: m.name,
+        email:       m.email ?? "",
+        group:       m.gruppe,
+        role:        m.rolle ?? "mitarbeiterin",
+      };
+    }
+  }
+  return null;
 }
 
 // ============================================================
 // Colleagues
 // ============================================================
 
-/** Gibt Mitarbeiterinnen mit Geburtstag- und Eintrittsdaten zurück (für Kalender-Events). */
+/** Gibt Mitarbeiterinnen zurück (für Kalender-Events). Kein geburtstag/eintrittsdatum — DSGVO. */
 export function getMitarbeiter() {
   if (_planData) {
     return (_planData.mitarbeiter ?? []).map((m) => ({
-      id:             m.id,
-      name:           m.name,
-      geburtstag:     m.geburtstag     ?? null,
-      eintrittsdatum: m.eintrittsdatum ?? null,
+      id:   m.id,
+      name: m.name,
     }));
   }
   return mock.MOCK_MITARBEITER ?? [];

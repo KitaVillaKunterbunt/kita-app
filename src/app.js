@@ -18,7 +18,6 @@ import {
   confirmNotification,
   respondToSwapRequest,
   setPlanData,
-  setPinsData,
   hasPlanData,
   isDemoMode,
   getDemoUser,
@@ -37,7 +36,6 @@ import {
   setMockData,
   validatePinForUser,
   getUserDisplayName,
-  userHasPin,
 } from "./data/api.js";
 
 /** Nächsten verfügbaren Monat nahe dem heutigen Datum finden. */
@@ -490,9 +488,8 @@ function showDebugDialog() {
 
   const rows = [
     ["Plan geladen",  info.loaded ? "✅ ja" : "❌ nein"],
-    ["PINs geladen",  info.pinsLoaded ? "✅ ja" : "❌ nein"],
     ["Mitarbeiter",   String(info.mitarbeiterCount)],
-    ["Erster PIN",    info.firstPinSet ? "gesetzt" : "—"],
+    ["Erster Hash",   info.firstPinHashSet ? "gesetzt" : "—"],
   ];
 
   const tableRows = rows.map(([label, value]) => `
@@ -622,7 +619,7 @@ function showPinLogin() {
       submit.disabled = locked;
     }
 
-    function tryLogin() {
+    async function tryLogin() {
       const now = Date.now();
 
       if (_pinLockUntil > now) {
@@ -632,7 +629,7 @@ function showPinLogin() {
       }
 
       const pin    = input.value.trim();
-      const member = validatePin(pin);
+      const member = await validatePin(pin);
 
       if (member) {
         _pinFailCount = 0;
@@ -845,13 +842,13 @@ function showLoginFlow() {
             return;
           }
           // PIN gesetzt → sofort einloggen
-          const member = validatePinForUser(userId, p1);
+          const member = await validatePinForUser(userId, p1);
           if (member) {
             localStorage.setItem("kita-user-id", member.id);
             overlay.remove();
             resolve(member);
           } else {
-            // pins.json lokal noch nicht aktuell → direkt aus userId bauen
+            // pinHash noch nicht im Plan — direkt aus userId bauen
             overlay.remove();
             resolve({ id: userId, displayName, email: "", group: "", role: "mitarbeiterin" });
           }
@@ -909,7 +906,7 @@ function showLoginFlow() {
         submit.disabled = locked;
       }
 
-      function tryLogin() {
+      async function tryLogin() {
         const now = Date.now();
         if (_pinLockUntil > now) {
           const secs = Math.ceil((_pinLockUntil - now) / 1000);
@@ -918,7 +915,7 @@ function showLoginFlow() {
         }
 
         const pin    = input.value.trim();
-        const member = validatePinForUser(userId, pin);
+        const member = await validatePinForUser(userId, pin);
 
         if (member) {
           _pinFailCount = 0;
@@ -1298,20 +1295,7 @@ async function initApp() {
       // Kein Plan vorhanden — Demo-Modus
     }
 
-    // pins.json laden — separate Datei mit PINs, hat Priorität vor plan-export.json
-    try {
-      const pinsResp = await fetch("pins.json", { cache: "no-cache" });
-      if (pinsResp.ok) {
-        const pins = await pinsResp.json();
-        setPinsData(pins);
-        const dbg = getDebugInfo();
-        console.log(`[Kita-App] pins.json geladen — ${dbg.mitarbeiterCount} PINs, Erster: ${dbg.firstPinSet ? 'gesetzt' : '—'}`);
-      }
-    } catch {
-      // pins.json nicht verfügbar — Fallback auf mitarbeiter aus plan-export.json
-    }
-
-    // planMonth/planYear auf nächsten verfügbaren Monat setzen
+// planMonth/planYear auf nächsten verfügbaren Monat setzen
     const _nearest = _nearestAvailableMonth(getAvailableMonths(), new Date());
     if (_nearest) { planMonth = _nearest.monat; planYear = _nearest.jahr; }
 
@@ -1328,7 +1312,7 @@ async function initApp() {
         if (demo) {
           user = demo;
           localStorage.setItem("kita-user-id", demo.id);
-          showToast("Demo-Modus — keine Plandaten vorhanden", "", 4000);
+          showToast("Plan noch nicht veröffentlicht — bitte Leitung fragen", "", 5000);
         }
       } else if (isDemoMode()) {
         // Plan vorhanden, aber keine PINs → Person aus Liste wählen

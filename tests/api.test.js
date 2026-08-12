@@ -17,7 +17,6 @@ import {
   approveRequest,
   rejectRequest,
   setPlanData,
-  setPinsData,
   validatePin,
   getDebugInfo,
   setMockData,
@@ -281,135 +280,90 @@ describe("API: rejectRequest() im Mock-Modus", () => {
 });
 
 // ============================================================
-// setPinsData
-// ============================================================
-
-describe("API: setPinsData()", () => {
-  afterEach(() => { setPinsData(null); });
-
-  it("speichert ein Array korrekt — getDebugInfo zeigt pinsLoaded true", () => {
-    setPinsData([{ id: "u1", name: "A", gruppe: "X", rolle: "Erzieherin", pin: "1111" }]);
-    expect(getDebugInfo().pinsLoaded).toBe(true);
-    expect(getDebugInfo().mitarbeiterCount).toBe(1);
-  });
-
-  it("ignoriert null — pinsLoaded bleibt false", () => {
-    setPinsData(null);
-    expect(getDebugInfo().pinsLoaded).toBe(false);
-  });
-
-  it("ignoriert Nicht-Array (Objekt) — pinsLoaded bleibt false", () => {
-    setPinsData({ id: "u1", pin: "1234" });
-    expect(getDebugInfo().pinsLoaded).toBe(false);
-  });
-
-  it("überschreibt vorherige Pins-Daten", () => {
-    setPinsData([{ id: "u1", name: "A", gruppe: "X", rolle: "Erzieherin", pin: "1111" }]);
-    setPinsData([
-      { id: "u2", name: "B", gruppe: "X", rolle: "Erzieherin", pin: "2222" },
-      { id: "u3", name: "C", gruppe: "X", rolle: "Erzieherin", pin: "3333" },
-    ]);
-    expect(getDebugInfo().mitarbeiterCount).toBe(2);
-    expect(getDebugInfo().firstPinSet).toBe(true);
-  });
-});
-
-// ============================================================
 // getDebugInfo
 // ============================================================
 
 describe("API: getDebugInfo()", () => {
-  afterEach(() => { setPlanData(null); setPinsData(null); });
+  afterEach(() => { setPlanData(null); });
 
-  it("gibt Null-Zustand zurück wenn weder Plan noch Pins geladen", () => {
+  it("gibt Null-Zustand zurück wenn kein Plan geladen", () => {
     setPlanData(null);
-    setPinsData(null);
     const info = getDebugInfo();
     expect(info.loaded).toBe(false);
-    expect(info.pinsLoaded).toBe(false);
     expect(info.mitarbeiterCount).toBe(0);
-    expect(info.firstPinSet).toBe(false);
+    expect(info.firstPinHashSet).toBe(false);
   });
 
-  it("zeigt Mitarbeiter aus pins.json (Priorität vor plan)", () => {
-    setPlanData({ mitarbeiter: [{ id: "p1", name: "Plan", gruppe: "X", rolle: "Erzieherin", pin: "0000" }], wochen: [], infos: [] });
-    setPinsData([
-      { id: "u1", name: "A", gruppe: "X", rolle: "Erzieherin", pin: "1111" },
-      { id: "u2", name: "B", gruppe: "X", rolle: "Erzieherin", pin: "2222" },
-    ]);
+  it("zeigt Mitarbeiter aus plan.mitarbeiter", () => {
+    setPlanData({ mitarbeiter: [
+      { id: "u1", name: "A", gruppe: "X", rolle: "Erzieherin", pinHash: "abc" },
+      { id: "u2", name: "B", gruppe: "X", rolle: "Erzieherin", pinHash: "def" },
+    ], wochen: [], infos: [] });
     const info = getDebugInfo();
     expect(info.loaded).toBe(true);
-    expect(info.pinsLoaded).toBe(true);
     expect(info.mitarbeiterCount).toBe(2);
-    expect(info.firstPinSet).toBe(true);
+    expect(info.firstPinHashSet).toBe(true);
   });
 
-  it("fällt auf plan.mitarbeiter zurück wenn keine pins.json", () => {
-    setPinsData(null);
-    setPlanData({ mitarbeiter: [{ id: "u1", name: "A", gruppe: "X", rolle: "Erzieherin", pin: "9999" }], wochen: [], infos: [] });
+  it("firstPinHashSet ist false wenn kein pinHash gesetzt", () => {
+    setPlanData({ mitarbeiter: [{ id: "u1", name: "A", gruppe: "X", rolle: "Erzieherin" }], wochen: [], infos: [] });
     const info = getDebugInfo();
     expect(info.loaded).toBe(true);
-    expect(info.pinsLoaded).toBe(false);
-    expect(info.mitarbeiterCount).toBe(1);
-    expect(info.firstPinSet).toBe(true);
+    expect(info.firstPinHashSet).toBe(false);
   });
 });
 
 // ============================================================
-// validatePin() mit pins.json
+// validatePin() via SHA-256
 // ============================================================
 
-describe("API: validatePin() mit setPinsData()", () => {
-  const pinsList = [
-    { id: "u-pins", name: "Test Person", gruppe: "Blaue Gruppe", rolle: "Erzieherin", pin: "777666" },
-  ];
+import { createHash } from 'node:crypto';
+function mkHash(userId, pin) {
+  return createHash('sha256').update(`${userId}:${pin}`, 'utf8').digest('hex');
+}
 
-  afterEach(() => { setPlanData(null); setPinsData(null); });
+describe("API: validatePin() mit SHA-256", () => {
+  const userId = "u-pins";
+  const pinHash = mkHash(userId, "777666");
+  const planWithHash = {
+    mitarbeiter: [{ id: userId, name: "Test Person", gruppe: "Blaue Gruppe", rolle: "Erzieherin", pinHash }],
+    wochen: [], infos: [],
+  };
 
-  it("gibt null zurück wenn weder pins noch plan geladen", () => {
-    expect(validatePin("777666")).toBeNull();
+  afterEach(() => { setPlanData(null); });
+
+  it("gibt null zurück wenn kein plan geladen", async () => {
+    expect(await validatePin("777666")).toBeNull();
   });
 
-  it("findet PIN in pinsData", () => {
-    setPinsData(pinsList);
-    const result = validatePin("777666");
+  it("findet PIN via pinHash in plan.mitarbeiter", async () => {
+    setPlanData(planWithHash);
+    const result = await validatePin("777666");
     expect(result).not.toBeNull();
-    expect(result.id).toBe("u-pins");
+    expect(result.id).toBe(userId);
     expect(result.displayName).toBe("Test Person");
     expect(result.group).toBe("Blaue Gruppe");
     expect(result.role).toBe("Erzieherin");
   });
 
-  it("gibt null wenn PIN nicht in pinsData", () => {
-    setPinsData(pinsList);
-    expect(validatePin("000000")).toBeNull();
+  it("gibt null wenn PIN nicht korrekt", async () => {
+    setPlanData(planWithHash);
+    expect(await validatePin("000000")).toBeNull();
   });
 
-  it("pinsData hat Priorität vor plan.mitarbeiter", () => {
-    setPlanData({ mitarbeiter: [{ id: "plan-user", name: "Plan", gruppe: "X", rolle: "Erzieherin", pin: "777666" }], wochen: [], infos: [] });
-    setPinsData(pinsList);
-    const result = validatePin("777666");
-    expect(result.id).toBe("u-pins");
+  it("gibt null wenn Mitarbeiter kein pinHash hat", async () => {
+    setPlanData({ mitarbeiter: [{ id: userId, name: "Kein Hash", gruppe: "X", rolle: "Erzieherin" }], wochen: [], infos: [] });
+    expect(await validatePin("777666")).toBeNull();
   });
 
-  it("fällt auf plan.mitarbeiter zurück wenn keine pinsData", () => {
-    setPinsData(null);
-    setPlanData({ mitarbeiter: [{ id: "plan-user", name: "Fallback Person", gruppe: "Y", rolle: "Erzieherin", pin: "888999" }], wochen: [], infos: [] });
-    const result = validatePin("888999");
-    expect(result).not.toBeNull();
-    expect(result.id).toBe("plan-user");
-    expect(result.displayName).toBe("Fallback Person");
-  });
-
-  it("gibt null wenn plan.mitarbeiter den PIN auch nicht hat (Fallback leer)", () => {
-    setPinsData(null);
+  it("gibt null wenn plan.mitarbeiter leer", async () => {
     setPlanData({ mitarbeiter: [], wochen: [], infos: [] });
-    expect(validatePin("888999")).toBeNull();
+    expect(await validatePin("888999")).toBeNull();
   });
 
-  it("trimmt Leerzeichen im eingegebenen PIN", () => {
-    setPinsData(pinsList);
-    expect(validatePin("  777666  ")).not.toBeNull();
+  it("trimmt Leerzeichen im eingegebenen PIN", async () => {
+    setPlanData(planWithHash);
+    expect(await validatePin("  777666  ")).not.toBeNull();
   });
 });
 
