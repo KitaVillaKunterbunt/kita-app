@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-13T05:17:12.796Z",
+  "exportiert": "2026-08-13T06:17:41.614Z",
   "monat": 8,
   "jahr": 2026,
   "mitarbeiter": [
@@ -54,7 +54,7 @@
     },
     {
       "id": "user-8",
-      "name": "Emilia",
+      "name": "Emely",
       "gruppe": "Mäuse (U3)",
       "rolle": "Praktikantin",
       "pinHash": "01eedebd48eb1d3c7909301bfdb970cf080b7ec8c3eb0878ec2cc4dd0e24adbe"
@@ -896,9 +896,9 @@
     {
       "datum": "2026-08-10",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -918,9 +918,9 @@
     {
       "datum": "2026-08-12",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -929,9 +929,9 @@
     {
       "datum": "2026-08-13",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -940,9 +940,9 @@
     {
       "datum": "2026-08-14",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -951,9 +951,9 @@
     {
       "datum": "2026-08-17",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -973,9 +973,9 @@
     {
       "datum": "2026-08-19",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -984,9 +984,9 @@
     {
       "datum": "2026-08-20",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -995,9 +995,9 @@
     {
       "datum": "2026-08-21",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -1006,9 +1006,9 @@
     {
       "datum": "2026-08-24",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -1028,9 +1028,9 @@
     {
       "datum": "2026-08-26",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -1039,9 +1039,9 @@
     {
       "datum": "2026-08-27",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -1050,9 +1050,9 @@
     {
       "datum": "2026-08-28",
       "mitarbeiterId": "user-4",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "14:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
@@ -1855,7 +1855,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:00",
+      "bisUhr": "16:30",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1866,7 +1866,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:00",
+      "bisUhr": "16:30",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1910,7 +1910,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:00",
+      "bisUhr": "16:30",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1921,7 +1921,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:00",
+      "bisUhr": "16:30",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1965,7 +1965,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:00",
+      "bisUhr": "16:30",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -1976,7 +1976,7 @@
       "mitarbeiterId": "user-8",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "16:00",
+      "bisUhr": "16:30",
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
@@ -2211,7 +2211,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -2442,7 +2442,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -2673,7 +2673,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -2904,7 +2904,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -3058,7 +3058,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "NaBu Projekt startet"
     },
     {
       "datum": "2026-08-20",
@@ -3135,7 +3135,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -3289,7 +3289,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "NaBu Projekt startet"
     },
     {
       "datum": "2026-08-20",
@@ -3366,7 +3366,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -3437,9 +3437,9 @@
     {
       "datum": "2026-08-10",
       "mitarbeiterId": "user-15",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "15:30",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3448,9 +3448,9 @@
     {
       "datum": "2026-08-11",
       "mitarbeiterId": "user-15",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "15:30",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3459,9 +3459,9 @@
     {
       "datum": "2026-08-12",
       "mitarbeiterId": "user-15",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "14:00",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3492,9 +3492,9 @@
     {
       "datum": "2026-08-17",
       "mitarbeiterId": "user-15",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "15:30",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3503,9 +3503,9 @@
     {
       "datum": "2026-08-18",
       "mitarbeiterId": "user-15",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "15:30",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3514,13 +3514,13 @@
     {
       "datum": "2026-08-19",
       "mitarbeiterId": "user-15",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "14:00",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "NaBu Projekt startet"
     },
     {
       "datum": "2026-08-20",
@@ -3597,7 +3597,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -3828,7 +3828,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -3965,9 +3965,9 @@
     {
       "datum": "2026-08-18",
       "mitarbeiterId": "user-17",
-      "typ": "teil",
-      "vonUhr": "09:00",
-      "bisUhr": "15:00",
+      "typ": "frei",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
@@ -4059,7 +4059,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -4290,7 +4290,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Ausflug Mohnspark 15-17 Uhr"
     },
     {
       "datum": "2026-08-31",
@@ -4504,9 +4504,9 @@
     {
       "datum": "2026-08-27",
       "mitarbeiterId": "user-19",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "13:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Springer",
       "raum": null,
       "notiz": null,
@@ -4515,9 +4515,9 @@
     {
       "datum": "2026-08-28",
       "mitarbeiterId": "user-19",
-      "typ": "frueh",
-      "vonUhr": "08:00",
-      "bisUhr": "13:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Springer",
       "raum": null,
       "notiz": null,
@@ -4636,9 +4636,9 @@
     {
       "datum": "2026-08-14",
       "mitarbeiterId": "user-20",
-      "typ": "frueh",
-      "vonUhr": "07:30",
-      "bisUhr": "15:00",
+      "typ": "urlaub",
+      "vonUhr": null,
+      "bisUhr": null,
       "gruppe": "Leitung",
       "raum": null,
       "notiz": null,
