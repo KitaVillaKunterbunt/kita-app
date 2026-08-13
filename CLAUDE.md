@@ -9,8 +9,9 @@ PWA (Progressive Web App) für die Kita "Villa Kunterbunt". Vanilla HTML/CSS/JS,
 ## Befehle
 
 ```bash
-npm test          # Jest-Tests (106), --experimental-vm-modules
+npm test          # Jest-Tests (101), --experimental-vm-modules
 npm run test:watch
+node server.js    # Lokaler Admin-Server, Port 3001, 127.0.0.1 only
 ```
 
 Tests laufen gegen `public/src/data/api.js` und `public/src/data/mock.js`.
@@ -38,10 +39,19 @@ public/           ← Entwicklung (lokaler Dev-Server Port 8765)
       main.css
   sw.js           ← Service Worker v30, Network First, skipWaiting
   index.html
+  admin.html      ← Admin-Panel (passwortgeschützt, /admin)
 
 src/              ← Produktions-Kopie (= GitHub Pages)
 sw.js             ← Produktions-SW (= public/sw.js)
 index.html        ← Produktions-HTML
+
+server.js         ← Lokaler Admin-Server (Port 3001, nur 127.0.0.1)
+pins.json         ← Klartext-PINs für lokalen Server (gitignored, niemals committen)
+.env              ← ADMIN_PASSWORD (gitignored)
+.env.example      ← Vorlage (ohne Passwort)
+scripts/
+  strip-dsgvo.js  ← Bereinigt plan-export-public-*.json vor Commit
+  rotate-pins.js  ← Generiert neue PINs, zeigt Tabelle, schreibt pins.json
 ```
 
 **Wichtig:** Nach Änderungen in `public/src/` immer nach `src/` synchronisieren:
@@ -55,22 +65,26 @@ cp public/sw.js sw.js
 
 ## Sicherheitsregeln (NICHT verletzen)
 
-- `pins.json` → enthält PINs aller Mitarbeiterinnen, **nie** committen
-- `plan-export-YYYY-MM.json` → lokale Dateien mit PINs, **nie** committen (gitignored: `plan-export-????-??.json`)
+- `pins.json` → Klartext-PINs, nur für lokalen Admin-Server. **Nie committen.**
+- `plan-export-YYYY-MM.json` → lokale Dateien mit `pinHash`, **nie** committen (gitignored: `plan-export-????-??.json`)
 - `plan-export.json` → legacy, ebenfalls gitignored
 - `dienstplan.html` → enthält echte Namen, gitignored
-- Keine PINs in Debug-Dialogen, console.log oder öffentlichen Dateien
+- `.env` → enthält ADMIN_PASSWORD, gitignored
+- **Niemals** pinHash, PINs oder ADMIN_PASSWORD in Debug-Dialogen, console.log oder öffentlichen Dateien
 
 ## Plan-Dateien Format
 
-**Lokale Dateien (mit PINs, gitignored):**
+**Lokale Dateien (mit pinHash, gitignored):**
 - `plan-export-2026-08.json`, `plan-export-2026-09.json` usw.
+- Mitarbeiter-Einträge haben `pinHash`-Feld (SHA-256-Hash)
 
-**Öffentliche Dateien (ohne PINs, im Repo):**
+**Öffentliche Dateien (ohne pinHash/PINs, im Repo):**
 - `plan-export-public-2026-08.json`, `plan-export-public-2026-09.json` usw.
 - `plan-export-public.json` (Legacy-Fallback, ein Monat)
+- Mitarbeiter-Einträge haben **kein** `pinHash` (wird bei Export gestripped)
+- Vor Commit: `node scripts/strip-dsgvo.js` ausführen (entfernt auch geburtstag, eintrittsdatum, krank-Einträge)
 
-Das Dienstplan-Tool (`kita-dienstplan-review/Entwurf_Nr_1_v108.html`) pusht **nur** die öffentliche Variante (ohne PINs) auf GitHub. PINs landen separat in `pins.json`.
+Das Dienstplan-Tool (`kita-dienstplan-review/Entwurf_Nr_1_v108.html`) pusht **nur** die öffentliche Variante (ohne pinHash). Die privaten Plan-Dateien mit pinHash liegen lokal. Klartext-PINs liegen separat in `pins.json` (nur für Admin-Server).
 
 ## App-Architektur
 
@@ -78,8 +92,7 @@ Das Dienstplan-Tool (`kita-dienstplan-review/Entwurf_Nr_1_v108.html`) pusht **nu
 
 1. Versucht lokale Dateien: `plan-export.json` + `plan-export-YYYY-MM.json` für -2..+10 Monate
 2. Falls keine lokale Datei → öffentliche Dateien: `plan-export-public.json` + `plan-export-public-YYYY-MM.json`
-3. Danach `pins.json` (separate PIN-Datei)
-4. Auto-Refresh alle 5 Minuten via `refreshPlanData()`
+3. Auto-Refresh alle 5 Minuten via `refreshPlanData()`
 
 ### Monatssupport (`api.js`)
 
@@ -88,13 +101,73 @@ Das Dienstplan-Tool (`kita-dienstplan-review/Entwurf_Nr_1_v108.html`) pusht **nu
 - `getAvailableMonths()` → sortierte Liste `[{monat, jahr}]`
 - `getAllUserShifts(userId)` → Schichten über alle geladenen Monate
 
+### Auth-Architektur (SHA-256 pinHash)
+
+PINs werden **niemals** im Klartext gespeichert. Stattdessen SHA-256-Hash in `mitarbeiter[].pinHash`:
+
+```
+pinHash = sha256(userId + ':' + pin)
+```
+
+Beispiel: `sha256("user-3:1234")` → hex-String in `mitarbeiter[3].pinHash`
+
+**Relevante Funktionen in `api.js`:**
+- `validatePinForUser(userId, pin)` — prüft `sha256(userId + ':' + pin)` gegen `m.pinHash`, async
+- `validatePin(pin)` — durchsucht alle Mitarbeiter (für globalen PIN-Login ohne bekannte userId)
+- `isDemoMode()` — `true` wenn kein Mitarbeiter ein `pinHash`-Feld hat
+- `getDebugInfo()` → `{ loaded, mitarbeiterCount, firstPinHashSet }`
+
+**sha256()** in api.js: dual-environment — Browser via `SubtleCrypto`, Node via `node:crypto`.
+
+### Login-Flow (`showLoginFlow()` in app.js)
+
+3-Schritt-Flow, ersetzt das alte globale PIN-Login:
+
+1. **Step 1** — Mitarbeiternummer eingeben → `POST /api/auth-check` (nur lokaler Server)
+   - Gibt `{ found, userId, hasPin }` zurück
+   - `found: false` → Fehlermeldung
+   - `found: true, disabled: true` (403) → Account gesperrt
+2. **Step 2a** (Erstanmeldung, `hasPin: false`) — neuen PIN setzen → `POST /api/set-pin`
+3. **Step 2b** (Normal-Login, `hasPin: true`) — PIN eingeben → `validatePinForUser(userId, pin)`
+   - Brute-Force-Schutz: 5 Fehlversuche → 10 Min Sperre (`_pinFailCount`, `_pinLockUntil`)
+
+Wenn kein lokaler Server verfügbar (GitHub Pages): App fällt auf globales PIN-Login (`validatePin()`) oder Demo-Modus zurück.
+
 ### Demo-Modus
 
-`isDemoMode()` = kein `pins.json` UND kein PIN in Mitarbeiter-Daten → Auto-Login als erste Person.
+`isDemoMode()` = Plan geladen, aber kein Mitarbeiter hat `pinHash` gesetzt → Auto-Login als erste Person (`getDemoUser()`). Trifft auf GitHub Pages ohne lokalen Server zu, da public-Dateien kein `pinHash` haben.
 
-### Auth
+### Lokaler Admin-Server (`server.js`)
 
-PIN-Login via `validatePin(pin)` gegen `pins.json` (Priorität) oder `mitarbeiter[].pin` aus Plan. User-ID wird in `localStorage` gespeichert.
+- Port `3001`, bindet nur an `127.0.0.1`
+- CORS: nur `localhost:3001`, `localhost:8765`, `127.0.0.1:3001`, `127.0.0.1:8765`
+- Session-Tokens: `crypto.randomBytes(32)`, 8h TTL, in-memory Map
+- Passwort aus `.env` → `ADMIN_PASSWORD`
+- **Endpoints:**
+  - `POST /api/admin/login` → Token
+  - `GET /api/admin/data` → alle Mitarbeiter aus pins.json
+  - `POST /api/admin/reset-pin` → setzt PIN auf null
+  - `POST /api/admin/add-employee` → neuen Eintrag
+  - `POST /api/admin/deactivate` / `activate`
+  - `POST /api/auth-check` → prüft Mitarbeiternummer, gibt `{found, userId, hasPin}`
+  - `POST /api/set-pin` → setzt PIN (nur wenn aktuell null, sonst 409)
+  - `GET /pins.json` → dient pins.json (für Debugging)
+- Path-Traversal-Schutz: `resolve()` + `filePath.startsWith(PUBLIC + sep)`
+
+### Admin-Panel (`admin.html`)
+
+Unter `/admin` — passwortgeschützt via Server-Session.
+- Tabelle: Name, Mitarbeiter-Nr., PIN-Status, PIN (toggle-sichtbar), Status (aktiv/gesperrt), Aktionen
+- Aktionen: PIN zurücksetzen, Deaktivieren/Aktivieren, Mitarbeiter hinzufügen
+- Alle User-Daten via `escapeHTML()` gesichert
+
+### DSGVO-Compliance
+
+`scripts/strip-dsgvo.js` — vor jedem Push public plan-Dateien bereinigen:
+```bash
+node scripts/strip-dsgvo.js [--dry-run]
+```
+Entfernt: `mitarbeiter[].geburtstag`, `mitarbeiter[].eintrittsdatum`, `wochen[]` mit `typ === "krank"`.
 
 ## Service Worker
 
@@ -102,11 +175,13 @@ PIN-Login via `validatePin(pin)` gegen `pins.json` (Priorität) oder `mitarbeite
 
 ## Screens & Navigation
 
-Hash-Router: `#home`, `#plan`, `#antrag`, `#antraege`, `#infos`, `#dashboard`. Alle Screens außer Home haben einen `← Startseite` Zurück-Button.
+Hash-Router: `#home`, `#plan`, `#antrag`, `#antraege`, `#infos`, `#dashboard`, `#brett`. Alle Screens außer Home haben einen `← Startseite` Zurück-Button.
 
 Plan-Screen: Navigation zwischen verfügbaren Monaten, Buttons disabled an den Grenzen.
 
 Antrag-Screen: Kalender öffnet immer auf heutigem Monat. Dienstwunsch-Dropdown zeigt echte Schichtzeiten der Mitarbeiterin (Fallback: Standardzeiten). Freitextfeld "Eigener Wunsch…" verfügbar.
+
+Settings: Logout-Button öffnet Bestätigungs-Dialog (`.decision-modal-overlay`) vor dem Ausloggen.
 
 ## CSS Token
 
