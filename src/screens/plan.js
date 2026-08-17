@@ -1,7 +1,7 @@
 // src/screens/plan.js
 // Screen 2: Mein Plan — Monatskalender mit Schichten farblich markiert
 
-import { escapeHTML } from "../utils.js";
+import { escapeHTML, shiftTypeLabel } from "../utils.js";
 
 // Modul-Zustand für Monatsnavigation
 let _month = 8;   // August (1-basiert)
@@ -187,11 +187,11 @@ function renderDayDetail(container, date, shift, notifsForDate, eventsForDate, v
   let detailContent = "";
   let typeClass = "";
   if (shift && shift.type !== "frei") {
-    const label = TYPE_LABEL[shift.type] ?? shift.type;
+    const label = shiftTypeLabel(shift);
     typeClass = `day-detail--${shift.type}`;
     const mainLine = shift.startTime
-      ? `${shift.startTime} – ${shift.endTime} · ${label}`
-      : label;
+      ? (label ? `${shift.startTime} – ${shift.endTime} · ${label}` : `${shift.startTime} – ${shift.endTime}`)
+      : (label || TYPE_LABEL[shift.type] || shift.type);
     const meta = [shift.group, shift.room, shift.note].filter(Boolean).join(" · ");
     detailContent = `
       <p class="day-detail__main">${mainLine}</p>

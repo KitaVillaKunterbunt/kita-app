@@ -1,7 +1,7 @@
 // src/screens/antrag.js
 // Screen 3: Antrag stellen — Urlaub / Dienstwunsch / Diensttausch
 
-import { escapeHTML } from "../utils.js";
+import { escapeHTML, shiftTypeLabel } from "../utils.js";
 
 /** ISO-Datum für heute (lokale Zeit) */
 function todayISO() {
@@ -15,10 +15,9 @@ function shiftLabel(shift) {
   const date = new Date(shift.date + "T00:00:00").toLocaleDateString("de-DE", {
     weekday: "short", day: "numeric", month: "short",
   });
-  const typeMap = { frueh: "Frühdienst", spaet: "Spätdienst", teil: "Teildienst", frei: "Frei", urlaub: "Urlaub", krank: "Krank" };
-  const type = typeMap[shift.type] ?? shift.type;
+  const label = shiftTypeLabel(shift);
   const time = shift.startTime ? ` ${shift.startTime}–${shift.endTime}` : "";
-  return `${date} · ${type}${time}`;
+  return label ? `${date} · ${label}${time}` : `${date}${time}`;
 }
 
 // ============================================================
@@ -46,16 +45,12 @@ function buildDienstwunsch(shifts) {
   const seen = new Set();
   const options = [];
   for (const s of (shifts ?? [])) {
-    if (!s.startTime || !["frueh", "spaet"].includes(s.type)) continue;
-    // Frühdienst: Beginn muss 07:00 oder früher sein
-    if (s.type === "frueh" && s.startTime > "07:00") continue;
-    // Spätdienst: Ende muss 17:00 oder später sein
-    if (s.type === "spaet" && s.endTime && s.endTime < "17:00") continue;
-    const label = s.type === "frueh" ? "Frühdienst" : "Spätdienst";
+    if (!s.startTime) continue;
+    const label = shiftTypeLabel(s);
     const value = `${s.startTime}–${s.endTime ?? ""}`;
     if (!seen.has(value)) {
       seen.add(value);
-      options.push({ value, label: `${label} (${value})` });
+      options.push({ value, label: label ? `${label} (${value})` : value });
     }
   }
   const shiftOptions = options.length > 0 ? options : FALLBACK;

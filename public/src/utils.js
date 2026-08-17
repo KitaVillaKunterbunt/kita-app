@@ -7,6 +7,26 @@ export function escapeHTML(str) {
 }
 
 /**
+ * Textlabel für eine Schicht anhand ihrer tatsächlichen Uhrzeit (nicht des
+ * ggf. ungenauen "type"-Felds aus dem Plan-Export).
+ * - "Frühdienst" nur wenn Start ≤ 07:00
+ * - "Spätdienst" nur wenn Ende ≥ 17:00
+ * - Alles dazwischen: kein Label (leerer String) — nur die Uhrzeit anzeigen
+ * @param {{ type?:string, startTime?:string|null, endTime?:string|null }} shift
+ * @returns {string}
+ */
+export function shiftTypeLabel(shift) {
+  if (!shift) return "";
+  if (shift.type === "urlaub") return "Urlaub";
+  if (shift.type === "krank")  return "Krank";
+  if (shift.type === "frei")   return "Frei";
+  if (shift.type === "teil")   return "Teildienst";
+  if (shift.startTime && shift.startTime <= "07:00") return "Frühdienst";
+  if (shift.endTime && shift.endTime >= "17:00") return "Spätdienst";
+  return "";
+}
+
+/**
  * Zeigt einen app-eigenen Bestätigungs-Dialog.
  * @param {string} message   Frage, die dem User gestellt wird
  * @param {string} [confirmLabel="Bestätigen"]
