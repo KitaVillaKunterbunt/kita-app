@@ -179,7 +179,7 @@ function applyFilter(notifications, filter, user) {
  * @param {function} [onDelete]       async (notifId) => void  — nur Leitung
  * @param {function} [onDeleteAll]    async (notifIds[]) => void — nur Leitung
  */
-export function renderInfos(container, notifications, user, onConfirm, onSwapRespond, onDelete, onDeleteAll) {
+export function renderInfos(container, notifications, user, onConfirm, onSwapRespond, onDelete, onDeleteAll, isLeitung = false, onCreateClick = null) {
   let activeFilter = "aktuell";
   const isLeitung = isLeitungUser(user);
 
@@ -235,9 +235,16 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
            <p>${isArchivTab ? "Kein Archiv vorhanden." : "Keine Mitteilungen in dieser Kategorie."}</p>
          </div>`;
 
+    const createBtnHTML = isLeitung
+      ? `<button class="btn btn--primary btn--sm infos-create-btn" id="infos-create-btn">+ Neue Mitteilung</button>`
+      : "";
+
     container.innerHTML = `
       <button class="screen-back-btn" onclick="window.location.hash='home'">&#8592; Startseite</button>
-      <h1 class="screen-title">Mitteilungen</h1>
+      <div class="screen-title-row">
+        <h1 class="screen-title">Mitteilungen</h1>
+        ${createBtnHTML}
+      </div>
       <div class="filter-tabs" role="tablist" aria-label="Mitteilungsfilter">
         ${filterTabsHTML}
       </div>
@@ -254,6 +261,11 @@ export function renderInfos(container, notifications, user, onConfirm, onSwapRes
         render();
       });
     });
+
+    const createBtn = container.querySelector("#infos-create-btn");
+    if (createBtn && onCreateClick) {
+      createBtn.addEventListener("click", onCreateClick);
+    }
 
     // "Archiv leeren"-Button
     container.querySelector("#archiv-leeren")?.addEventListener("click", async () => {

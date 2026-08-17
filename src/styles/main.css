@@ -3529,3 +3529,64 @@ button.card:active {
   line-height: 1;
 }
 .screen-back-btn:active { opacity: 0.65; }
+
+/* ─── Screen-Titel mit Aktions-Button (Infos / Schwarzes Brett) ─── */
+.screen-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+}
+.screen-title-row .screen-title { margin-bottom: 0; }
+
+/* ─── Schwarzes Brett (neue GitHub-basierte Karten) ─── */
+.brett-card__delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  opacity: 0.6;
+}
+.brett-card__delete:active { opacity: 1; }
+.brett-card__expiry {
+  color: var(--c-warning);
+  font-weight: 600;
+}
+
+/* ─── GitHub-Token-Zeile (Einstellungen, nur Leitung) ─── */
+.settings-github-row {
+  padding: 11px var(--sp-md);
+  border-top: 1px solid var(--c-border);
+}
+.settings-github-row__label {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  margin-bottom: 6px;
+}
+.settings-github-row__input-wrap {
+  display: flex;
+  gap: 6px;
+}
+.settings-github-token-input {
+  flex: 1;
+  min-width: 0;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  font-size: 14px;
+  color: var(--c-text);
+  background: var(--c-bg);
+  box-sizing: border-box;
+}
+.settings-github-row__status {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--text-xs);
+}
+.settings-github-row__status--ok    { color: var(--c-success); }
+.settings-github-row__status--error { color: var(--c-danger); }
+.decision-modal__optional { font-size: var(--text-xs); color: var(--c-text-muted); font-weight: 400; }

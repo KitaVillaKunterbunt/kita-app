@@ -4,6 +4,8 @@
 //   2. Mock-Daten        (Entwicklung / Fallback)
 //   3. Graph API         (Phase 8, SharePoint)
 
+import { pushJsonFile } from "./github.js";
+
 const USE_MOCK = true;
 
 async function sha256(str) {
@@ -111,6 +113,96 @@ export async function validatePinForUser(userId, pin) {
     group:       m.gruppe ?? "",
     role:        m.rolle ?? "mitarbeiterin",
   };
+}
+
+// ============================================================
+// Mitteilungen + Schwarzes Brett (mitteilungen.json / schwarzes-brett.json)
+// Von der Leitung direkt in der App erstellt und auf GitHub gepusht.
+// ============================================================
+
+let _mitteilungenData = [];
+let _aushaengeData    = [];
+
+/** Von app.js nach fetch von mitteilungen.json aufgerufen. */
+export function setMitteilungenData(data) {
+  _mitteilungenData = Array.isArray(data?.mitteilungen) ? data.mitteilungen : [];
+}
+
+/** Von app.js nach fetch von schwarzes-brett.json aufgerufen. */
+export function setAushaengeData(data) {
+  _aushaengeData = Array.isArray(data?.aushaenge) ? data.aushaenge : [];
+}
+
+function _todayISODate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function _isExpired(aushang) {
+  return !!aushang.ablaufdatum && aushang.ablaufdatum < _todayISODate();
+}
+
+/**
+ * Aushänge fürs Schwarze Brett, neueste zuerst.
+ * @param {boolean} includeExpired  true = auch abgelaufene anzeigen (Leitungs-Verwaltung)
+ */
+export function getAushaenge(includeExpired = false) {
+  const list = includeExpired ? _aushaengeData : _aushaengeData.filter((a) => !_isExpired(a));
+  return [...list].sort((a, b) => new Date(b.erstellt) - new Date(a.erstellt));
+}
+
+/**
+ * Erstellt eine neue Mitteilung und pusht sie sofort auf GitHub (mitteilungen.json).
+ * @param {{titel:string, text:string, prioritaet:string, zielgruppe:string}} input
+ * @param {{displayName:string}} user
+ * @returns {Promise<{success:boolean, error?:string}>}
+ */
+export async function createMitteilung({ titel, text, prioritaet, zielgruppe }, user) {
+  const entry = {
+    id:         _genId(),
+    titel,
+    text,
+    prioritaet: prioritaet || "info",
+    zielgruppe: zielgruppe || "alle",
+    erstellt:   new Date().toISOString(),
+    von:        user?.displayName ?? "Leitung",
+  };
+  const updated = [entry, ..._mitteilungenData];
+  const result = await pushJsonFile("mitteilungen.json", { mitteilungen: updated }, `Mitteilung: ${titel}`);
+  if (result.success) _mitteilungenData = updated;
+  return result;
+}
+
+/**
+ * Erstellt einen neuen Aushang fürs Schwarze Brett und pusht ihn auf GitHub (schwarzes-brett.json).
+ * @param {{titel:string, text:string, ablaufdatum?:string|null}} input
+ * @param {{displayName:string}} user
+ * @returns {Promise<{success:boolean, error?:string}>}
+ */
+export async function createAushang({ titel, text, ablaufdatum }, user) {
+  const entry = {
+    id:          _genId(),
+    titel,
+    text,
+    ablaufdatum: ablaufdatum || null,
+    erstellt:    new Date().toISOString(),
+    von:         user?.displayName ?? "Leitung",
+  };
+  const updated = [entry, ..._aushaengeData];
+  const result = await pushJsonFile("schwarzes-brett.json", { aushaenge: updated }, `Aushang: ${titel}`);
+  if (result.success) _aushaengeData = updated;
+  return result;
+}
+
+/**
+ * Entfernt einen Aushang und pusht die aktualisierte Liste auf GitHub.
+ * @returns {Promise<{success:boolean, error?:string}>}
+ */
+export async function deleteAushang(id) {
+  const updated = _aushaengeData.filter((a) => a.id !== id);
+  const result = await pushJsonFile("schwarzes-brett.json", { aushaenge: updated }, "Aushang entfernt");
+  if (result.success) _aushaengeData = updated;
+  return result;
 }
 
 /** Debug-Informationen (für den 3×-Tap-Dialog auf der Login-Seite) */
@@ -373,6 +465,24 @@ function adaptNotifications(infos) {
                 : n.prioritaet === "wichtig"     ? "wichtig"
                 : "info",
     datum:        (n.datum && n.datum.length === 10) ? n.datum : null,
+    confirmedBy:  _planConfirmedBy(n.id),
+  }));
+}
+
+/** Adaptiert von der Leitung in der App erstellte Mitteilungen (mitteilungen.json) ins interne Format. */
+function adaptMitteilungen(mitteilungen) {
+  return (mitteilungen ?? []).map((n) => ({
+    id:           n.id,
+    createdAt:    n.erstellt,
+    authorId:     n.von ?? "Leitung",
+    title:        n.titel,
+    body:         n.text,
+    targetGroups: n.zielgruppe && n.zielgruppe !== "alle" ? [n.zielgruppe] : ["alle"],
+    priority:     n.prioritaet ?? "info",
+    type:         n.prioritaet === "sehrwichtig" ? "sehrwichtig"
+                : n.prioritaet === "wichtig"     ? "wichtig"
+                : "info",
+    datum:        null,
     confirmedBy:  _planConfirmedBy(n.id),
   }));
 }
@@ -701,20 +811,20 @@ export async function getNotifications(userGroup, userRole) {
   // Leitung und Stellvertreterin sehen alle Mitteilungen unabhängig von Zielgruppe
   const seeAll = userRole === "Leitung" || userRole === "Stellvertreterin";
   const deletedIds = _getDeletedNotifIds();
-  if (_planData) {
-    const adapted = adaptNotifications(_planData.infos)
-      .filter((n) => !deletedIds.includes(n.id));
-    return seeAll ? adapted : adapted.filter(
-      (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
-    );
-  }
-  // Keine Mock-Mitteilungen — nur echte aus plan-export.json
-  return [];
+  const planItems = _planData
+    ? adaptNotifications(_planData.infos).filter((n) => !deletedIds.includes(n.id))
+    : [];
+  const appItems  = adaptMitteilungen(_mitteilungenData).filter((n) => !deletedIds.includes(n.id));
+  const combined  = [...appItems, ...planItems];
+  if (combined.length === 0) return [];
+  return seeAll ? combined : combined.filter(
+    (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
+  );
   // Phase 8: return await graphApi.getNotifications(userGroup);
 }
 
 export async function confirmNotification(notificationId, userId) {
-  if (_planData) {
+  if (_planData || _mitteilungenData.length > 0) {
     _addPlanConfirmedBy(notificationId, userId);
     return { success: true };
   }

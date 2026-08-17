@@ -34,7 +34,18 @@ import {
   getAvailableMonths,
   getAllUserShifts,
   setMockData,
+  setMitteilungenData,
+  setAushaengeData,
+  getAushaenge,
+  createMitteilung,
+  createAushang,
+  deleteAushang,
 } from "./data/api.js";
+import {
+  getGithubToken,
+  saveGithubToken,
+  testGithubToken,
+} from "./data/github.js";
 
 /** Nächsten verfügbaren Monat nahe dem heutigen Datum finden. */
 function _nearestAvailableMonth(available, now) {
@@ -45,7 +56,21 @@ function _nearestAvailableMonth(available, now) {
   const future = available.find((m) => `${m.jahr}-${String(m.monat).padStart(2, "0")}` > todayKey);
   return future ?? available[available.length - 1];
 }
-import { escapeHTML } from "./utils.js";
+
+async function loadAppContentFiles() {
+  let changed = false;
+  try {
+    const resp = await fetch("mitteilungen.json", { cache: "no-cache" });
+    if (resp.ok) { setMitteilungenData(await resp.json()); changed = true; }
+  } catch { /* Datei existiert noch nicht */ }
+  try {
+    const resp = await fetch("schwarzes-brett.json", { cache: "no-cache" });
+    if (resp.ok) { setAushaengeData(await resp.json()); changed = true; }
+  } catch { /* Datei existiert noch nicht */ }
+  return changed;
+}
+
+import { escapeHTML, showConfirm } from "./utils.js";
 import {
   detectNewContent,
   maybeAskPermission,
@@ -286,7 +311,13 @@ async function navigate(screenName) {
           await refreshInfos();
         };
 
-        renderInfos(container, notifications, user, confirmCb, swapCb, deleteCb, deleteAllCb);
+        const leader = isLeadership(user);
+        const createCb = () => showMitteilungModal(user, async () => {
+          showToast("Mitteilung veröffentlicht.", "success");
+          await refreshInfos();
+        });
+
+        renderInfos(container, notifications, user, confirmCb, swapCb, deleteCb, deleteAllCb, leader, createCb);
         updateNotifBadge(user);
         break;
       }
@@ -328,26 +359,27 @@ async function navigate(screenName) {
       }
 
       case "brett": {
-        const entries = getBrettEntries();
+        const leader = isLeadership(user);
 
-        const refreshBrett = async () => {
-          const fresh = getBrettEntries();
-          renderBrett(container, fresh, user, addCb, deleteCb);
+        const refreshBrett = () => {
+          renderBrett(container, getAushaenge(), leader, createCb, deleteCb);
         };
 
-        const addCb = async (entryData) => {
-          addBrettEntry(entryData);
-          showToast("Aushang hinzugefügt.", "success");
-          await refreshBrett();
+        const createCb = () => showAushangModal(user, async () => {
+          showToast("Aushang veröffentlicht.", "success");
+          refreshBrett();
+        });
+
+        const deleteCb = async (id) => {
+          const ok = await showConfirm("Diesen Aushang wirklich löschen?", "Löschen");
+          if (!ok) { refreshBrett(); return; }
+          const result = await deleteAushang(id);
+          if (result.success) showToast("Aushang gelöscht.", "success");
+          else showToast(result.error ?? "Löschen fehlgeschlagen.", "error");
+          refreshBrett();
         };
 
-        const deleteCb = async (entryId) => {
-          deleteBrettEntry(entryId);
-          showToast("Aushang gelöscht.", "success");
-          await refreshBrett();
-        };
-
-        renderBrett(container, entries, user, addCb, deleteCb);
+        refreshBrett();
         break;
       }
     }
@@ -834,6 +866,19 @@ function showSettings(user) {
         </div>
       </div>
 
+      ${isLeadership(user) ? `
+      <div class="settings-github-row">
+        <label class="settings-github-row__label" for="settings-github-token">
+          GitHub-Token (für Mitteilungen &amp; Schwarzes Brett)
+        </label>
+        <div class="settings-github-row__input-wrap">
+          <input class="settings-github-token-input" id="settings-github-token" type="password"
+            placeholder="ghp_…" value="${escapeHTML(getGithubToken() ?? "")}" autocomplete="off">
+          <button class="btn btn--primary btn--sm" id="settings-github-save">Speichern</button>
+        </div>
+        <span class="settings-github-row__status" id="settings-github-status"></span>
+      </div>` : ""}
+
       <button class="btn btn--danger btn--sm settings-logout" id="settings-logout">
         Abmelden
       </button>
@@ -869,6 +914,33 @@ function showSettings(user) {
 
   overlay.querySelector("#settings-close").addEventListener("click", () => overlay.remove());
   overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+
+  // GitHub-Token speichern + prüfen (nur Leitung)
+  const githubSaveBtn = overlay.querySelector("#settings-github-save");
+  if (githubSaveBtn) {
+    githubSaveBtn.addEventListener("click", async () => {
+      const input    = overlay.querySelector("#settings-github-token");
+      const statusEl = overlay.querySelector("#settings-github-status");
+      const token    = input.value.trim();
+
+      saveGithubToken(token);
+      statusEl.className = "settings-github-row__status";
+      statusEl.textContent = "Wird geprüft …";
+      githubSaveBtn.disabled = true;
+
+      const result = await testGithubToken(token);
+      githubSaveBtn.disabled = false;
+      if (!token) {
+        statusEl.textContent = "";
+      } else if (result.success) {
+        statusEl.textContent = "✓ Verbunden — Mitteilungen können veröffentlicht werden.";
+        statusEl.className = "settings-github-row__status settings-github-row__status--ok";
+      } else {
+        statusEl.textContent = result.error ?? "Verbindung fehlgeschlagen.";
+        statusEl.className = "settings-github-row__status settings-github-row__status--error";
+      }
+    });
+  }
 
   overlay.querySelector("#theme-toggle").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-theme-val]");
@@ -1032,6 +1104,177 @@ function showDecisionModal(requestId, action, onConfirm) {
 }
 
 // ============================================================
+// Mitteilung erstellen (Leitung) — pusht sofort auf GitHub
+// ============================================================
+
+function showMitteilungModal(user, onSuccess) {
+  const existing = document.getElementById("mitteilung-modal-overlay");
+  if (existing) existing.remove();
+
+  if (!getGithubToken()) {
+    showToast("Bitte zuerst ein GitHub-Token in den Einstellungen eintragen.", "error");
+    return;
+  }
+
+  const groups = [...new Set(getPlanMitarbeiter().map((m) => m.gruppe).filter(Boolean))];
+  const groupOptionsHTML = groups.map((g) => `<option value="${escapeHTML(g)}">${escapeHTML(g)}</option>`).join("");
+
+  const overlay = document.createElement("div");
+  overlay.id        = "mitteilung-modal-overlay";
+  overlay.className = "decision-modal-overlay";
+
+  overlay.innerHTML = `
+    <div class="decision-modal">
+      <h3 class="decision-modal__title">Neue Mitteilung</h3>
+      <div class="form-group">
+        <label class="form-label" for="mit-titel">Titel</label>
+        <input class="form-input" id="mit-titel" type="text" maxlength="120" placeholder="z.B. Elternabend am 20.09.">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mit-text">Text</label>
+        <textarea class="form-textarea" id="mit-text" rows="4" placeholder="Details zur Mitteilung…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mit-prioritaet">Priorität</label>
+        <select class="form-select" id="mit-prioritaet">
+          <option value="info">Info</option>
+          <option value="wichtig">Wichtig</option>
+          <option value="sehrwichtig">Sehr wichtig</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="mit-zielgruppe">Zielgruppe</label>
+        <select class="form-select" id="mit-zielgruppe">
+          <option value="alle">Alle</option>
+          ${groupOptionsHTML}
+        </select>
+      </div>
+      <p class="form-error" id="mit-error" style="display:none"></p>
+      <div class="decision-modal__actions">
+        <button class="btn btn--ghost mit-cancel">Abbrechen</button>
+        <button class="btn btn--primary mit-submit">Veröffentlichen</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  function close() { overlay.remove(); }
+  overlay.querySelector(".mit-cancel").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+
+  overlay.querySelector(".mit-submit").addEventListener("click", async () => {
+    const titel = overlay.querySelector("#mit-titel").value.trim();
+    const text  = overlay.querySelector("#mit-text").value.trim();
+    const errEl = overlay.querySelector("#mit-error");
+
+    if (!titel || !text) {
+      errEl.textContent = "Bitte Titel und Text ausfüllen.";
+      errEl.style.display = "block";
+      return;
+    }
+
+    const submitBtn = overlay.querySelector(".mit-submit");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Wird veröffentlicht …";
+
+    const result = await createMitteilung({
+      titel,
+      text,
+      prioritaet: overlay.querySelector("#mit-prioritaet").value,
+      zielgruppe: overlay.querySelector("#mit-zielgruppe").value,
+    }, user);
+
+    if (result.success) {
+      close();
+      await onSuccess();
+    } else {
+      errEl.textContent = result.error ?? "Veröffentlichen fehlgeschlagen.";
+      errEl.style.display = "block";
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Veröffentlichen";
+    }
+  });
+}
+
+// ============================================================
+// Aushang erstellen (Leitung) — Schwarzes Brett, pusht sofort auf GitHub
+// ============================================================
+
+function showAushangModal(user, onSuccess) {
+  const existing = document.getElementById("aushang-modal-overlay");
+  if (existing) existing.remove();
+
+  if (!getGithubToken()) {
+    showToast("Bitte zuerst ein GitHub-Token in den Einstellungen eintragen.", "error");
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.id        = "aushang-modal-overlay";
+  overlay.className = "decision-modal-overlay";
+
+  overlay.innerHTML = `
+    <div class="decision-modal">
+      <h3 class="decision-modal__title">Neuer Aushang</h3>
+      <div class="form-group">
+        <label class="form-label" for="aus-titel">Titel</label>
+        <input class="form-input" id="aus-titel" type="text" maxlength="120" placeholder="z.B. Hausordnung">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="aus-text">Text</label>
+        <textarea class="form-textarea" id="aus-text" rows="4" placeholder="Inhalt des Aushangs…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="aus-ablauf">Ablaufdatum <span class="decision-modal__optional">(optional)</span></label>
+        <input class="form-input" id="aus-ablauf" type="date">
+      </div>
+      <p class="form-error" id="aus-error" style="display:none"></p>
+      <div class="decision-modal__actions">
+        <button class="btn btn--ghost aus-cancel">Abbrechen</button>
+        <button class="btn btn--primary aus-submit">Veröffentlichen</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  function close() { overlay.remove(); }
+  overlay.querySelector(".aus-cancel").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+
+  overlay.querySelector(".aus-submit").addEventListener("click", async () => {
+    const titel = overlay.querySelector("#aus-titel").value.trim();
+    const text  = overlay.querySelector("#aus-text").value.trim();
+    const errEl = overlay.querySelector("#aus-error");
+
+    if (!titel || !text) {
+      errEl.textContent = "Bitte Titel und Text ausfüllen.";
+      errEl.style.display = "block";
+      return;
+    }
+
+    const submitBtn = overlay.querySelector(".aus-submit");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Wird veröffentlicht …";
+
+    const result = await createAushang({
+      titel,
+      text,
+      ablaufdatum: overlay.querySelector("#aus-ablauf").value || null,
+    }, user);
+
+    if (result.success) {
+      close();
+      await onSuccess();
+    } else {
+      errEl.textContent = result.error ?? "Veröffentlichen fehlgeschlagen.";
+      errEl.style.display = "block";
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Veröffentlichen";
+    }
+  });
+}
+
+// ============================================================
 // App starten
 // ============================================================
 
@@ -1103,6 +1346,9 @@ async function initApp() {
     } catch {
       // Kein Plan vorhanden — Demo-Modus
     }
+
+    // mitteilungen.json + schwarzes-brett.json laden (von der Leitung in der App erstellt)
+    await loadAppContentFiles();
 
     // planMonth/planYear auf nächsten verfügbaren Monat setzen
     const _nearest = _nearestAvailableMonth(getAvailableMonths(), new Date());
@@ -1210,8 +1456,11 @@ async function initApp() {
     // Auto-Refresh: alle 5 Minuten Plan neu laden und bei Änderung Mitteilungen aktualisieren
     setInterval(async () => {
       try {
-        const changed = await refreshPlanData();
-        if (!changed) return;
+        const [planChanged, contentChanged] = await Promise.all([
+          refreshPlanData(),
+          loadAppContentFiles(),
+        ]);
+        if (!planChanged && !contentChanged) return;
 
         // Badge neu laden
         await updateNotifBadge(user);
@@ -1220,6 +1469,12 @@ async function initApp() {
         if (_currentScreen === "infos") {
           _currentScreen = null;
           await navigate("infos");
+        }
+
+        // Schwarzes-Brett-Screen neu rendern wenn gerade offen
+        if (_currentScreen === "brett") {
+          _currentScreen = null;
+          await navigate("brett");
         }
 
         // Banner: neue Mitteilungen ankündigen
