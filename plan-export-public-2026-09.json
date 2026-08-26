@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-26T13:56:17.609Z",
+  "exportiert": "2026-08-26T14:09:19.735Z",
   "monat": 9,
   "jahr": 2026,
   "mitarbeiter": [
@@ -535,7 +535,7 @@
       "mitarbeiterId": "user-2",
       "typ": "frueh",
       "vonUhr": "08:00",
-      "bisUhr": "17:30",
+      "bisUhr": "16:30",
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
