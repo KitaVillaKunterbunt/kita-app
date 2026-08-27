@@ -1279,6 +1279,8 @@ function showAushangModal(user, onSuccess) {
 // ============================================================
 
 async function initApp() {
+  setTimeout(() => document.getElementById("loading-overlay")?.classList.add("hidden"), 3000);
+
   // Gespeichertes Theme sofort anwenden — verhindert Flash
   const _savedTheme = localStorage.getItem("kita-theme");
   if (_savedTheme === "dark" || _savedTheme === "light") {
