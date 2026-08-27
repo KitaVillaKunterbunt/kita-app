@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-27T06:11:20.697Z",
+  "exportiert": "2026-08-27T11:55:15.227Z",
   "monat": 9,
   "jahr": 2026,
   "mitarbeiter": [
@@ -220,7 +220,7 @@
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Vanessa Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -325,17 +325,6 @@
       "datum": "2026-09-23",
       "mitarbeiterId": "user-1",
       "typ": "frei",
-      "vonUhr": null,
-      "bisUhr": null,
-      "gruppe": "Käfer (U3)",
-      "raum": null,
-      "notiz": null,
-      "gruppenNotiz": null
-    },
-    {
-      "datum": "2026-09-24",
-      "mitarbeiterId": "user-1",
-      "typ": "urlaub",
       "vonUhr": null,
       "bisUhr": null,
       "gruppe": "Käfer (U3)",
@@ -462,7 +451,7 @@
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Vanessa Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -704,7 +693,7 @@
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Vanessa Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -946,7 +935,7 @@
       "gruppe": "Käfer (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Vanessa Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -1188,7 +1177,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Sabine Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -1254,7 +1243,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
@@ -1309,7 +1298,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "15 Uhr Praxisanleitertreffen"
     },
     {
       "datum": "2026-09-25",
@@ -1430,7 +1419,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Sabine Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -1496,7 +1485,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
@@ -1551,7 +1540,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "15 Uhr Praxisanleitertreffen"
     },
     {
       "datum": "2026-09-25",
@@ -1672,7 +1661,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Sabine Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -1738,7 +1727,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
@@ -1793,7 +1782,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "15 Uhr Praxisanleitertreffen"
     },
     {
       "datum": "2026-09-25",
@@ -1914,7 +1903,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Sabine Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -1980,7 +1969,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
@@ -2035,7 +2024,7 @@
       "gruppe": "Mäuse (U3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "15 Uhr Praxisanleitertreffen"
     },
     {
       "datum": "2026-09-25",
@@ -2112,7 +2101,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule"
+      "gruppenNotiz": null
     },
     {
       "datum": "2026-09-04",
@@ -2156,7 +2145,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Celina Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -2178,7 +2167,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-14",
@@ -2200,7 +2189,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Larissa Di Igel"
     },
     {
       "datum": "2026-09-16",
@@ -2217,8 +2206,8 @@
       "datum": "2026-09-17",
       "mitarbeiterId": "user-9",
       "typ": "frueh",
-      "vonUhr": "07:00",
-      "bisUhr": "15:30",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
@@ -2233,7 +2222,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "Einer bis 13 Uhr Igel"
     },
     {
       "datum": "2026-09-21",
@@ -2244,7 +2233,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine bis 11 Uhr Igel"
     },
     {
       "datum": "2026-09-22",
@@ -2255,7 +2244,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine ab 14 Uhr Igel"
     },
     {
       "datum": "2026-09-23",
@@ -2288,7 +2277,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-28",
@@ -2354,7 +2343,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule"
+      "gruppenNotiz": null
     },
     {
       "datum": "2026-09-04",
@@ -2398,7 +2387,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Celina Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -2420,7 +2409,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-14",
@@ -2442,7 +2431,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Larissa Di Igel"
     },
     {
       "datum": "2026-09-16",
@@ -2475,7 +2464,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "Einer bis 13 Uhr Igel"
     },
     {
       "datum": "2026-09-21",
@@ -2486,7 +2475,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine bis 11 Uhr Igel"
     },
     {
       "datum": "2026-09-22",
@@ -2497,7 +2486,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine ab 14 Uhr Igel"
     },
     {
       "datum": "2026-09-23",
@@ -2530,7 +2519,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-28",
@@ -2596,7 +2585,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule"
+      "gruppenNotiz": null
     },
     {
       "datum": "2026-09-04",
@@ -2640,7 +2629,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Celina Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -2662,7 +2651,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-14",
@@ -2684,7 +2673,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Larissa Di Igel"
     },
     {
       "datum": "2026-09-16",
@@ -2717,7 +2706,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "Einer bis 13 Uhr Igel"
     },
     {
       "datum": "2026-09-21",
@@ -2728,7 +2717,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine bis 11 Uhr Igel"
     },
     {
       "datum": "2026-09-22",
@@ -2739,7 +2728,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine ab 14 Uhr Igel"
     },
     {
       "datum": "2026-09-23",
@@ -2772,7 +2761,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-28",
@@ -2838,7 +2827,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule"
+      "gruppenNotiz": null
     },
     {
       "datum": "2026-09-04",
@@ -2882,7 +2871,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Celina Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -2904,7 +2893,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-14",
@@ -2926,7 +2915,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Larissa Di Igel"
     },
     {
       "datum": "2026-09-16",
@@ -2959,7 +2948,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "Einer bis 13 Uhr Igel"
     },
     {
       "datum": "2026-09-21",
@@ -2970,7 +2959,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine bis 11 Uhr Igel"
     },
     {
       "datum": "2026-09-22",
@@ -2981,7 +2970,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Eine ab 14 Uhr Igel"
     },
     {
       "datum": "2026-09-23",
@@ -3014,7 +3003,7 @@
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-28",
@@ -3030,9 +3019,9 @@
     {
       "datum": "2026-09-29",
       "mitarbeiterId": "user-12",
-      "typ": "frei",
-      "vonUhr": null,
-      "bisUhr": null,
+      "typ": "frueh",
+      "vonUhr": "08:00",
+      "bisUhr": "16:30",
       "gruppe": "Bären (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3080,7 +3069,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule // GB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-04",
@@ -3124,7 +3113,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Gabi Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -3135,7 +3124,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-11",
@@ -3190,13 +3179,13 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
       "mitarbeiterId": "user-13",
       "typ": "spaet",
-      "vonUhr": "09:00",
+      "vonUhr": "08:30",
       "bisUhr": "16:30",
       "gruppe": "Dino (Ü3)",
       "raum": null,
@@ -3245,7 +3234,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-25",
@@ -3322,18 +3311,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule // GB"
-    },
-    {
-      "datum": "2026-09-04",
-      "mitarbeiterId": "user-14",
-      "typ": "urlaub",
-      "vonUhr": null,
-      "bisUhr": null,
-      "gruppe": "Dino (Ü3)",
-      "raum": null,
-      "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-07",
@@ -3366,7 +3344,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Gabi Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -3377,7 +3355,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-11",
@@ -3432,7 +3410,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
@@ -3487,7 +3465,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-25",
@@ -3564,7 +3542,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "Start Musikschule // GB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-04",
@@ -3608,7 +3586,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Gabi Fobi"
     },
     {
       "datum": "2026-09-10",
@@ -3619,7 +3597,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-11",
@@ -3674,7 +3652,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-18",
@@ -3729,7 +3707,7 @@
       "gruppe": "Dino (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-25",
@@ -3839,7 +3817,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-09",
@@ -3883,7 +3861,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-15",
@@ -3922,8 +3900,8 @@
       "datum": "2026-09-18",
       "mitarbeiterId": "user-16",
       "typ": "frueh",
-      "vonUhr": "07:00",
-      "bisUhr": "14:30",
+      "vonUhr": "08:00",
+      "bisUhr": "17:00",
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
@@ -3938,7 +3916,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-22",
@@ -3982,7 +3960,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Bär zum Imbiss"
     },
     {
       "datum": "2026-09-28",
@@ -4081,7 +4059,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-09",
@@ -4125,7 +4103,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-15",
@@ -4180,7 +4158,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-22",
@@ -4224,7 +4202,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Bär zum Imbiss"
     },
     {
       "datum": "2026-09-28",
@@ -4323,7 +4301,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-09",
@@ -4367,14 +4345,14 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-15",
       "mitarbeiterId": "user-18",
       "typ": "frueh",
-      "vonUhr": "07:30",
-      "bisUhr": "11:30",
+      "vonUhr": "07:00",
+      "bisUhr": "11:00",
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
@@ -4422,7 +4400,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": "DB"
+      "gruppenNotiz": "GB"
     },
     {
       "datum": "2026-09-22",
@@ -4466,7 +4444,7 @@
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
-      "gruppenNotiz": null
+      "gruppenNotiz": "Bär zum Imbiss"
     },
     {
       "datum": "2026-09-28",
@@ -4575,7 +4553,7 @@
       "bisUhr": "17:00",
       "gruppe": "Springer",
       "raum": null,
-      "notiz": null,
+      "notiz": "Fobi",
       "gruppenNotiz": null
     },
     {
@@ -4608,7 +4586,7 @@
       "bisUhr": "15:00",
       "gruppe": "Springer",
       "raum": null,
-      "notiz": null,
+      "notiz": "Ab 12:15 Igel",
       "gruppenNotiz": null
     },
     {
@@ -4630,7 +4608,7 @@
       "bisUhr": "15:00",
       "gruppe": "Springer",
       "raum": null,
-      "notiz": null,
+      "notiz": "Ab 12:30 Igel",
       "gruppenNotiz": null
     },
     {
@@ -4641,7 +4619,7 @@
       "bisUhr": "15:00",
       "gruppe": "Springer",
       "raum": null,
-      "notiz": null,
+      "notiz": "Ab 12:30 Igel",
       "gruppenNotiz": null
     },
     {
@@ -4813,11 +4791,11 @@
       "datum": "2026-09-09",
       "mitarbeiterId": "user-20",
       "typ": "frueh",
-      "vonUhr": "07:30",
-      "bisUhr": "16:00",
+      "vonUhr": "08:00",
+      "bisUhr": "17:00",
       "gruppe": "Leitung",
       "raum": null,
-      "notiz": null,
+      "notiz": "Pierre Fobi",
       "gruppenNotiz": null
     },
     {
