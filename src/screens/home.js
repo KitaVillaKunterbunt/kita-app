@@ -1,7 +1,7 @@
 // src/screens/home.js
 // Screen 1: Home — Dashboard mit Heute-Karte und Kachel-Grid
 
-import { escapeHTML, shiftTypeLabel } from "../utils.js";
+import { escapeHTML } from "../utils.js";
 
 // ── Modul-State ───────────────────────────────────────────────
 
@@ -49,9 +49,8 @@ function nextShiftSub(shifts) {
   const wd = WEEKDAY_SHORT_DE[d.getDay()];
   const day = d.getDate();
   const mon = d.getMonth() + 1;
-  const label = shiftTypeLabel(next);
-  const typeLabel = label === "Frühdienst" ? "Früh " : label === "Spätdienst" ? "Spät " : "";
-  return `${wd} ${day}.${mon} · ${typeLabel}${next.startTime}`;
+  const typeLabel = next.startTime < "07:30" ? "Früh" : next.endTime > "16:30" ? "Spät" : "Dienst";
+  return `${wd} ${day}.${mon} · ${typeLabel} ${next.startTime}`;
 }
 
 const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
@@ -87,10 +86,9 @@ function weekCardHTML(shifts) {
         badgeHTML = `<span class="home-week-badge home-week-badge--krank">Krank</span>`;
       } else if (shift.startTime) {
         timeText = `${shift.startTime}–${shift.endTime ?? ""}`;
-        const label = shiftTypeLabel(shift);
-        if (label === "Frühdienst") {
+        if (shift.startTime < "07:30") {
           badgeHTML = `<span class="home-week-badge home-week-badge--frueh">Früh</span>`;
-        } else if (label === "Spätdienst") {
+        } else if (shift.endTime && shift.endTime > "16:30") {
           badgeHTML = `<span class="home-week-badge home-week-badge--spaet">Spät</span>`;
         }
       }

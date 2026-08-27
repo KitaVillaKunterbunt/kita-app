@@ -18,6 +18,7 @@ import {
   confirmNotification,
   respondToSwapRequest,
   setPlanData,
+  setPinsData,
   hasPlanData,
   isDemoMode,
   getDemoUser,
@@ -34,18 +35,10 @@ import {
   getAvailableMonths,
   getAllUserShifts,
   setMockData,
-  setMitteilungenData,
-  setAushaengeData,
-  getAushaenge,
-  createMitteilung,
-  createAushang,
-  deleteAushang,
+  validatePinForUser,
+  getUserDisplayName,
+  userHasPin,
 } from "./data/api.js";
-import {
-  getGithubToken,
-  saveGithubToken,
-  testGithubToken,
-} from "./data/github.js";
 
 /** Nächsten verfügbaren Monat nahe dem heutigen Datum finden. */
 function _nearestAvailableMonth(available, now) {
@@ -56,21 +49,7 @@ function _nearestAvailableMonth(available, now) {
   const future = available.find((m) => `${m.jahr}-${String(m.monat).padStart(2, "0")}` > todayKey);
   return future ?? available[available.length - 1];
 }
-
-async function loadAppContentFiles() {
-  let changed = false;
-  try {
-    const resp = await fetch("mitteilungen.json", { cache: "no-cache" });
-    if (resp.ok) { setMitteilungenData(await resp.json()); changed = true; }
-  } catch { /* Datei existiert noch nicht */ }
-  try {
-    const resp = await fetch("schwarzes-brett.json", { cache: "no-cache" });
-    if (resp.ok) { setAushaengeData(await resp.json()); changed = true; }
-  } catch { /* Datei existiert noch nicht */ }
-  return changed;
-}
-
-import { escapeHTML, showConfirm } from "./utils.js";
+import { escapeHTML } from "./utils.js";
 import {
   detectNewContent,
   maybeAskPermission,
@@ -311,13 +290,7 @@ async function navigate(screenName) {
           await refreshInfos();
         };
 
-        const leader = isLeadership(user);
-        const createCb = () => showMitteilungModal(user, async () => {
-          showToast("Mitteilung veröffentlicht.", "success");
-          await refreshInfos();
-        });
-
-        renderInfos(container, notifications, user, confirmCb, swapCb, deleteCb, deleteAllCb, leader, createCb);
+        renderInfos(container, notifications, user, confirmCb, swapCb, deleteCb, deleteAllCb);
         updateNotifBadge(user);
         break;
       }
@@ -359,27 +332,26 @@ async function navigate(screenName) {
       }
 
       case "brett": {
-        const leader = isLeadership(user);
+        const entries = getBrettEntries();
 
-        const refreshBrett = () => {
-          renderBrett(container, getAushaenge(), leader, createCb, deleteCb);
+        const refreshBrett = async () => {
+          const fresh = getBrettEntries();
+          renderBrett(container, fresh, user, addCb, deleteCb);
         };
 
-        const createCb = () => showAushangModal(user, async () => {
-          showToast("Aushang veröffentlicht.", "success");
-          refreshBrett();
-        });
-
-        const deleteCb = async (id) => {
-          const ok = await showConfirm("Diesen Aushang wirklich löschen?", "Löschen");
-          if (!ok) { refreshBrett(); return; }
-          const result = await deleteAushang(id);
-          if (result.success) showToast("Aushang gelöscht.", "success");
-          else showToast(result.error ?? "Löschen fehlgeschlagen.", "error");
-          refreshBrett();
+        const addCb = async (entryData) => {
+          addBrettEntry(entryData);
+          showToast("Aushang hinzugefügt.", "success");
+          await refreshBrett();
         };
 
-        refreshBrett();
+        const deleteCb = async (entryId) => {
+          deleteBrettEntry(entryId);
+          showToast("Aushang gelöscht.", "success");
+          await refreshBrett();
+        };
+
+        renderBrett(container, entries, user, addCb, deleteCb);
         break;
       }
     }
@@ -706,19 +678,201 @@ function showPinLogin() {
 }
 
 // ============================================================
-// Login-Flow — PIN gegen pinHash aus plan-export prüfen
+// Erst-Login-Flow (Mitarbeiternummer → PIN-Setup oder PIN-Login)
 // ============================================================
 
 function showLoginFlow() {
+  const API_BASE =
+    window.location.hostname === "localhost" ? "http://localhost:3001" : "";
+
   return new Promise((resolve) => {
     const overlay = document.createElement("div");
     overlay.className = "pin-login-overlay";
     document.body.appendChild(overlay);
 
-    overlay.innerHTML = `
-      <div class="pin-login-card">
+    function render(html) {
+      overlay.innerHTML = `<div class="pin-login-card">${html}</div>`;
+    }
+
+    // ── Schritt 1: Mitarbeiternummer ──────────────────────────
+    function showStep1(errorMsg) {
+      render(`
         <div class="pin-login-icon">🔑</div>
         <h1 class="pin-login-title">Kita-App</h1>
+        <p class="pin-login-sub">Bitte gib deine Mitarbeiternummer ein</p>
+        <input
+          class="pin-login-input"
+          id="lf-number"
+          type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          min="1"
+          placeholder="z.B. 3"
+          autocomplete="off"
+        >
+        <p class="pin-login-error" id="lf-error" ${errorMsg ? "" : "hidden"}>${escapeHTML(errorMsg ?? "")}</p>
+        <button class="btn btn--primary btn--lg pin-login-btn" id="lf-next">
+          Weiter
+        </button>
+      `);
+
+      const input = overlay.querySelector("#lf-number");
+      const error = overlay.querySelector("#lf-error");
+      const btn   = overlay.querySelector("#lf-next");
+
+      async function next() {
+        const num = input.value.trim();
+        if (!num || isNaN(num) || Number(num) < 1) {
+          error.textContent = "Bitte eine gültige Nummer eingeben.";
+          error.hidden = false;
+          return;
+        }
+        btn.disabled = true;
+        try {
+          const resp = await fetch(`${API_BASE}/api/auth-check`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ number: num }),
+          });
+          const data = await resp.json();
+          if (resp.status === 403 && data.disabled) {
+            error.textContent = "Dein Account ist deaktiviert. Bitte wende dich an die Leitung.";
+            error.hidden = false;
+            btn.disabled = false;
+            return;
+          }
+          if (!resp.ok || !data.found) {
+            error.textContent = "Mitarbeiternummer nicht gefunden.";
+            error.hidden = false;
+            btn.disabled = false;
+            return;
+          }
+          if (data.hasPin) {
+            showStep2Login(data.userId);
+          } else {
+            showStep2Setup(data.userId);
+          }
+        } catch {
+          error.textContent = "Server nicht erreichbar. Ist server.js gestartet?";
+          error.hidden = false;
+          btn.disabled = false;
+        }
+      }
+
+      btn.addEventListener("click", next);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") next(); });
+      requestAnimationFrame(() => input.focus());
+    }
+
+    // ── Schritt 2a: PIN-Setup (Erstanmeldung) ─────────────────
+    function showStep2Setup(userId) {
+      const displayName = getUserDisplayName(userId);
+      render(`
+        <div class="pin-login-icon">✨</div>
+        <h1 class="pin-login-title">Hallo, ${escapeHTML(displayName)}!</h1>
+        <p class="pin-login-sub">Wähle einen PIN (4–8 Ziffern)</p>
+        <input
+          class="pin-login-input"
+          id="lf-pin1"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="8"
+          placeholder="Neuer PIN"
+          autocomplete="new-password"
+        >
+        <input
+          class="pin-login-input"
+          id="lf-pin2"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="8"
+          placeholder="PIN bestätigen"
+          autocomplete="new-password"
+          style="margin-top:var(--sp-sm)"
+        >
+        <p class="pin-login-error" id="lf-error" hidden></p>
+        <button class="btn btn--primary btn--lg pin-login-btn" id="lf-save">
+          PIN speichern & einloggen
+        </button>
+        <button class="btn btn--secondary pin-login-btn" id="lf-back" style="margin-top:var(--sp-xs)">
+          Zurück
+        </button>
+      `);
+
+      const pin1  = overlay.querySelector("#lf-pin1");
+      const pin2  = overlay.querySelector("#lf-pin2");
+      const error = overlay.querySelector("#lf-error");
+      const save  = overlay.querySelector("#lf-save");
+      const back  = overlay.querySelector("#lf-back");
+
+      back.addEventListener("click", showStep1);
+
+      async function doSave() {
+        const p1 = pin1.value.trim();
+        const p2 = pin2.value.trim();
+
+        if (!/^\d{4,8}$/.test(p1)) {
+          error.textContent = "PIN muss 4–8 Ziffern haben.";
+          error.hidden = false;
+          return;
+        }
+        if (p1 !== p2) {
+          error.textContent = "PINs stimmen nicht überein.";
+          error.hidden = false;
+          pin2.value = "";
+          pin2.focus();
+          return;
+        }
+
+        save.disabled = true;
+        try {
+          const resp = await fetch(`${API_BASE}/api/set-pin`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, pin: p1 }),
+          });
+          const data = await resp.json();
+          if (!resp.ok) {
+            if (resp.status === 409) {
+              error.textContent = "PIN bereits gesetzt — bitte normal einloggen.";
+            } else {
+              error.textContent = data.error ?? "Fehler beim Speichern.";
+            }
+            error.hidden = false;
+            save.disabled = false;
+            return;
+          }
+          // PIN gesetzt → sofort einloggen
+          const member = validatePinForUser(userId, p1);
+          if (member) {
+            localStorage.setItem("kita-user-id", member.id);
+            overlay.remove();
+            resolve(member);
+          } else {
+            // pins.json lokal noch nicht aktuell → direkt aus userId bauen
+            overlay.remove();
+            resolve({ id: userId, displayName, email: "", group: "", role: "mitarbeiterin" });
+          }
+        } catch {
+          error.textContent = "Server nicht erreichbar.";
+          error.hidden = false;
+          save.disabled = false;
+        }
+      }
+
+      save.addEventListener("click", doSave);
+      pin2.addEventListener("keydown", (e) => { if (e.key === "Enter") doSave(); });
+      requestAnimationFrame(() => pin1.focus());
+    }
+
+    // ── Schritt 2b: PIN-Login (normaler Login) ────────────────
+    function showStep2Login(userId) {
+      const displayName = getUserDisplayName(userId);
+      render(`
+        <div class="pin-login-icon">🔑</div>
+        <h1 class="pin-login-title">Hallo, ${escapeHTML(displayName)}!</h1>
         <p class="pin-login-sub">Bitte gib deinen PIN ein</p>
         <input
           class="pin-login-input"
@@ -734,72 +888,80 @@ function showLoginFlow() {
         <button class="btn btn--primary btn--lg pin-login-btn" id="lf-submit">
           Anmelden
         </button>
-      </div>
-    `;
+        <button class="btn btn--secondary pin-login-btn" id="lf-back" style="margin-top:var(--sp-xs)">
+          Zurück
+        </button>
+      `);
 
-    const input  = overlay.querySelector("#lf-pin");
-    const error  = overlay.querySelector("#lf-error");
-    const submit = overlay.querySelector("#lf-submit");
+      const input = overlay.querySelector("#lf-pin");
+      const error = overlay.querySelector("#lf-error");
+      const submit = overlay.querySelector("#lf-submit");
+      const back  = overlay.querySelector("#lf-back");
 
-    function showError(msg) {
-      error.textContent = msg;
-      error.hidden = false;
-    }
-    function setLocked(locked) {
-      input.disabled  = locked;
-      submit.disabled = locked;
-    }
+      back.addEventListener("click", showStep1);
 
-    async function tryLogin() {
-      const now = Date.now();
-      if (_pinLockUntil > now) {
-        const secs = Math.ceil((_pinLockUntil - now) / 1000);
-        showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
-        return;
+      function showError(msg) {
+        error.textContent = msg;
+        error.hidden = false;
+      }
+      function setLocked(locked) {
+        input.disabled  = locked;
+        submit.disabled = locked;
       }
 
-      const pin    = input.value.trim();
-      const member = await validatePin(pin);
+      function tryLogin() {
+        const now = Date.now();
+        if (_pinLockUntil > now) {
+          const secs = Math.ceil((_pinLockUntil - now) / 1000);
+          showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
+          return;
+        }
 
-      if (member) {
-        _pinFailCount = 0;
-        _pinLockUntil = 0;
-        localStorage.setItem("kita-user-id", member.id);
-        overlay.remove();
-        resolve(member);
-        return;
-      }
+        const pin    = input.value.trim();
+        const member = validatePinForUser(userId, pin);
 
-      _pinFailCount++;
-      input.value = "";
-
-      if (_pinFailCount >= 5) {
-        _pinLockUntil = Date.now() + 30_000;
-        _pinFailCount = 0;
-        setLocked(true);
-        showError("Zu viele Versuche. Bitte wende dich an die Leitung.");
-        setTimeout(() => {
+        if (member) {
+          _pinFailCount = 0;
           _pinLockUntil = 0;
-          setLocked(false);
-          error.hidden = true;
+          localStorage.setItem("kita-user-id", member.id);
+          overlay.remove();
+          resolve(member);
+          return;
+        }
+
+        _pinFailCount++;
+        input.value = "";
+
+        if (_pinFailCount >= 5) {
+          _pinLockUntil = Date.now() + 30_000;
+          _pinFailCount = 0;
+          setLocked(true);
+          showError("Zu viele Versuche. Bitte wende dich an die Leitung.");
+          setTimeout(() => {
+            _pinLockUntil = 0;
+            setLocked(false);
+            error.hidden = true;
+            input.focus();
+          }, 30_000);
+        } else {
+          showError(`Falscher PIN — noch ${5 - _pinFailCount} Versuch${5 - _pinFailCount === 1 ? "" : "e"}.`);
           input.focus();
-        }, 30_000);
-      } else {
-        showError(`Falscher PIN — noch ${5 - _pinFailCount} Versuch${5 - _pinFailCount === 1 ? "" : "e"}.`);
-        input.focus();
+        }
       }
+
+      submit.addEventListener("click", tryLogin);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+
+      if (_pinLockUntil > Date.now()) {
+        setLocked(true);
+        const secs = Math.ceil((_pinLockUntil - Date.now()) / 1000);
+        showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
+      }
+
+      requestAnimationFrame(() => input.focus());
     }
 
-    submit.addEventListener("click", tryLogin);
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
-
-    if (_pinLockUntil > Date.now()) {
-      setLocked(true);
-      const secs = Math.ceil((_pinLockUntil - Date.now()) / 1000);
-      showError(`Gesperrt noch ${secs} s. Bitte wende dich an die Leitung.`);
-    }
-
-    requestAnimationFrame(() => input.focus());
+    showStep1();
   });
 }
 
@@ -866,19 +1028,6 @@ function showSettings(user) {
         </div>
       </div>
 
-      ${isLeadership(user) ? `
-      <div class="settings-github-row">
-        <label class="settings-github-row__label" for="settings-github-token">
-          GitHub-Token (für Mitteilungen &amp; Schwarzes Brett)
-        </label>
-        <div class="settings-github-row__input-wrap">
-          <input class="settings-github-token-input" id="settings-github-token" type="password"
-            placeholder="ghp_…" value="${escapeHTML(getGithubToken() ?? "")}" autocomplete="off">
-          <button class="btn btn--primary btn--sm" id="settings-github-save">Speichern</button>
-        </div>
-        <span class="settings-github-row__status" id="settings-github-status"></span>
-      </div>` : ""}
-
       <button class="btn btn--danger btn--sm settings-logout" id="settings-logout">
         Abmelden
       </button>
@@ -914,33 +1063,6 @@ function showSettings(user) {
 
   overlay.querySelector("#settings-close").addEventListener("click", () => overlay.remove());
   overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
-
-  // GitHub-Token speichern + prüfen (nur Leitung)
-  const githubSaveBtn = overlay.querySelector("#settings-github-save");
-  if (githubSaveBtn) {
-    githubSaveBtn.addEventListener("click", async () => {
-      const input    = overlay.querySelector("#settings-github-token");
-      const statusEl = overlay.querySelector("#settings-github-status");
-      const token    = input.value.trim();
-
-      saveGithubToken(token);
-      statusEl.className = "settings-github-row__status";
-      statusEl.textContent = "Wird geprüft …";
-      githubSaveBtn.disabled = true;
-
-      const result = await testGithubToken(token);
-      githubSaveBtn.disabled = false;
-      if (!token) {
-        statusEl.textContent = "";
-      } else if (result.success) {
-        statusEl.textContent = "✓ Verbunden — Mitteilungen können veröffentlicht werden.";
-        statusEl.className = "settings-github-row__status settings-github-row__status--ok";
-      } else {
-        statusEl.textContent = result.error ?? "Verbindung fehlgeschlagen.";
-        statusEl.className = "settings-github-row__status settings-github-row__status--error";
-      }
-    });
-  }
 
   overlay.querySelector("#theme-toggle").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-theme-val]");
@@ -1104,177 +1226,6 @@ function showDecisionModal(requestId, action, onConfirm) {
 }
 
 // ============================================================
-// Mitteilung erstellen (Leitung) — pusht sofort auf GitHub
-// ============================================================
-
-function showMitteilungModal(user, onSuccess) {
-  const existing = document.getElementById("mitteilung-modal-overlay");
-  if (existing) existing.remove();
-
-  if (!getGithubToken()) {
-    showToast("Bitte zuerst ein GitHub-Token in den Einstellungen eintragen.", "error");
-    return;
-  }
-
-  const groups = [...new Set(getPlanMitarbeiter().map((m) => m.gruppe).filter(Boolean))];
-  const groupOptionsHTML = groups.map((g) => `<option value="${escapeHTML(g)}">${escapeHTML(g)}</option>`).join("");
-
-  const overlay = document.createElement("div");
-  overlay.id        = "mitteilung-modal-overlay";
-  overlay.className = "decision-modal-overlay";
-
-  overlay.innerHTML = `
-    <div class="decision-modal">
-      <h3 class="decision-modal__title">Neue Mitteilung</h3>
-      <div class="form-group">
-        <label class="form-label" for="mit-titel">Titel</label>
-        <input class="form-input" id="mit-titel" type="text" maxlength="120" placeholder="z.B. Elternabend am 20.09.">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="mit-text">Text</label>
-        <textarea class="form-textarea" id="mit-text" rows="4" placeholder="Details zur Mitteilung…"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="mit-prioritaet">Priorität</label>
-        <select class="form-select" id="mit-prioritaet">
-          <option value="info">Info</option>
-          <option value="wichtig">Wichtig</option>
-          <option value="sehrwichtig">Sehr wichtig</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="mit-zielgruppe">Zielgruppe</label>
-        <select class="form-select" id="mit-zielgruppe">
-          <option value="alle">Alle</option>
-          ${groupOptionsHTML}
-        </select>
-      </div>
-      <p class="form-error" id="mit-error" style="display:none"></p>
-      <div class="decision-modal__actions">
-        <button class="btn btn--ghost mit-cancel">Abbrechen</button>
-        <button class="btn btn--primary mit-submit">Veröffentlichen</button>
-      </div>
-    </div>`;
-
-  document.body.appendChild(overlay);
-
-  function close() { overlay.remove(); }
-  overlay.querySelector(".mit-cancel").addEventListener("click", close);
-  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-
-  overlay.querySelector(".mit-submit").addEventListener("click", async () => {
-    const titel = overlay.querySelector("#mit-titel").value.trim();
-    const text  = overlay.querySelector("#mit-text").value.trim();
-    const errEl = overlay.querySelector("#mit-error");
-
-    if (!titel || !text) {
-      errEl.textContent = "Bitte Titel und Text ausfüllen.";
-      errEl.style.display = "block";
-      return;
-    }
-
-    const submitBtn = overlay.querySelector(".mit-submit");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Wird veröffentlicht …";
-
-    const result = await createMitteilung({
-      titel,
-      text,
-      prioritaet: overlay.querySelector("#mit-prioritaet").value,
-      zielgruppe: overlay.querySelector("#mit-zielgruppe").value,
-    }, user);
-
-    if (result.success) {
-      close();
-      await onSuccess();
-    } else {
-      errEl.textContent = result.error ?? "Veröffentlichen fehlgeschlagen.";
-      errEl.style.display = "block";
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Veröffentlichen";
-    }
-  });
-}
-
-// ============================================================
-// Aushang erstellen (Leitung) — Schwarzes Brett, pusht sofort auf GitHub
-// ============================================================
-
-function showAushangModal(user, onSuccess) {
-  const existing = document.getElementById("aushang-modal-overlay");
-  if (existing) existing.remove();
-
-  if (!getGithubToken()) {
-    showToast("Bitte zuerst ein GitHub-Token in den Einstellungen eintragen.", "error");
-    return;
-  }
-
-  const overlay = document.createElement("div");
-  overlay.id        = "aushang-modal-overlay";
-  overlay.className = "decision-modal-overlay";
-
-  overlay.innerHTML = `
-    <div class="decision-modal">
-      <h3 class="decision-modal__title">Neuer Aushang</h3>
-      <div class="form-group">
-        <label class="form-label" for="aus-titel">Titel</label>
-        <input class="form-input" id="aus-titel" type="text" maxlength="120" placeholder="z.B. Hausordnung">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="aus-text">Text</label>
-        <textarea class="form-textarea" id="aus-text" rows="4" placeholder="Inhalt des Aushangs…"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="aus-ablauf">Ablaufdatum <span class="decision-modal__optional">(optional)</span></label>
-        <input class="form-input" id="aus-ablauf" type="date">
-      </div>
-      <p class="form-error" id="aus-error" style="display:none"></p>
-      <div class="decision-modal__actions">
-        <button class="btn btn--ghost aus-cancel">Abbrechen</button>
-        <button class="btn btn--primary aus-submit">Veröffentlichen</button>
-      </div>
-    </div>`;
-
-  document.body.appendChild(overlay);
-
-  function close() { overlay.remove(); }
-  overlay.querySelector(".aus-cancel").addEventListener("click", close);
-  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-
-  overlay.querySelector(".aus-submit").addEventListener("click", async () => {
-    const titel = overlay.querySelector("#aus-titel").value.trim();
-    const text  = overlay.querySelector("#aus-text").value.trim();
-    const errEl = overlay.querySelector("#aus-error");
-
-    if (!titel || !text) {
-      errEl.textContent = "Bitte Titel und Text ausfüllen.";
-      errEl.style.display = "block";
-      return;
-    }
-
-    const submitBtn = overlay.querySelector(".aus-submit");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Wird veröffentlicht …";
-
-    const result = await createAushang({
-      titel,
-      text,
-      ablaufdatum: overlay.querySelector("#aus-ablauf").value || null,
-    }, user);
-
-    if (result.success) {
-      close();
-      await onSuccess();
-    } else {
-      errEl.textContent = result.error ?? "Veröffentlichen fehlgeschlagen.";
-      errEl.style.display = "block";
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Veröffentlichen";
-    }
-  });
-}
-
-// ============================================================
 // App starten
 // ============================================================
 
@@ -1347,8 +1298,18 @@ async function initApp() {
       // Kein Plan vorhanden — Demo-Modus
     }
 
-    // mitteilungen.json + schwarzes-brett.json laden (von der Leitung in der App erstellt)
-    await loadAppContentFiles();
+    // pins.json laden — separate Datei mit PINs, hat Priorität vor plan-export.json
+    try {
+      const pinsResp = await fetch("pins.json", { cache: "no-cache" });
+      if (pinsResp.ok) {
+        const pins = await pinsResp.json();
+        setPinsData(pins);
+        const dbg = getDebugInfo();
+        console.log(`[Kita-App] pins.json geladen — ${dbg.mitarbeiterCount} PINs, Erster: ${dbg.firstPinSet ? 'gesetzt' : '—'}`);
+      }
+    } catch {
+      // pins.json nicht verfügbar — Fallback auf mitarbeiter aus plan-export.json
+    }
 
     // planMonth/planYear auf nächsten verfügbaren Monat setzen
     const _nearest = _nearestAvailableMonth(getAvailableMonths(), new Date());
@@ -1456,11 +1417,8 @@ async function initApp() {
     // Auto-Refresh: alle 5 Minuten Plan neu laden und bei Änderung Mitteilungen aktualisieren
     setInterval(async () => {
       try {
-        const [planChanged, contentChanged] = await Promise.all([
-          refreshPlanData(),
-          loadAppContentFiles(),
-        ]);
-        if (!planChanged && !contentChanged) return;
+        const changed = await refreshPlanData();
+        if (!changed) return;
 
         // Badge neu laden
         await updateNotifBadge(user);
@@ -1469,12 +1427,6 @@ async function initApp() {
         if (_currentScreen === "infos") {
           _currentScreen = null;
           await navigate("infos");
-        }
-
-        // Schwarzes-Brett-Screen neu rendern wenn gerade offen
-        if (_currentScreen === "brett") {
-          _currentScreen = null;
-          await navigate("brett");
         }
 
         // Banner: neue Mitteilungen ankündigen

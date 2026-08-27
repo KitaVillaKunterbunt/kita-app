@@ -4,19 +4,7 @@
 //   2. Mock-Daten        (Entwicklung / Fallback)
 //   3. Graph API         (Phase 8, SharePoint)
 
-import { pushJsonFile } from "./github.js";
-
 const USE_MOCK = true;
-
-async function sha256(str) {
-  const data = new TextEncoder().encode(str);
-  if (typeof globalThis !== 'undefined' && globalThis.crypto?.subtle) {
-    const buf = await globalThis.crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-  }
-  const { createHash } = await import('node:crypto');
-  return createHash('sha256').update(str, 'utf8').digest('hex');
-}
 
 // Placeholder — wird durch setMockData() ersetzt sobald Demo-Modus erkannt wird.
 // Leere Arrays verhindern Crashes falls Funktionen vor dem Laden aufgerufen werden.
@@ -41,6 +29,8 @@ let _planData = null;
 // Einzelne Monats-Pläne: key = "YYYY-MM" → Plan-Objekt
 let _planMonths = {};
 
+// Wird von app.js via setPinsData() gefüllt wenn pins.json geladen wurde.
+let _pinsData = null;
 
 /** Alle Monatspläne zu einem einzigen Objekt zusammenführen. */
 function _buildMergedPlan() {
@@ -89,6 +79,17 @@ export function setPlanData(data) {
   _planData = _buildMergedPlan();
 }
 
+/** PIN-Liste setzen (aufgerufen von app.js nach fetch von pins.json) */
+export function setPinsData(data) {
+  if (Array.isArray(data)) {
+    _pinsData = data;
+  } else if (data?.pins && typeof data.pins === "object") {
+    // Format: { aktualisiert, pins: { "user-1": "1234" | null } }
+    _pinsData = Object.entries(data.pins).map(([id, pin]) => ({ id, pin }));
+  } else {
+    _pinsData = null;
+  }
+}
 
 /** Gibt den Anzeigenamen eines Mitarbeiters anhand der ID zurück. */
 export function getUserDisplayName(userId) {
@@ -96,122 +97,42 @@ export function getUserDisplayName(userId) {
   return list.find((m) => m.id === userId)?.name ?? userId;
 }
 
+/** Gibt true zurück wenn der User einen PIN gesetzt hat, false wenn null, null wenn unbekannt. */
+export function userHasPin(userId) {
+  if (!_pinsData) return null;
+  const entry = _pinsData.find((m) => m.id === userId);
+  if (!entry) return null;
+  return entry.pin !== null && entry.pin !== undefined;
+}
+
 /**
- * Validiert den PIN für einen bestimmten User (userId-spezifisch) via SHA-256.
+ * Validiert den PIN für einen bestimmten User (userId-spezifisch).
  * Gibt User-Objekt zurück oder null bei Fehler.
  */
-export async function validatePinForUser(userId, pin) {
+export function validatePinForUser(userId, pin) {
+  const list = _pinsData ?? _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
+  const entry = list.find((m) => m.id === userId);
+  if (!entry || entry.pin == null || String(entry.pin) !== String(pin).trim()) return null;
+
   const mitarbeiter = _planData?.mitarbeiter ?? mock?.MOCK_MITARBEITER ?? [];
-  const m = mitarbeiter.find((e) => e.id === userId);
-  if (!m?.pinHash) return null;
-  const hash = await sha256(userId + ':' + String(pin).trim());
-  if (hash !== m.pinHash) return null;
+  const full = mitarbeiter.find((m) => m.id === userId) ?? entry;
   return {
-    id:          m.id,
-    displayName: m.name ?? m.id,
-    email:       m.email ?? "",
-    group:       m.gruppe ?? "",
-    role:        m.rolle ?? "mitarbeiterin",
+    id:          full.id,
+    displayName: full.name ?? full.id,
+    email:       full.email ?? "",
+    group:       full.gruppe ?? "",
+    role:        full.rolle ?? "mitarbeiterin",
   };
-}
-
-// ============================================================
-// Mitteilungen + Schwarzes Brett (mitteilungen.json / schwarzes-brett.json)
-// Von der Leitung direkt in der App erstellt und auf GitHub gepusht.
-// ============================================================
-
-let _mitteilungenData = [];
-let _aushaengeData    = [];
-
-/** Von app.js nach fetch von mitteilungen.json aufgerufen. */
-export function setMitteilungenData(data) {
-  _mitteilungenData = Array.isArray(data?.mitteilungen) ? data.mitteilungen : [];
-}
-
-/** Von app.js nach fetch von schwarzes-brett.json aufgerufen. */
-export function setAushaengeData(data) {
-  _aushaengeData = Array.isArray(data?.aushaenge) ? data.aushaenge : [];
-}
-
-function _todayISODate() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-function _isExpired(aushang) {
-  return !!aushang.ablaufdatum && aushang.ablaufdatum < _todayISODate();
-}
-
-/**
- * Aushänge fürs Schwarze Brett, neueste zuerst.
- * @param {boolean} includeExpired  true = auch abgelaufene anzeigen (Leitungs-Verwaltung)
- */
-export function getAushaenge(includeExpired = false) {
-  const list = includeExpired ? _aushaengeData : _aushaengeData.filter((a) => !_isExpired(a));
-  return [...list].sort((a, b) => new Date(b.erstellt) - new Date(a.erstellt));
-}
-
-/**
- * Erstellt eine neue Mitteilung und pusht sie sofort auf GitHub (mitteilungen.json).
- * @param {{titel:string, text:string, prioritaet:string, zielgruppe:string}} input
- * @param {{displayName:string}} user
- * @returns {Promise<{success:boolean, error?:string}>}
- */
-export async function createMitteilung({ titel, text, prioritaet, zielgruppe }, user) {
-  const entry = {
-    id:         _genId(),
-    titel,
-    text,
-    prioritaet: prioritaet || "info",
-    zielgruppe: zielgruppe || "alle",
-    erstellt:   new Date().toISOString(),
-    von:        user?.displayName ?? "Leitung",
-  };
-  const updated = [entry, ..._mitteilungenData];
-  const result = await pushJsonFile("mitteilungen.json", { mitteilungen: updated }, `Mitteilung: ${titel}`);
-  if (result.success) _mitteilungenData = updated;
-  return result;
-}
-
-/**
- * Erstellt einen neuen Aushang fürs Schwarze Brett und pusht ihn auf GitHub (schwarzes-brett.json).
- * @param {{titel:string, text:string, ablaufdatum?:string|null}} input
- * @param {{displayName:string}} user
- * @returns {Promise<{success:boolean, error?:string}>}
- */
-export async function createAushang({ titel, text, ablaufdatum }, user) {
-  const entry = {
-    id:          _genId(),
-    titel,
-    text,
-    ablaufdatum: ablaufdatum || null,
-    erstellt:    new Date().toISOString(),
-    von:         user?.displayName ?? "Leitung",
-  };
-  const updated = [entry, ..._aushaengeData];
-  const result = await pushJsonFile("schwarzes-brett.json", { aushaenge: updated }, `Aushang: ${titel}`);
-  if (result.success) _aushaengeData = updated;
-  return result;
-}
-
-/**
- * Entfernt einen Aushang und pusht die aktualisierte Liste auf GitHub.
- * @returns {Promise<{success:boolean, error?:string}>}
- */
-export async function deleteAushang(id) {
-  const updated = _aushaengeData.filter((a) => a.id !== id);
-  const result = await pushJsonFile("schwarzes-brett.json", { aushaenge: updated }, "Aushang entfernt");
-  if (result.success) _aushaengeData = updated;
-  return result;
 }
 
 /** Debug-Informationen (für den 3×-Tap-Dialog auf der Login-Seite) */
 export function getDebugInfo() {
-  const list = _planData?.mitarbeiter ?? [];
+  const list = _pinsData ?? _planData?.mitarbeiter ?? [];
   return {
-    loaded:            !!_planData,
-    mitarbeiterCount:  list.length,
-    firstPinHashSet:   list[0]?.pinHash != null,
+    loaded:           !!_planData,
+    pinsLoaded:       !!_pinsData,
+    mitarbeiterCount: list.length,
+    firstPinSet:      list[0]?.pin != null,
   };
 }
 
@@ -298,12 +219,13 @@ export async function refreshPlanData() {
 }
 
 /**
- * Demo-Modus: kein Plan oder Plan ohne pinHash-Felder.
- * Trifft auf GitHub Pages mit plan-export-public.json ohne pinHash zu.
+ * Demo-Modus: keine pins.json UND entweder kein Plan oder Plan ohne PIN-Felder.
+ * Trifft auf GitHub Pages mit plan-export-public.json zu.
  */
 export function isDemoMode() {
+  if (_pinsData !== null) return false;
   if (_planData === null) return true;
-  return !(_planData.mitarbeiter ?? []).some(m => m.pinHash != null);
+  return !(_planData.mitarbeiter ?? []).some(m => m.pin != null);
 }
 
 /** Ersten Mitarbeiter aus Plan (oder Mock) als Demo-User zurückgeben. */
@@ -469,24 +391,6 @@ function adaptNotifications(infos) {
   }));
 }
 
-/** Adaptiert von der Leitung in der App erstellte Mitteilungen (mitteilungen.json) ins interne Format. */
-function adaptMitteilungen(mitteilungen) {
-  return (mitteilungen ?? []).map((n) => ({
-    id:           n.id,
-    createdAt:    n.erstellt,
-    authorId:     n.von ?? "Leitung",
-    title:        n.titel,
-    body:         n.text,
-    targetGroups: n.zielgruppe && n.zielgruppe !== "alle" ? [n.zielgruppe] : ["alle"],
-    priority:     n.prioritaet ?? "info",
-    type:         n.prioritaet === "sehrwichtig" ? "sehrwichtig"
-                : n.prioritaet === "wichtig"     ? "wichtig"
-                : "info",
-    datum:        null,
-    confirmedBy:  _planConfirmedBy(n.id),
-  }));
-}
-
 // ============================================================
 // User
 // ============================================================
@@ -515,38 +419,34 @@ export function getPlanMitarbeiter() {
 }
 
 /**
- * Prüft einen PIN gegen alle Mitarbeiter via SHA-256.
+ * Prüft einen PIN gegen die Mitarbeiterliste aus plan-export.json.
  * Gibt bei Treffer das User-Objekt zurück, sonst null.
  */
-export async function validatePin(pin) {
-  const list = _planData?.mitarbeiter ?? mock.MOCK_MITARBEITER;
-  const trimmed = String(pin).trim();
-  for (const m of list) {
-    if (!m.pinHash) continue;
-    const hash = await sha256(m.id + ':' + trimmed);
-    if (hash === m.pinHash) {
-      return {
-        id:          m.id,
-        displayName: m.name,
-        email:       m.email ?? "",
-        group:       m.gruppe,
-        role:        m.rolle ?? "mitarbeiterin",
-      };
-    }
-  }
-  return null;
+export function validatePin(pin) {
+  const list = _pinsData ?? _planData?.mitarbeiter ?? mock.MOCK_MITARBEITER;
+  const m = list.find((m) => String(m.pin) === String(pin).trim());
+  if (!m) return null;
+  return {
+    id:          m.id,
+    displayName: m.name,
+    email:       m.email ?? "",
+    group:       m.gruppe,
+    role:        m.rolle ?? "mitarbeiterin",
+  };
 }
 
 // ============================================================
 // Colleagues
 // ============================================================
 
-/** Gibt Mitarbeiterinnen zurück (für Kalender-Events). Kein geburtstag/eintrittsdatum — DSGVO. */
+/** Gibt Mitarbeiterinnen mit Geburtstag- und Eintrittsdaten zurück (für Kalender-Events). */
 export function getMitarbeiter() {
   if (_planData) {
     return (_planData.mitarbeiter ?? []).map((m) => ({
-      id:   m.id,
-      name: m.name,
+      id:             m.id,
+      name:           m.name,
+      geburtstag:     m.geburtstag     ?? null,
+      eintrittsdatum: m.eintrittsdatum ?? null,
     }));
   }
   return mock.MOCK_MITARBEITER ?? [];
@@ -811,20 +711,20 @@ export async function getNotifications(userGroup, userRole) {
   // Leitung und Stellvertreterin sehen alle Mitteilungen unabhängig von Zielgruppe
   const seeAll = userRole === "Leitung" || userRole === "Stellvertreterin";
   const deletedIds = _getDeletedNotifIds();
-  const planItems = _planData
-    ? adaptNotifications(_planData.infos).filter((n) => !deletedIds.includes(n.id))
-    : [];
-  const appItems  = adaptMitteilungen(_mitteilungenData).filter((n) => !deletedIds.includes(n.id));
-  const combined  = [...appItems, ...planItems];
-  if (combined.length === 0) return [];
-  return seeAll ? combined : combined.filter(
-    (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
-  );
+  if (_planData) {
+    const adapted = adaptNotifications(_planData.infos)
+      .filter((n) => !deletedIds.includes(n.id));
+    return seeAll ? adapted : adapted.filter(
+      (n) => n.targetGroups.includes("alle") || n.targetGroups.includes(userGroup)
+    );
+  }
+  // Keine Mock-Mitteilungen — nur echte aus plan-export.json
+  return [];
   // Phase 8: return await graphApi.getNotifications(userGroup);
 }
 
 export async function confirmNotification(notificationId, userId) {
-  if (_planData || _mitteilungenData.length > 0) {
+  if (_planData) {
     _addPlanConfirmedBy(notificationId, userId);
     return { success: true };
   }
