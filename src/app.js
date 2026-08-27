@@ -1374,11 +1374,10 @@ async function initApp() {
 
     if (!user) {
       console.log("[KitaApp] Kein eingeloggter User — blende Loading-Overlay aus");
-      loadingOverlay.classList.add("hidden");
+      loadingOverlay?.classList.add("hidden");
 
       if (!hasPlanData()) {
         console.log("[KitaApp] Kein Plan → Demo-Modus mit mock.js");
-        // Kein Plan überhaupt → Demo-Modus: mock.js jetzt laden (lazy)
         setMockData(await import("./data/mock.js"));
         const demo = getDemoUser();
         if (demo) {
@@ -1386,23 +1385,13 @@ async function initApp() {
           localStorage.setItem("kita-user-id", demo.id);
           showToast("Demo-Modus — keine Plandaten vorhanden", "", 4000);
         }
-      } else if (isDemoMode()) {
-        console.log("[KitaApp] isDemoMode=true → showUserPicker");
-        // Plan vorhanden, aber keine PINs → Person aus Liste wählen
+      } else {
+        console.log("[KitaApp] → showUserPicker");
         const picked = await showUserPicker();
         console.log("[KitaApp] User-Picker Auswahl:", picked?.id ?? null);
         if (picked) {
           user = picked;
           localStorage.setItem("kita-user-id", picked.id);
-        }
-      } else {
-        console.log("[KitaApp] isDemoMode=false → showLoginFlow");
-        // Plan + PINs vorhanden → Login-Flow (Nummer → PIN)
-        const loggedIn = await showLoginFlow();
-        if (loggedIn) user = loggedIn;
-        else {
-          await initAuth();
-          user = getUser();
         }
       }
     }
@@ -1411,7 +1400,7 @@ async function initApp() {
     console.log("[KitaApp] eingeloggter User:", user.id);
 
     // Lade-Overlay ausblenden, Settings-Button einblenden
-    loadingOverlay.classList.add("hidden");
+    loadingOverlay?.classList.add("hidden");
     if (settingsBtn) {
       settingsBtn.hidden = false;
       settingsBtn.addEventListener("click", () => showSettings(user));
@@ -1516,7 +1505,7 @@ async function initApp() {
 
   } catch (err) {
     console.error("[Kita-App] Init-Fehler:", err);
-    loadingOverlay.innerHTML = `
+    if (loadingOverlay) loadingOverlay.innerHTML = `
       <p style="color:var(--c-danger);text-align:center;padding:24px;">
         Fehler beim Laden der App.<br>
         <button onclick="location.reload()"
