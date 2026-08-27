@@ -611,7 +611,7 @@ function showPinLogin() {
           type="password"
           inputmode="numeric"
           pattern="[0-9]*"
-          maxlength="6"
+          maxlength="10"
           autocomplete="one-time-code"
           placeholder="••••••"
         >
@@ -726,7 +726,7 @@ function showLoginFlow() {
           type="password"
           inputmode="numeric"
           pattern="[0-9]*"
-          maxlength="6"
+          maxlength="10"
           autocomplete="one-time-code"
           placeholder="••••••"
         >
@@ -1279,8 +1279,6 @@ function showAushangModal(user, onSuccess) {
 // ============================================================
 
 async function initApp() {
-  setTimeout(() => document.getElementById("loading-overlay")?.classList.add("hidden"), 3000);
-
   // Gespeichertes Theme sofort anwenden — verhindert Flash
   const _savedTheme = localStorage.getItem("kita-theme");
   if (_savedTheme === "dark" || _savedTheme === "light") {
@@ -1293,7 +1291,6 @@ async function initApp() {
   });
 
   try {
-    console.log("[KitaApp] initApp start");
     // Plan laden: lokale Dateien (mit PINs) haben Vorrang.
     // Lokal: plan-export.json + plan-export-YYYY-MM.json (gitignored)
     // Fallback: plan-export-public.json + plan-export-public-YYYY-MM.json (GitHub Pages)
@@ -1308,7 +1305,6 @@ async function initApp() {
         while (m < 1)  { m += 12; y--; }
         localSources.push(`plan-export-${y}-${String(m).padStart(2, "0")}.json`);
       }
-      console.log("[KitaApp] Lade lokale Quellen:", localSources);
       const localResults = await Promise.allSettled(
         localSources.map((src) => fetch(src, { cache: "no-cache" }))
       );
@@ -1321,10 +1317,8 @@ async function initApp() {
           setPlanData(plan);
           planExportedIso = plan.exportiert ?? planExportedIso;
           localLoaded++;
-          console.log("[KitaApp] Lokaler Plan geladen:", localSources[i]);
         } catch { /* parse error */ }
       }
-      console.log("[KitaApp] Lokale Pläne geladen:", localLoaded);
 
       if (localLoaded === 0) {
         // Öffentliche Dateien: plan-export-public.json + pro-Monat für -2..+10 Monate
@@ -1336,11 +1330,9 @@ async function initApp() {
           while (m < 1)  { m += 12; y--; }
           publicSources.push(`plan-export-public-${y}-${String(m).padStart(2, "0")}.json`);
         }
-        console.log("[KitaApp] Lade öffentliche Quellen:", publicSources);
         const publicResults = await Promise.allSettled(
           publicSources.map((src) => fetch(src, { cache: "no-cache" }))
         );
-        let publicLoaded = 0;
         for (let i = 0; i < publicResults.length; i++) {
           const r = publicResults[i];
           if (r.status === "rejected" || !r.value.ok) continue;
@@ -1348,17 +1340,12 @@ async function initApp() {
             const plan = await r.value.json();
             setPlanData(plan);
             planExportedIso = plan.exportiert ?? planExportedIso;
-            publicLoaded++;
-            console.log("[KitaApp] Öffentlicher Plan geladen:", publicSources[i]);
           } catch { /* parse error */ }
         }
-        console.log("[KitaApp] Öffentliche Pläne geladen:", publicLoaded);
       }
-    } catch (planErr) {
-      console.error("[KitaApp] Fehler beim Plan-Laden:", planErr);
+    } catch {
+      // Kein Plan vorhanden — Demo-Modus
     }
-
-    console.log("[KitaApp] hasPlanData:", hasPlanData(), "| isDemoMode:", isDemoMode());
 
     // mitteilungen.json + schwarzes-brett.json laden (von der Leitung in der App erstellt)
     await loadAppContentFiles();
@@ -1367,41 +1354,33 @@ async function initApp() {
     const _nearest = _nearestAvailableMonth(getAvailableMonths(), new Date());
     if (_nearest) { planMonth = _nearest.monat; planYear = _nearest.jahr; }
 
-    console.log("[KitaApp] initAuth...");
     await initAuth();
     let user = getUser();
-    console.log("[KitaApp] user nach initAuth:", user ? user.id : null);
 
     if (!user) {
-      console.log("[KitaApp] Kein eingeloggter User — blende Loading-Overlay aus");
-      loadingOverlay?.classList.add("hidden");
+      loadingOverlay.classList.add("hidden");
 
       if (!hasPlanData()) {
-        console.log("[KitaApp] Kein Plan → Demo-Modus mit mock.js");
+        // Kein Plan überhaupt → Demo-Modus: mock.js jetzt laden (lazy)
         setMockData(await import("./data/mock.js"));
         const demo = getDemoUser();
         if (demo) {
           user = demo;
           localStorage.setItem("kita-user-id", demo.id);
-          await initAuth();
           showToast("Demo-Modus — keine Plandaten vorhanden", "", 4000);
         }
       } else if (isDemoMode()) {
-        console.log("[KitaApp] isDemoMode=true → showUserPicker");
+        // Plan vorhanden, aber keine PINs → Person aus Liste wählen
         const picked = await showUserPicker();
-        console.log("[KitaApp] User-Picker Auswahl:", picked?.id ?? null);
         if (picked) {
           user = picked;
           localStorage.setItem("kita-user-id", picked.id);
-          await initAuth();
         }
       } else {
-        console.log("[KitaApp] isDemoMode=false → showLoginFlow");
+        // Plan + PINs vorhanden → Login-Flow (Nummer → PIN)
         const loggedIn = await showLoginFlow();
-        if (loggedIn) {
-          user = loggedIn;
-          await initAuth();
-        } else {
+        if (loggedIn) user = loggedIn;
+        else {
           await initAuth();
           user = getUser();
         }
@@ -1409,10 +1388,9 @@ async function initApp() {
     }
 
     if (!user) throw new Error("Kein User nach Auth");
-    console.log("[KitaApp] eingeloggter User:", user.id);
 
     // Lade-Overlay ausblenden, Settings-Button einblenden
-    loadingOverlay?.classList.add("hidden");
+    loadingOverlay.classList.add("hidden");
     if (settingsBtn) {
       settingsBtn.hidden = false;
       settingsBtn.addEventListener("click", () => showSettings(user));
@@ -1517,7 +1495,7 @@ async function initApp() {
 
   } catch (err) {
     console.error("[Kita-App] Init-Fehler:", err);
-    if (loadingOverlay) loadingOverlay.innerHTML = `
+    loadingOverlay.innerHTML = `
       <p style="color:var(--c-danger);text-align:center;padding:24px;">
         Fehler beim Laden der App.<br>
         <button onclick="location.reload()"
