@@ -2172,7 +2172,7 @@ button.card:active {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: var(--c-background);
+  background: var(--c-bg);
   display: flex;
   align-items: center;
   justify-content: center;
