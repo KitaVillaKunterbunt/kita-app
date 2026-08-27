@@ -115,23 +115,5 @@
 
   <script type="module" src="src/app.js"></script>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async () => {
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
-        try {
-          const reg = await navigator.serviceWorker.register('./sw.js');
-          reg.update().catch(() => {});
-        } catch (err) {
-          console.warn('[SW] Fehler:', err);
-        }
-      });
-    }
-  </script>
 </body>
 </html>
