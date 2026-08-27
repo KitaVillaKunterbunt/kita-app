@@ -1383,6 +1383,7 @@ async function initApp() {
         if (demo) {
           user = demo;
           localStorage.setItem("kita-user-id", demo.id);
+          await initAuth();
           showToast("Demo-Modus — keine Plandaten vorhanden", "", 4000);
         }
       } else {
@@ -1392,6 +1393,7 @@ async function initApp() {
         if (picked) {
           user = picked;
           localStorage.setItem("kita-user-id", picked.id);
+          await initAuth(); // _currentUser in auth.js syncen — navigate() braucht getUser()
         }
       }
     }
