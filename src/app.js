@@ -283,7 +283,7 @@ async function navigate(screenName) {
 
         const refreshInfos = async () => {
           const fresh = await getNotifications(user.group, user.role);
-          renderInfos(container, fresh, user, confirmCb, swapCb, deleteCb, deleteAllCb);
+          renderInfos(container, fresh, user, confirmCb, swapCb, deleteCb, deleteAllCb, leader, createCb);
           updateNotifBadge(user);
         };
 
