@@ -70,7 +70,8 @@ cp public/sw.js sw.js
 - `plan-export.json` → legacy, ebenfalls gitignored
 - `dienstplan.html` → enthält echte Namen, gitignored
 - `.env` → enthält ADMIN_PASSWORD, gitignored
-- **Niemals** pinHash, PINs oder ADMIN_PASSWORD in Debug-Dialogen, console.log oder öffentlichen Dateien
+- **Niemals** pinHash, PINs oder ADMIN_PASSWORD in Debug-Dialogen oder console.log
+- **Bewusste Ausnahme:** `plan-export-public-*.json` enthalten `pinHash`-Felder für Client-Side-PIN-Validierung auf GitHub Pages (kein Server verfügbar). Risiko bekannt und akzeptiert (2026-08-27): SHA-256(userId:pin) eines 6-stelligen PINs ist offline bruteforcebar. Für eine interne Kita-App ohne sensible Daten vertretbar. Nicht ändern ohne explizite Anweisung.
 
 ## Plan-Dateien Format
 
