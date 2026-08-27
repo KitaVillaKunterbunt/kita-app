@@ -611,7 +611,7 @@ function showPinLogin() {
           type="password"
           inputmode="numeric"
           pattern="[0-9]*"
-          maxlength="10"
+          maxlength="6"
           autocomplete="one-time-code"
           placeholder="••••••"
         >
@@ -726,7 +726,7 @@ function showLoginFlow() {
           type="password"
           inputmode="numeric"
           pattern="[0-9]*"
-          maxlength="10"
+          maxlength="6"
           autocomplete="one-time-code"
           placeholder="••••••"
         >
