@@ -7,121 +7,141 @@
       "id": "user-1",
       "name": "Vanessa",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "2d8f2478e6ba09f79529dc92c9979649fd787c20fafec3d7ffdcdc64e895339a"
     },
     {
       "id": "user-2",
       "name": "Rieke",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "0da6333fdd827b207652dcea31d40ccf98f0aa223108b2f79bf0257650d6f8ee"
     },
     {
       "id": "user-3",
       "name": "Vera",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "1ba7f97e362bd465f0674aeffbb03ddc905c536c0ef65558a02d1b51199fa494"
     },
     {
       "id": "user-4",
       "name": "Doreen",
       "gruppe": "Käfer (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "554f3731b51cf5d89b2016113a6c4365fb711d0f2ffec9bb220bb0c9343b56eb"
     },
     {
       "id": "user-5",
       "name": "Biance",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "5656bee4fde4b42983133ca5021eba7c5ddb2fb69ab9ca6996927783306086bc"
     },
     {
       "id": "user-6",
       "name": "Julia",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "43b3a0f2c52b1d38be545b243f30c71d7ce9db6fcfbc692c3469e14d8258cfd9"
     },
     {
       "id": "user-7",
       "name": "Sabine",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "5b4cef47eec38916f2ac633f822592f1210740a3debfe019349e86b7c5e9a085"
     },
     {
       "id": "user-8",
       "name": "Emilia",
       "gruppe": "Mäuse (U3)",
-      "rolle": "Praktikantin"
+      "rolle": "Praktikantin",
+      "pinHash": "a53876d114a8c1c5b25711e9b4568fbce3e3a52ae65f04d79c321327c69cc8b1"
     },
     {
       "id": "user-9",
       "name": "Larissa",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "ee17af80665f351201320777bcdfa6521a64e3f00ebe4bc01dfd97cab3006325"
     },
     {
       "id": "user-10",
       "name": "Celina",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "888b3c715e2e26ee47ada76f9d567225084ebca0213231772e1eb2dca0c0c841"
     },
     {
       "id": "user-11",
       "name": "Hedwig",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "a170ad5e53c4251d4c192ced41db7d4d22719b016570eb895452c7aef0ebda75"
     },
     {
       "id": "user-12",
       "name": "Simge",
       "gruppe": "Bären (Ü3)",
-      "rolle": "Praktikantin"
+      "rolle": "Praktikantin",
+      "pinHash": "787ee77de0fffd6316bc21ec5a8075870aafaf3a0672e24ed70f2cd1e212743d"
     },
     {
       "id": "user-13",
       "name": "Gabi",
       "gruppe": "Dino (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "4af060cb8df44b6461a6a4af929a8d28cb4d65ba2e35254f84cf846c3f32af0c"
     },
     {
       "id": "user-14",
       "name": "Andju",
       "gruppe": "Dino (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "8a02198af153bd16d3fdbd4f6e85e3eab84fd9f2e28f196cb05702a62d637d12"
     },
     {
       "id": "user-15",
       "name": "Andreea",
       "gruppe": "Dino (Ü3)",
-      "rolle": "Praktikantin"
+      "rolle": "Praktikantin",
+      "pinHash": "5d9ccf48d2a6a0cb7c4d91d209aed644286513dabe1518b676fb28effce902e8"
     },
     {
       "id": "user-16",
       "name": "Laura",
       "gruppe": "Igel (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "5e6248bda7884e67b31eeaef34d8adad7b8c5b30e21aab07ba45848edfd22e23"
     },
     {
       "id": "user-17",
       "name": "Anke",
       "gruppe": "Igel (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "9ac11a187eb8bd71a95698c571b14f2300db2f90548ec799b1859bdaa414165c"
     },
     {
       "id": "user-18",
       "name": "Janina",
       "gruppe": "Igel (Ü3)",
-      "rolle": "Erzieherin"
+      "rolle": "Erzieherin",
+      "pinHash": "3094bac90b986f5d965971c3a69576e255ae604a9d6b42bc3b54cad0d0308c1c"
     },
     {
       "id": "user-19",
       "name": "Svenja",
       "gruppe": "Springer",
-      "rolle": "Stellvertreterin"
+      "rolle": "Stellvertreterin",
+      "pinHash": "a341ca9dc0d42ceeb5955e628b56fb0471bbc276b902c15f99429993d94f1686"
     },
     {
       "id": "user-20",
       "name": "Pierre",
       "gruppe": "Leitung",
-      "rolle": "Leitung"
+      "rolle": "Leitung",
+      "pinHash": "9556eaacd26296df3bafe1330fa2ca5b9496f5be08d9a396ca58056030be890c"
     }
   ],
   "wochen": [

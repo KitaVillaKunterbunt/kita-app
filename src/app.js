@@ -1386,14 +1386,24 @@ async function initApp() {
           await initAuth();
           showToast("Demo-Modus — keine Plandaten vorhanden", "", 4000);
         }
-      } else {
-        console.log("[KitaApp] → showUserPicker");
+      } else if (isDemoMode()) {
+        console.log("[KitaApp] isDemoMode=true → showUserPicker");
         const picked = await showUserPicker();
         console.log("[KitaApp] User-Picker Auswahl:", picked?.id ?? null);
         if (picked) {
           user = picked;
           localStorage.setItem("kita-user-id", picked.id);
-          await initAuth(); // _currentUser in auth.js syncen — navigate() braucht getUser()
+          await initAuth();
+        }
+      } else {
+        console.log("[KitaApp] isDemoMode=false → showLoginFlow");
+        const loggedIn = await showLoginFlow();
+        if (loggedIn) {
+          user = loggedIn;
+          await initAuth();
+        } else {
+          await initAuth();
+          user = getUser();
         }
       }
     }

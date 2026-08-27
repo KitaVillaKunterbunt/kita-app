@@ -16,6 +16,11 @@
 <body>
   <div id="app">
 
+    <div id="loading-overlay" class="loading-overlay" aria-live="polite" aria-label="Wird geladen">
+      <div class="loading-spinner"></div>
+      <p>Wird geladen…</p>
+    </div>
+
     <main id="main-content" aria-label="Hauptinhalt">
       <section id="screen-home"      class="screen" hidden aria-label="Startseite"></section>
       <section id="screen-plan"      class="screen" hidden aria-label="Mein Dienstplan"></section>
@@ -109,5 +114,24 @@
   </div>
 
   <script type="module" src="src/app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+        try {
+          const reg = await navigator.serviceWorker.register('./sw.js');
+          reg.update().catch(() => {});
+        } catch (err) {
+          console.warn('[SW] Fehler:', err);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
