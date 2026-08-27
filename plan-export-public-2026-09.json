@@ -1,5 +1,5 @@
 {
-  "exportiert": "2026-08-27T06:06:25.375Z",
+  "exportiert": "2026-08-27T06:11:20.697Z",
   "monat": 9,
   "jahr": 2026,
   "mitarbeiter": [
@@ -3921,9 +3921,9 @@
     {
       "datum": "2026-09-18",
       "mitarbeiterId": "user-16",
-      "typ": "spaet",
-      "vonUhr": "08:15",
-      "bisUhr": "16:30",
+      "typ": "frueh",
+      "vonUhr": "07:00",
+      "bisUhr": "14:30",
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
@@ -4372,9 +4372,9 @@
     {
       "datum": "2026-09-15",
       "mitarbeiterId": "user-18",
-      "typ": "teil",
-      "vonUhr": "08:15",
-      "bisUhr": "12:15",
+      "typ": "frueh",
+      "vonUhr": "07:30",
+      "bisUhr": "11:30",
       "gruppe": "Igel (Ü3)",
       "raum": null,
       "notiz": null,
