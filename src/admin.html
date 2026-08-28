@@ -133,6 +133,23 @@
 
     .btn-ghost:hover { background: var(--border); }
 
+    .btn-warning {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .btn-warning:hover:not(:disabled) { background: #fde68a; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .btn-warning {
+        background: #78350f;
+        color: #fde68a;
+        border-color: #92400e;
+      }
+      :root:not([data-theme="light"]) .btn-warning:hover:not(:disabled) { background: #92400e; }
+    }
+
     .error-msg {
       color: var(--danger);
       font-size: 0.8rem;
@@ -337,6 +354,7 @@
             <th>Rolle</th>
             <th>PIN-Hash</th>
             <th>PIN gesetzt</th>
+            <th>Aktionen</th>
           </tr>
         </thead>
         <tbody id="emp-tbody"></tbody>
@@ -351,6 +369,9 @@
 <script>
   const KEY_HASH    = 'kita-admin-pw-hash';
   const KEY_SESSION = 'kita-admin-session';
+
+  const allEmployees = new Map();
+  let employees = [];
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -455,7 +476,7 @@
     const statsEl  = document.getElementById('stats-row');
     const sourceEl = document.getElementById('source-tag');
 
-    tbody.innerHTML = '<tr><td colspan="7" style="padding:2rem;text-align:center;color:var(--text-muted)">Lade…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:2rem;text-align:center;color:var(--text-muted)">Lade…</td></tr>';
     emptyEl.style.display = 'none';
     statsEl.innerHTML = '';
 
@@ -469,7 +490,7 @@
       sources.push(`../plan-export-public-${y}-${String(m).padStart(2,'0')}.json`);
     }
 
-    const allEmployees = new Map();
+    allEmployees.clear();
     const loadedFiles  = [];
 
     await Promise.allSettled(sources.map(async src => {
@@ -485,7 +506,7 @@
       } catch {}
     }));
 
-    const employees = [...allEmployees.values()].sort((a, b) =>
+    employees = [...allEmployees.values()].sort((a, b) =>
       (a.nachname ?? a.name ?? '').localeCompare(b.nachname ?? b.name ?? '', 'de'));
 
     sourceEl.textContent = loadedFiles.length
@@ -529,7 +550,10 @@
           }
         </td>
         <td>
-          <span class="badge ${hasPin ? 'badge-green' : 'badge-red'}">${hasPin ? '✓ Ja' : '✗ Nein'}</span>
+          <span class="badge ${hasPin ? 'badge-green' : 'badge-red'}" id="badge-${i}">${hasPin ? '✓ Ja' : '✗ Nein'}</span>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-warning pin-reset-btn" data-idx="${i}" ${!hasPin ? 'disabled' : ''}>PIN zurücksetzen</button>
         </td>
       </tr>`;
     }).join('');
@@ -538,6 +562,47 @@
       el.addEventListener('click', () => {
         el.classList.toggle('hash-hidden');
         el.title = el.classList.contains('hash-hidden') ? 'Klicken zum Anzeigen' : 'Klicken zum Verbergen';
+      });
+    });
+
+    tbody.querySelectorAll('.pin-reset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        const emp = employees[idx];
+        if (!emp) return;
+        const name = ((emp.vorname ?? '') + ' ' + (emp.nachname ?? emp.name ?? '')).trim() || String(emp.id);
+        if (!confirm(`PIN von ${name} wirklich zurücksetzen?\n\nDie Erzieherin muss beim nächsten Login einen neuen PIN setzen.`)) return;
+
+        emp.pinHash = null;
+
+        const row = tbody.querySelectorAll('tr')[idx];
+        if (row) {
+          const cells = row.querySelectorAll('td');
+          cells[5].innerHTML = '<span style="color:var(--text-muted)">–</span>';
+          const badge = row.querySelector(`#badge-${idx}`);
+          if (badge) { badge.className = 'badge badge-red'; badge.textContent = '✗ Nein'; }
+          btn.disabled = true;
+          btn.textContent = 'Zurückgesetzt';
+        }
+
+        const withPin    = employees.filter(e => e.pinHash).length;
+        const withoutPin = employees.length - withPin;
+        statsEl.innerHTML = `
+          <div class="stat"><div class="stat-value">${employees.length}</div><div class="stat-label">Mitarbeiter</div></div>
+          <div class="stat"><div class="stat-value" style="color:var(--success)">${withPin}</div><div class="stat-label">PIN gesetzt</div></div>
+          <div class="stat"><div class="stat-value" style="color:var(--danger)">${withoutPin}</div><div class="stat-label">Kein PIN</div></div>
+        `;
+
+        const payload = { ...emp, pinHash: null };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = `pin-reset-${String(emp.id ?? idx)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       });
     });
   }
