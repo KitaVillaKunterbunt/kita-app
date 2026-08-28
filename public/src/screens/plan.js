@@ -187,14 +187,19 @@ function renderDayDetail(container, date, shift, notifsForDate, eventsForDate, v
   let detailContent = "";
   let typeClass = "";
   if (shift && shift.type !== "frei") {
-    const label = shiftTypeLabel(shift);
+    const label = shiftTypeLabel(shift, d.getDay() === 5);
     typeClass = `day-detail--${shift.type}`;
+    const dienstBadge = label === "Frühdienst"
+      ? `<span class="shift-type-badge shift-type-badge--frueh">Frühdienst</span>`
+      : label === "Spätdienst"
+        ? `<span class="shift-type-badge shift-type-badge--spaet">Spätdienst</span>`
+        : "";
     const mainLine = shift.startTime
-      ? (label ? `${shift.startTime} – ${shift.endTime} · ${label}` : `${shift.startTime} – ${shift.endTime}`)
-      : (label || TYPE_LABEL[shift.type] || shift.type);
+      ? `${shift.startTime} – ${shift.endTime ?? ""}`
+      : (TYPE_LABEL[shift.type] || shift.type);
     const meta = [shift.group, shift.room, shift.note].filter(Boolean).join(" · ");
     detailContent = `
-      <p class="day-detail__main">${mainLine}</p>
+      <p class="day-detail__main">${mainLine}${dienstBadge ? ` ${dienstBadge}` : ""}</p>
       ${meta ? `<p class="day-detail__meta">${meta}</p>` : ""}`;
   } else {
     detailContent = `<p class="day-detail__empty">Kein Dienst eingetragen.</p>`;

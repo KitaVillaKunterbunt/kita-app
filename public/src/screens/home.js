@@ -49,7 +49,7 @@ function nextShiftSub(shifts) {
   const wd = WEEKDAY_SHORT_DE[d.getDay()];
   const day = d.getDate();
   const mon = d.getMonth() + 1;
-  const label = shiftTypeLabel(next);
+  const label = shiftTypeLabel(next, d.getDay() === 5);
   const typeLabel = label === "Frühdienst" ? "Früh " : label === "Spätdienst" ? "Spät " : "";
   return `${wd} ${day}.${mon} · ${typeLabel}${next.startTime}`;
 }
@@ -87,11 +87,11 @@ function weekCardHTML(shifts) {
         badgeHTML = `<span class="home-week-badge home-week-badge--krank">Krank</span>`;
       } else if (shift.startTime) {
         timeText = `${shift.startTime}–${shift.endTime ?? ""}`;
-        const label = shiftTypeLabel(shift);
+        const label = shiftTypeLabel(shift, d.getDay() === 5);
         if (label === "Frühdienst") {
-          badgeHTML = `<span class="home-week-badge home-week-badge--frueh">Früh</span>`;
+          badgeHTML = `<span class="home-week-badge home-week-badge--frueh">Frühdienst</span>`;
         } else if (label === "Spätdienst") {
-          badgeHTML = `<span class="home-week-badge home-week-badge--spaet">Spät</span>`;
+          badgeHTML = `<span class="home-week-badge home-week-badge--spaet">Spätdienst</span>`;
         }
       }
     }

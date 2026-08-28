@@ -15,14 +15,15 @@ export function escapeHTML(str) {
  * @param {{ type?:string, startTime?:string|null, endTime?:string|null }} shift
  * @returns {string}
  */
-export function shiftTypeLabel(shift) {
+export function shiftTypeLabel(shift, isFriday = false) {
   if (!shift) return "";
   if (shift.type === "urlaub") return "Urlaub";
   if (shift.type === "krank")  return "Krank";
   if (shift.type === "frei")   return "Frei";
   if (shift.type === "teil")   return "Teildienst";
-  if (shift.startTime && shift.startTime <= "07:00") return "Frühdienst";
-  if (shift.endTime && shift.endTime >= "17:00") return "Spätdienst";
+  if (shift.startTime && (shift.startTime === "07:00" || shift.startTime === "07:30")) return "Frühdienst";
+  const spaetThreshold = isFriday ? "16:30" : "17:00";
+  if (shift.endTime && shift.endTime >= spaetThreshold) return "Spätdienst";
   return "";
 }
 
