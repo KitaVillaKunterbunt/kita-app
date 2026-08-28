@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kita Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f5;
+      --surface: #fff;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --primary: #1A56DB;
+      --primary-hover: #1447c0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #111;
+        --surface: #1e1e1e;
+        --border: #333;
+        --text: #f0f0f0;
+        --text-muted: #999;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Login ── */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .login-card h1 {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .field label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .field input {
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:disabled { opacity: 0.5; cursor: default; }
+    .btn:active:not(:disabled) { opacity: 0.8; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+
+    .btn-sm {
+      padding: 0.3rem 0.65rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover { background: var(--border); }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      min-height: 1.2em;
+    }
+
+    .reset-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .reset-link button {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: inherit;
+      text-decoration: underline;
+    }
+
+    /* ── Admin ── */
+    #admin-screen { display: none; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar h1 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .content {
+      padding: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.25rem;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:hover { background: var(--bg); }
+
+    tbody td {
+      padding: 0.65rem 1rem;
+      vertical-align: middle;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-red   { background: #fee2e2; color: #991b1b; }
+    .badge-gray  { background: #f3f4f6; color: #374151; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .badge-green { background: #14532d; color: #86efac; }
+      :root:not([data-theme="light"]) .badge-red   { background: #7f1d1d; color: #fca5a5; }
+      :root:not([data-theme="light"]) .badge-gray  { background: #374151; color: #d1d5db; }
+    }
+
+    .hash-cell {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hash-hidden { filter: blur(5px); user-select: none; cursor: pointer; }
+
+    .source-tag {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>🏠 Kita Admin</h1>
+    <p id="login-subtitle">Admin-Bereich — bitte Passwort eingeben</p>
+    <div class="field">
+      <label id="pw-label" for="pw-input">Passwort</label>
+      <input type="password" id="pw-input" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary" id="login-btn">Anmelden</button>
+    <div class="error-msg" id="login-error"></div>
+    <div class="reset-link" id="reset-link">
+      <button id="reset-btn">Passwort zurücksetzen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin -->
+<div id="admin-screen">
+  <div class="topbar">
+    <h1>Kita Admin — Mitarbeiter</h1>
+    <div class="topbar-actions">
+      <button class="btn btn-sm btn-ghost" id="reload-btn">⟳ Neu laden</button>
+      <button class="btn btn-sm btn-ghost" id="logout-btn">Abmelden</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="source-tag" id="source-tag"></div>
+    <div class="stats" id="stats-row"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Kürzel</th>
+            <th>Mitarb.-Nr.</th>
+            <th>Rolle</th>
+            <th>PIN-Hash</th>
+            <th>PIN gesetzt</th>
+          </tr>
+        </thead>
+        <tbody id="emp-tbody"></tbody>
+      </table>
+      <div class="empty-state" id="empty-state" style="display:none">
+        Keine Mitarbeiterdaten gefunden.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY_HASH    = 'kita-admin-pw-hash';
+  const KEY_SESSION = 'kita-admin-session';
+
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function escape(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Auth ──────────────────────────────────────────────────
+  const loginScreen  = document.getElementById('login-screen');
+  const adminScreen  = document.getElementById('admin-screen');
+  const pwInput      = document.getElementById('pw-input');
+  const loginBtn     = document.getElementById('login-btn');
+  const loginError   = document.getElementById('login-error');
+  const loginSub     = document.getElementById('login-subtitle');
+  const pwLabel      = document.getElementById('pw-label');
+  const resetLink    = document.getElementById('reset-link');
+  const resetBtn     = document.getElementById('reset-btn');
+
+  let isSetup = false;
+
+  function initAuth() {
+    const storedHash = localStorage.getItem(KEY_HASH);
+    if (!storedHash) {
+      isSetup = true;
+      loginSub.textContent = 'Erstzugang — bitte Admin-Passwort festlegen';
+      pwLabel.textContent = 'Neues Passwort';
+      loginBtn.textContent = 'Passwort setzen';
+      resetLink.style.display = 'none';
+    } else {
+      isSetup = false;
+      loginSub.textContent = 'Admin-Bereich — bitte Passwort eingeben';
+      pwLabel.textContent = 'Passwort';
+      loginBtn.textContent = 'Anmelden';
+      resetLink.style.display = 'block';
+    }
+    const session = sessionStorage.getItem(KEY_SESSION);
+    if (session === 'ok') { showAdmin(); return; }
+    loginScreen.style.display = 'flex';
+    adminScreen.style.display = 'none';
+  }
+
+  loginBtn.addEventListener('click', async () => {
+    const pw = pwInput.value.trim();
+    if (!pw) { loginError.textContent = 'Bitte Passwort eingeben.'; return; }
+    loginError.textContent = '';
+    loginBtn.disabled = true;
+
+    try {
+      const hash = await sha256(pw);
+      if (isSetup) {
+        localStorage.setItem(KEY_HASH, hash);
+        sessionStorage.setItem(KEY_SESSION, 'ok');
+        showAdmin();
+      } else {
+        const stored = localStorage.getItem(KEY_HASH);
+        if (hash === stored) {
+          sessionStorage.setItem(KEY_SESSION, 'ok');
+          showAdmin();
+        } else {
+          loginError.textContent = 'Falsches Passwort.';
+          pwInput.value = '';
+          pwInput.focus();
+        }
+      }
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
+
+  pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('Passwort wirklich zurücksetzen? Du musst danach ein neues festlegen.')) return;
+    localStorage.removeItem(KEY_HASH);
+    sessionStorage.removeItem(KEY_SESSION);
+    pwInput.value = '';
+    loginError.textContent = '';
+    initAuth();
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    sessionStorage.removeItem(KEY_SESSION);
+    pwInput.value = '';
+    initAuth();
+  });
+
+  document.getElementById('reload-btn').addEventListener('click', loadData);
+
+  // ── Admin ─────────────────────────────────────────────────
+  function showAdmin() {
+    loginScreen.style.display = 'none';
+    adminScreen.style.display = 'block';
+    loadData();
+  }
+
+  async function loadData() {
+    const tbody    = document.getElementById('emp-tbody');
+    const emptyEl  = document.getElementById('empty-state');
+    const statsEl  = document.getElementById('stats-row');
+    const sourceEl = document.getElementById('source-tag');
+
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:2rem;text-align:center;color:var(--text-muted)">Lade…</td></tr>';
+    emptyEl.style.display = 'none';
+    statsEl.innerHTML = '';
+
+    const now = new Date();
+    const sources = [];
+    for (let delta = -2; delta <= 10; delta++) {
+      let m = now.getMonth() + 1 + delta;
+      let y = now.getFullYear();
+      while (m > 12) { m -= 12; y++; }
+      while (m < 1)  { m += 12; y--; }
+      sources.push(`../plan-export-public-${y}-${String(m).padStart(2,'0')}.json`);
+    }
+
+    const allEmployees = new Map();
+    const loadedFiles  = [];
+
+    await Promise.allSettled(sources.map(async src => {
+      try {
+        const r = await fetch(src, { cache: 'no-cache' });
+        if (!r.ok) return;
+        const data = await r.json();
+        loadedFiles.push(src.replace('../',''));
+        for (const m of (data.mitarbeiter ?? [])) {
+          if (!allEmployees.has(m.id)) allEmployees.set(m.id, m);
+          else if (m.pinHash) allEmployees.get(m.id).pinHash = m.pinHash;
+        }
+      } catch {}
+    }));
+
+    const employees = [...allEmployees.values()].sort((a, b) =>
+      (a.nachname ?? a.name ?? '').localeCompare(b.nachname ?? b.name ?? '', 'de'));
+
+    sourceEl.textContent = loadedFiles.length
+      ? `Quellen: ${loadedFiles.join(', ')}`
+      : 'Keine plan-export-public-*.json Dateien gefunden.';
+
+    if (!employees.length) {
+      tbody.innerHTML = '';
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    const withPin    = employees.filter(e => e.pinHash).length;
+    const withoutPin = employees.length - withPin;
+
+    statsEl.innerHTML = `
+      <div class="stat"><div class="stat-value">${employees.length}</div><div class="stat-label">Mitarbeiter</div></div>
+      <div class="stat"><div class="stat-value" style="color:var(--success)">${withPin}</div><div class="stat-label">PIN gesetzt</div></div>
+      <div class="stat"><div class="stat-value" style="color:var(--danger)">${withoutPin}</div><div class="stat-label">Kein PIN</div></div>
+    `;
+
+    tbody.innerHTML = employees.map((e, i) => {
+      const name    = escape((e.vorname ?? '') + ' ' + (e.nachname ?? e.name ?? '')).trim() || '–';
+      const kuerzel = escape(e.kuerzel ?? '–');
+      const nr      = escape(e.mitarbeiternummer ?? e.id ?? '–');
+      const rolle   = escape(e.rolle ?? '–');
+      const hash    = e.pinHash ?? null;
+      const hasPin  = !!hash;
+      const id      = `hash-${i}`;
+
+      return `<tr>
+        <td style="color:var(--text-muted)">${i + 1}</td>
+        <td><strong>${name}</strong></td>
+        <td>${kuerzel}</td>
+        <td style="font-family:monospace">${nr}</td>
+        <td>${rolle}</td>
+        <td>
+          ${hash
+            ? `<span class="hash-cell hash-hidden" id="${id}" title="Klicken zum Anzeigen" data-hash="${escape(hash)}">${escape(hash)}</span>`
+            : '<span style="color:var(--text-muted)">–</span>'
+          }
+        </td>
+        <td>
+          <span class="badge ${hasPin ? 'badge-green' : 'badge-red'}">${hasPin ? '✓ Ja' : '✗ Nein'}</span>
+        </td>
+      </tr>`;
+    }).join('');
+
+    tbody.querySelectorAll('.hash-cell').forEach(el => {
+      el.addEventListener('click', () => {
+        el.classList.toggle('hash-hidden');
+        el.title = el.classList.contains('hash-hidden') ? 'Klicken zum Anzeigen' : 'Klicken zum Verbergen';
+      });
+    });
+  }
+
+  initAuth();
+</script>
+</body>
+</html>
